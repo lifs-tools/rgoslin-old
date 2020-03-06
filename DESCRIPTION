@@ -9,4 +9,8 @@ Description: rGoslin is the R implementation for the Grammar of Succint Lipid No
 License: MIT + file LICENSE
 Imports: Rcpp (>= 1.0.3)
 LinkingTo: Rcpp
+Suggests: 
+    pkgKitten,
+    testthat (>= 2.1.0)
 RoxygenNote: 7.0.1
+Encoding: UTF-8
