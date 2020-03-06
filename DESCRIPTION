@@ -8,7 +8,7 @@ Maintainer: Nils Hoffmann <nils.hoffmann@isas.de>
 Description: rGoslin is the R implementation for the Grammar of Succint Lipid Nomenclature.
 License: MIT + file LICENSE
 Imports: Rcpp (>= 1.0.3)
-LinkingTo: Rcpp
+LinkingTo: Rcpp, testthat
 Suggests: 
     pkgKitten,
     testthat (>= 2.1.0)

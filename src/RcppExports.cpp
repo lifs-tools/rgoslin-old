@@ -17,7 +17,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_parse_lipid_name
-RcppExport SEXP rcpp_parse_lipid_name(std::string lipid_name);
+SEXP rcpp_parse_lipid_name(std::string lipid_name);
 RcppExport SEXP _rgoslin_rcpp_parse_lipid_name(SEXP lipid_nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
