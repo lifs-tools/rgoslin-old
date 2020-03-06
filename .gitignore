@@ -6,3 +6,4 @@
 *.so
 cppgoslin/cppgoslin/parser/KnownGrammars.h
 cppgoslin/writeGrammarsHeader
+*.a
