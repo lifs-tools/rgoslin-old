@@ -2,3 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+*.o
+*.so
+cppgoslin/cppgoslin/parser/KnownGrammars.h
+cppgoslin/writeGrammarsHeader

@@ -8,17 +8,14 @@ parser = cppgoslin/parser/ParserClasses.o cppgoslin/parser/KnownParsers.o cppgos
 obj = ${domain} ${parser}
 test_obj = cppgoslin/tests/MolecularFattyAcidTest.o cppgoslin/tests/ParserTest.o cppgoslin/tests/SwissLipidsTest.o
 
-opt = -std=c++11 -O3
+opt = -std=c++11 -O3 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 #-g
 
 main: grammarWriter ${obj}
 	${CC} -shared ${obj} -o ${bin}
 	
-	
-
 grammarWriter:
 	${CC} ${opt} -o writeGrammarsHeader writeGrammarsHeader.cpp
 	./writeGrammarsHeader "cppgoslin/parser/KnownGrammars.h"
-	
 	
 %.o: %.cpp
 	${CC} ${opt} -I. -Wall -fPIC -o $@ -c $<
