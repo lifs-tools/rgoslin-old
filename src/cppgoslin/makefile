@@ -1,6 +1,7 @@
 install_dir = /usr
 CC = g++
 bin = libcppGoslin.so
+abin = libcppGoslin.a
 domain = cppgoslin/domain/Adduct.o cppgoslin/domain/IsomericFattyAcid.o cppgoslin/domain/LipidMolecularSubspecies.o cppgoslin/domain/LipidStructuralSubspecies.o cppgoslin/domain/FattyAcid.o cppgoslin/domain/LipidAdduct.o cppgoslin/domain/LipidSpecies.o cppgoslin/domain/MolecularFattyAcid.o cppgoslin/domain/Fragment.o cppgoslin/domain/LipidIsomericSubspecies.o cppgoslin/domain/LipidSpeciesInfo.o cppgoslin/domain/StructuralFattyAcid.o
 
 parser = cppgoslin/parser/ParserClasses.o cppgoslin/parser/KnownParsers.o cppgoslin/parser/GoslinFragmentParserEventHandler.o cppgoslin/parser/GoslinParserEventHandler.o cppgoslin/parser/LipidMapsParserEventHandler.o cppgoslin/parser/SwissLipidsParserEventHandler.o
@@ -13,6 +14,9 @@ opt = -std=c++11 -O3 -fstack-protector-strong -Wformat -Werror=format-security -
 main: grammarWriter ${obj}
 	${CC} -shared ${obj} -o ${bin}
 	
+static: grammarWriter ${obj}
+	ar rcs ${abin} ${obj}
+
 grammarWriter:
 	${CC} ${opt} -o writeGrammarsHeader writeGrammarsHeader.cpp
 	./writeGrammarsHeader "cppgoslin/parser/KnownGrammars.h"
@@ -29,6 +33,7 @@ clean:
 	rm -f MolecularFattyAcidTest
 	rm -f ParserTest
 	rm -f writeGrammarsHeader
+	rm -f ${abin}
 	
 dist-clean: clean
 	rm -f ${install_dir}/lib/${bin}
