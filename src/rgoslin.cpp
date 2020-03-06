@@ -30,7 +30,7 @@ bool rcpp_is_valid_lipid_name(std::string lipid_name) {
 //
 // [[Rcpp::plugins("cpp11")]]
 // [[Rcpp::export]]
-RcppExport SEXP rcpp_parse_lipid_name(std::string lipid_name) {
+SEXP rcpp_parse_lipid_name(std::string lipid_name) {
     /* create instance of lipid parser containing several grammars */
     LipidParser lipid_parser;
     
