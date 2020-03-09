@@ -23,17 +23,17 @@ void BaseParserEventHandler<T>::sanity_check(){
         }
         
         string rule_name = event_name.first;
-        rule_name = Parser<T>::replace_all(rule_name, "_pre_event", "");
-        rule_name = Parser<T>::replace_all(rule_name, "_post_event", "");
+        rule_name = replace_all(rule_name, "_pre_event", "");
+        rule_name = replace_all(rule_name, "_post_event", "");
         if (rule_names.find(rule_name) == rule_names.end()){
             throw RuntimeException("Parser event handler error: rule '" + rule_name + "' in event '" + event_name.first + "' is not present in the grammar" + (parser != NULL ? " '" + parser->grammar_name + "'" : ""));
         }
     }
 }
 
+
 template <class T> 
 void BaseParserEventHandler<T>::handle_event(string event_name, TreeNode *node){
-    
     if (registered_events->find(event_name) != registered_events->end()){
         registered_events->at(event_name)(node);
     }
