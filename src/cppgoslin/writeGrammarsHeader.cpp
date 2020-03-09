@@ -22,7 +22,7 @@ void addingGrammar(ofstream& offile, string grammarName, string grammarFilename)
     ifstream infile(grammarFilename.c_str());
     offile << "static const string " + grammarName + " = \"";
     if (!infile.good()){
-        cout << "Error: file'" + grammarFilename + "' not found." << endl;
+        cout << "Error: file '" + grammarFilename + "' not found." << endl;
         exit(-1);
     }
     
@@ -38,13 +38,7 @@ void addingGrammar(ofstream& offile, string grammarName, string grammarFilename)
 
 
 
-int main(int argc, char** argv){
-    if (argc < 2){
-        cout << "Error, specify grammar output filename." << endl;
-        exit(-1);
-    }
-
-    string ofFileName = argv[1];
+void writeGrammarHeader(string ofFileName){
     ofstream offile(ofFileName.c_str());
     
     
@@ -70,6 +64,20 @@ int main(int argc, char** argv){
     offile << endl << endl << endl;
     
     offile << "#endif /* KNOWN_GRAMMARS_H */" << endl;
-    
+}
+
+
+
+
+
+
+
+int main(int argc, char** argv){
+    if (argc < 2){
+        cout << "Error, specify grammar output filename." << endl;
+        exit(-1);
+    }
+
+    writeGrammarHeader(argv[1]);
     return 0;
 }
