@@ -2,15 +2,23 @@
 % Please edit documentation in R/rgoslin.R
 \name{parseLipidName}
 \alias{parseLipidName}
-\title{Parse the provided lipid name and return structural information.
+\title{Parse the provided lipid name and return structural information as a named vector.
 Will return an empty vector if none of the parsers was able to parse the provided name successfully.}
 \usage{
 parseLipidName(lipidName)
 }
 \arguments{
-\item{lipidName}{the lipid name to check.}
+\item{lipidName}{The lipid name to parse.}
+}
+\value{
+Named vector with details of the lipid, empty vector otherwise.
 }
 \description{
-Parse the provided lipid name and return structural information.
+Parse the provided lipid name and return structural information as a named vector.
 Will return an empty vector if none of the parsers was able to parse the provided name successfully.
+}
+\examples{
+parseLipidName("PC 32:1")
+parseLipidName("LPC 18:1_16:0") 
+parseLipidName("TG(18:1_18:0_16:1")
 }

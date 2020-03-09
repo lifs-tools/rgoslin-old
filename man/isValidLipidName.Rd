@@ -8,9 +8,17 @@ Will return FALSE if none of the parsers was able to parse the provided name suc
 isValidLipidName(lipidName)
 }
 \arguments{
-\item{lipidName}{the lipid name to check.}
+\item{lipidName}{The lipid name to check.}
+}
+\value{
+TRUE if the lipidName could be parsed, FALSE otherwise.
 }
 \description{
 Check the provided lipid name against the built-in grammars.
 Will return FALSE if none of the parsers was able to parse the provided name successfully.
+}
+\examples{
+isValidLipidName("PC 32:1")
+isValidLipidName("PC(32:1)")
+isValidLipidName("PCX(32:1)")
 }
