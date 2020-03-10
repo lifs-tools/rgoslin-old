@@ -155,27 +155,25 @@ SEXP rcpp_parse_lipid_name(std::string lipid_name) {
             species = lipidAdduct->get_lipid_string(SPECIES);
             LipidSpecies* lipid = lipidAdduct->lipid;
             if(lipid) {
-                // Rcout << "Lipid object is defined" << "\n";
                 LipidSpeciesInfo info = (*lipid).info;
-                // Rcout << "Lipid species info is defined" << "\n";
                 nativeLevelName = lipidAdduct->get_lipid_string(info.level);
-                // Rcout << "Lipid string on native level: " << nativeLevelName << endl;
-                // Rcout << "Lipid string is defined" << "\n";
                 lipidMapsMainClass = lipid->get_class_name();
-                // Rcout << "Lipid maps main class is defined" << "\n";
                 headGroup = lipid->head_group;
-                // Rcout << "Lipid head group is defined" << "\n";
                 LipidClassMeta lcMeta = lipid_classes.at(lipid->get_class(headGroup));
-                // Rcout << "Lipid class meta is defined" << "\n";
                 headGroupSynonyms = "[" + join(lcMeta.synonyms, ", ") + "]";
                 level = get_lipid_level_str(info.level);
-                // Rcout << "Lipid level is defined" << "\n";
-                totalC = info.num_carbon;
-                // Rcout << "Lipid total carbon is defined" << "\n";
-                totalOH = info.num_hydroxyl;
-                // Rcout << "Lipid total hydroxyl is defined" << "\n";
-                totalDB = info.num_double_bonds;
-                // Rcout << "Lipid total double bonds is defined" << "\n";
+                std::ostringstream cbuffer; 
+                cbuffer << info.num_carbon;
+                totalC = cbuffer.str();
+                std::ostringstream ohbuffer;
+                ohbuffer << info.num_hydroxyl;
+                totalOH = ohbuffer.str();
+                std::ostringstream dbbuffer;
+                dbbuffer << info.num_double_bonds;
+                totalDB = dbbuffer.str();
+                switch(info.level) {
+                    
+                }
             }
     //         lipidDetails["Species Name"] = species;
     //         lipidDetails["Functional Class Abbr"] = "[" + headGroup + "]";
@@ -195,7 +193,7 @@ SEXP rcpp_parse_lipid_name(std::string lipid_name) {
             lipidDetails["Lipid Maps Main Class"] = lipidMapsMainClass;
             lipidDetails["Functional Class Abbr"] = "[" + headGroup + "]";
             lipidDetails["Functional Class Synonyms"] = headGroupSynonyms;
-            lipidDetails["Level"] = headGroupSynonyms;
+            lipidDetails["Level"] = level;
             lipidDetails["Total C"] = totalC;
             lipidDetails["Total OH"] = totalOH;
             lipidDetails["Total DB"] = totalDB;
