@@ -154,7 +154,7 @@ SEXP rcpp_parse_lipid_name(std::string lipid_name) {
             if(lipidAdduct->lipid) {
                 LipidSpecies* lipid = lipidAdduct->lipid;
                 Rcout << "Lipid object is defined" << "\n";
-                LipidSpeciesInfo info = lipid->info;
+                LipidSpeciesInfo info = (*lipid).info;
                 Rcout << "Lipid species info is defined" << "\n";
                 // nativeLevelName = lipidAdduct->get_lipid_string(info.level);
                 // Rcout << "Lipid string is defined" << "\n";
