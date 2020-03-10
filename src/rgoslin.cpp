@@ -79,7 +79,7 @@ bool rcpp_is_valid_lipid_name(std::string lipid_name) {
 SEXP rcpp_parse_lipid_name(std::string lipid_name) {
     CharacterVector lipidDetails;
     /* parsing lipid name into a lipid container data structure */
-    LipidAdduct* lipidAdduct;
+    LipidAdduct* lipidAdduct = NULL;
     try {
         /* create instance of lipid parser containing several grammars */
         LipidParser lipid_parser;
@@ -89,7 +89,9 @@ SEXP rcpp_parse_lipid_name(std::string lipid_name) {
                 LipidAdduct *lipid = parser->parse(lipid_name);
                 if (lipid){
                     lipidAdduct = lipid;
-                    grammar = parser->grammar_name;
+                    if (parser) {
+                        grammar = parser->grammar_name;
+                    }
                     break;
                 }
             } catch (LipidException &e){
@@ -151,27 +153,28 @@ SEXP rcpp_parse_lipid_name(std::string lipid_name) {
             lipidMapsCategory = lipidAdduct->get_lipid_string(CATEGORY);
             lipidMapsMainClass = lipidAdduct->get_lipid_string(CLASS);
             species = lipidAdduct->get_lipid_string(SPECIES);
-            if(lipidAdduct->lipid) {
-                LipidSpecies* lipid = lipidAdduct->lipid;
-                Rcout << "Lipid object is defined" << "\n";
+            LipidSpecies* lipid = lipidAdduct->lipid;
+            if(lipid) {
+                // Rcout << "Lipid object is defined" << "\n";
                 LipidSpeciesInfo info = (*lipid).info;
-                Rcout << "Lipid species info is defined" << "\n";
-                // nativeLevelName = lipidAdduct->get_lipid_string(info.level);
+                // Rcout << "Lipid species info is defined" << "\n";
+                nativeLevelName = lipidAdduct->get_lipid_string(info.level);
+                // Rcout << "Lipid string on native level: " << nativeLevelName << endl;
                 // Rcout << "Lipid string is defined" << "\n";
-                // lipidMapsMainClass = lipidAdduct->lipid->get_class_name();
+                lipidMapsMainClass = lipid->get_class_name();
                 // Rcout << "Lipid maps main class is defined" << "\n";
-                // headGroup = lipid->head_group;
+                headGroup = lipid->head_group;
                 // Rcout << "Lipid head group is defined" << "\n";
-                // LipidClassMeta lcMeta = lipid_classes.at(lipid->get_class(headGroup));
+                LipidClassMeta lcMeta = lipid_classes.at(lipid->get_class(headGroup));
                 // Rcout << "Lipid class meta is defined" << "\n";
-                // headGroupSynonyms = "[" + join(lcMeta.synonyms, ", ") + "]";
-                // level = get_lipid_level_str(info.level);
+                headGroupSynonyms = "[" + join(lcMeta.synonyms, ", ") + "]";
+                level = get_lipid_level_str(info.level);
                 // Rcout << "Lipid level is defined" << "\n";
-                // totalC = info.num_carbon;
+                totalC = info.num_carbon;
                 // Rcout << "Lipid total carbon is defined" << "\n";
-                // totalOH = info.num_hydroxyl;
+                totalOH = info.num_hydroxyl;
                 // Rcout << "Lipid total hydroxyl is defined" << "\n";
-                // totalDB = info.num_double_bonds;
+                totalDB = info.num_double_bonds;
                 // Rcout << "Lipid total double bonds is defined" << "\n";
             }
     //         lipidDetails["Species Name"] = species;
