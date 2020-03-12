@@ -2,8 +2,7 @@
 % Please edit documentation in R/rgoslin.R
 \name{parseLipidName}
 \alias{parseLipidName}
-\title{Parse the provided lipid name and return structural information as a named vector.
-Will return an empty vector if none of the parsers was able to parse the provided name successfully.}
+\title{Parse lipid name.}
 \usage{
 parseLipidName(lipidName)
 }
@@ -14,11 +13,12 @@ parseLipidName(lipidName)
 Named vector with details of the lipid, empty vector otherwise.
 }
 \description{
-Parse the provided lipid name and return structural information as a named vector.
-Will return an empty vector if none of the parsers was able to parse the provided name successfully.
+\code{parseLipidName} reads the provided lipid name and returns structural information as a named vector.
+Will return a vector with the "Grammar" element set to "NOT_PARSEABLE" if none of the parsers was able to parse the provided name successfully.
+If any error was raised, returns an empty vector.
 }
 \examples{
 parseLipidName("PC 32:1")
 parseLipidName("LPC 18:1_16:0") 
-parseLipidName("TG(18:1_18:0_16:1")
+parseLipidName("TG(18:1_18:0_16:1)")
 }

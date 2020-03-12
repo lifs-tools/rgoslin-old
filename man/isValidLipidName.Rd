@@ -2,8 +2,7 @@
 % Please edit documentation in R/rgoslin.R
 \name{isValidLipidName}
 \alias{isValidLipidName}
-\title{Check the provided lipid name against the built-in grammars.
-Will return FALSE if none of the parsers was able to parse the provided name successfully.}
+\title{Check lipid name.}
 \usage{
 isValidLipidName(lipidName)
 }
@@ -14,8 +13,8 @@ isValidLipidName(lipidName)
 TRUE if the lipidName could be parsed, FALSE otherwise.
 }
 \description{
-Check the provided lipid name against the built-in grammars.
-Will return FALSE if none of the parsers was able to parse the provided name successfully.
+\code{isValidLipidName} checks the provided lipid name against the built-in grammars.
+Will return FALSE if none of the parsers was able to parse the provided name successfully or if any error was raised.
 }
 \examples{
 isValidLipidName("PC 32:1")

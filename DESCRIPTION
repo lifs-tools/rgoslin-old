@@ -1,7 +1,7 @@
 Package: rgoslin
 Type: Package
 Title: Lipid name parsing and normalization
-Version: 0.1
+Version: 1.0.0
 Date: 2020-02-12
 Author: Nils Hoffmann
 Maintainer: Nils Hoffmann <nils.hoffmann@isas.de>
@@ -11,6 +11,9 @@ Imports: Rcpp (>= 1.0.3)
 LinkingTo: Rcpp, testthat
 Suggests: 
     pkgKitten,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
 RoxygenNote: 7.0.1
 Encoding: UTF-8
+VignetteBuilder: knitr
