@@ -223,7 +223,7 @@ SEXP rcpp_parse_lipid_name(std::string lipid_name) {
         } else {
             lipidDetails["Normalized Name"] = chr_na;
             lipidDetails["Original Name"] = lipid_name;
-            lipidDetails["Grammar"] = chr_na;
+            lipidDetails["Grammar"] = "NOT_PARSEABLE";
         }
         if(lipidAdduct) {
             delete lipidAdduct;
