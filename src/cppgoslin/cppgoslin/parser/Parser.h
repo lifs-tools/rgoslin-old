@@ -149,7 +149,7 @@ public:
     static string de_escape(string text, char _quote);
     unsigned long add_terminal(string text);
     vector<unsigned long>* collect_one_backwards(unsigned long rule_index);
-    vector<unsigned long>* collect_backwards(unsigned long child_rule_index, unsigned parent_rule_index, int s = 0);
+    vector<unsigned long>* collect_backwards(unsigned long child_rule_index, unsigned parent_rule_index);
     void raise_events(TreeNode *node);
     void fill_tree(TreeNode *node, DPNode *dp_node);
     T parse(string text_to_parse);
