@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Parse the provided lipid name and return structural information as a named vector.
-Will return an empty vector if none of the parsers was able to parse the provided name successfully. — parseLipidName • rgoslin</title>
+<title>Parse lipid name. — parseLipidName • rgoslin</title>
 
 
 <!-- jquery -->
@@ -36,10 +35,10 @@ Will return an empty vector if none of the parsers was able to parse the provide
 
 
 
-<meta property="og:title" content="Parse the provided lipid name and return structural information as a named vector.
-Will return an empty vector if none of the parsers was able to parse the provided name successfully. — parseLipidName" />
-<meta property="og:description" content="Parse the provided lipid name and return structural information as a named vector.
-Will return an empty vector if none of the parsers was able to parse the provided name successfully." />
+<meta property="og:title" content="Parse lipid name. — parseLipidName" />
+<meta property="og:description" content="parseLipidName reads the provided lipid name and returns structural information as a named vector.
+Will return a vector with the &quot;Grammar&quot; element set to &quot;NOT_PARSEABLE&quot; if none of the parsers was able to parse the provided name successfully.
+If any error was raised, returns an empty vector." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -115,15 +114,15 @@ Will return an empty vector if none of the parsers was able to parse the provide
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Parse the provided lipid name and return structural information as a named vector.
-Will return an empty vector if none of the parsers was able to parse the provided name successfully.</h1>
+    <h1>Parse lipid name.</h1>
     
     <div class="hidden name"><code>parseLipidName.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Parse the provided lipid name and return structural information as a named vector.
-Will return an empty vector if none of the parsers was able to parse the provided name successfully.</p>
+    <p><code>parseLipidName</code> reads the provided lipid name and returns structural information as a named vector.
+Will return a vector with the "Grammar" element set to "NOT_PARSEABLE" if none of the parsers was able to parse the provided name successfully.
+If any error was raised, returns an empty vector.</p>
     </div>
 
     <pre class="usage"><span class='fu'>parseLipidName</span>(<span class='no'>lipidName</span>)</pre>
@@ -212,30 +211,7 @@ Will return an empty vector if none of the parsers was able to parse the provide
 #&gt;                           FA4 C                          FA4 OH 
 #&gt;                            "NA"                            "NA" 
 #&gt;                          FA4 DB                   FA4 Bond Type 
-#&gt;                            "NA"                            "NA" </div><div class='input'><span class='fu'>parseLipidName</span>(<span class='st'>"TG(18:1_18:0_16:1"</span>)</div><div class='output co'>#&gt;           Normalized Name             Original Name                   Grammar 
-#&gt;                      "NA"       "TG(18:1_18:0_16:1"           "NOT_PARSEABLE" 
-#&gt;       Lipid Maps Category     Lipid Maps Main Class     Functional Class Abbr 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt; Functional Class Synonyms                     Level                   Total C 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt;                  Total OH                  Total DB              FA1 Position 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt;                     FA1 C                    FA1 OH                    FA1 DB 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt;             FA1 Bond Type              FA2 Position                     FA2 C 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt;                    FA2 OH                    FA2 DB             FA2 Bond Type 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt;              LCB Position                     LCB C                    LCB OH 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt;                    LCB DB             LCB Bond Type              FA3 Position 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt;                     FA3 C                    FA3 OH                    FA3 DB 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt;             FA3 Bond Type              FA4 Position                     FA4 C 
-#&gt;                      "NA"                      "NA"                      "NA" 
-#&gt;                    FA4 OH                    FA4 DB             FA4 Bond Type 
-#&gt;                      "NA"                      "NA"                      "NA" </div></pre>
+#&gt;                            "NA"                            "NA" </div><div class='input'><span class='fu'>parseLipidName</span>(<span class='st'>"TG(18:1_18:0_16:1)"</span>)</div><div class='output co'>#&gt; <span class='message'>Could not parse the provided lipid name TG(18:1_18:0_16:1)  with any of the available parsers!</span></div><div class='output co'>#&gt; NULL</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
