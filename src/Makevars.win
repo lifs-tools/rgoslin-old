@@ -1,3 +1,4 @@
+.PHONY: libcppGoslin.dll.a all
 $(info The compilation root directory is: $(ROOT_DIR))
 $(info The name of the shared library to be created is: $(SHLIB))
 
@@ -7,19 +8,21 @@ CXX_STD= CXX11
 $(info The CXX flags are: $(PKG_CXXFLAGS))
 
 # add the subdirectory to the linker / library path
-CPP_GOSLIN_LIB_DIR = ./
+CPP_GOSLIN_LIB_DIR= ./
 # include header locations to compile goslin.cpp against
 PKG_CPPFLAGS= -I"." -I"./cppgoslin" -I"./cppgoslin/cppgoslin" -I"./cppgoslin/cppgoslin/domain" -I"./cppgoslin/cppgoslin/parser"
 
 PKG_LIBS= -L$(CPP_GOSLIN_LIB_DIR) -lcppGoslin
 
-$(SHLIB): libcppGoslin.a $(OBJECTS)
+SOURCES= rgoslin.cpp
+OBJECTS= $(SOURCES:.cpp=.dll)
 
 # we generate some custom files with make and also compile a shared library, thus call it from here
-libcppGoslin.a: 
-	(cd cppgoslin; $(MAKE) static "CC=$(CXX)" "AR=$(AR)"; cp libcppGoslin.a ../; $(MAKE) clean)
+libcppGoslin.dll.a: 
+	(cd cppgoslin; $(MAKE) static "CC=$(CXX)" "AR=$(AR)"; cp libcppGoslin.a ../libcppGoslin.dll.a; $(MAKE) clean; cd ../;)
 
 all: $(SHLIB)
+$(SHLIB): libcppGoslin.dll.a
 
 clean:
 	rm -rf *.a
