@@ -13,11 +13,11 @@ PKG_CPPFLAGS= -I"." -I"./cppgoslin" -I"./cppgoslin/cppgoslin" -I"./cppgoslin/cpp
 
 PKG_LIBS= -L$(CPP_GOSLIN_LIB_DIR) -lcppGoslin
 
-$(SHLIB): build_goslin $(OBJECTS)
+$(SHLIB): libcppGoslin.a $(OBJECTS)
 
 # we generate some custom files with make and also compile a shared library, thus call it from here
-build_goslin: 
-	(cd cppgoslin; $(MAKE) static; cp libcppGoslin.a ../; $(MAKE) clean)
+libcppGoslin.a: 
+	(cd cppgoslin; $(MAKE) CC="$(CXX)" AR="$(AR)" static; cp libcppGoslin.a ../; $(MAKE) clean)
 
 all: $(SHLIB)
 
