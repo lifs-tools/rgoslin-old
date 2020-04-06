@@ -23,7 +23,7 @@ sublibs: subclean sublibraries
 
 sublibraries: subclean
 	@for d in $(SUBDIRS); do \
-		(cd $${d} && $(MAKE) static "CC=$(CXX)" "opt=$(CXXFLAGS)") || exit 1; \
+		(cd $${d} && $(MAKE) static "CC=$(CXX)" "opt=$(CXXFLAGS)" "AR=$(AR)") || exit 1; \
 	done
 
 clean: subclean
