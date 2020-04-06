@@ -19,6 +19,6 @@ If any error was raised, returns an empty vector.
 }
 \examples{
 parseLipidName("PC 32:1")
-parseLipidName("LPC 18:1_16:0") 
+parseLipidName("LPC 34:1") 
 parseLipidName("TG(18:1_18:0_16:1)")
 }
