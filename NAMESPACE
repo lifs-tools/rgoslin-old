@@ -2,6 +2,7 @@
 
 export(isValidLipidName)
 export(parseLipidName)
+export(parseLipidNames)
 importFrom(Rcpp,evalCpp)
 importFrom(Rcpp,sourceCpp)
 useDynLib(rgoslin, .registration = TRUE)

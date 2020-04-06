@@ -1,9 +1,10 @@
 #define STRICT_R_HEADERS
 #include <Rcpp.h>
-#include <cppgoslin/cppgoslin/cppgoslin.h>
+#include <cppgoslin.h>
 #include <typeinfo>
 
 using namespace Rcpp;
+using namespace goslin;
 
 /**
  * Join elements of a string vector with the provided delimiter
