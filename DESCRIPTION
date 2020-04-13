@@ -3,8 +3,9 @@ Type: Package
 Title: Lipid name parsing and normalization
 Version: 1.0.0
 Date: 2020-02-12
-Author: Nils Hoffmann
-Maintainer: Nils Hoffmann <nils.hoffmann@isas.de>
+Authors@R: c(
+    person("Nils", "Hoffmann", email = "nils.hoffmann@isas.de", role=c("aut","cre")),
+    person("Dominik", "Kopczynski", email = "dominik.kopczynski@isas.de", role=c("aut")))
 Description: rGoslin is the R implementation for the Grammar of Succint Lipid Nomenclature.
 License: MIT + file LICENSE
 Imports: Rcpp (>= 1.0.3)
@@ -13,7 +14,9 @@ Suggests:
     pkgKitten,
     testthat (>= 2.1.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    kableExtra,
+    dplyr
 RoxygenNote: 7.1.0
 Encoding: UTF-8
 VignetteBuilder: knitr

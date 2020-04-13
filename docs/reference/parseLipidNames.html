@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Check lipid name. — isValidLipidName • rgoslin</title>
+<title>Parse multiple lipid names and return a data frame with the results. — parseLipidNames • rgoslin</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,10 @@
 
 
 
-<meta property="og:title" content="Check lipid name. — isValidLipidName" />
-<meta property="og:description" content="isValidLipidName checks the provided lipid name against the built-in grammars.
-Will return FALSE if none of the parsers was able to parse the provided name successfully or if any error was raised." />
+<meta property="og:title" content="Parse multiple lipid names and return a data frame with the results. — parseLipidNames" />
+<meta property="og:description" content="parseLipidNames reads the provided lipid names vector and returns structural information as a data frame.
+Will return a cell with the &quot;Grammar&quot; column set to &quot;NOT_PARSEABLE&quot; if none of the parsers was able to parse the provided name successfully.
+If any error was raised, returns an empty data frame." />
 
 
 
@@ -116,33 +117,65 @@ Will return FALSE if none of the parsers was able to parse the provided name suc
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Check lipid name.</h1>
+    <h1>Parse multiple lipid names and return a data frame with the results.</h1>
     
-    <div class="hidden name"><code>isValidLipidName.Rd</code></div>
+    <div class="hidden name"><code>parseLipidNames.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>isValidLipidName</code> checks the provided lipid name against the built-in grammars.
-Will return FALSE if none of the parsers was able to parse the provided name successfully or if any error was raised.</p>
+    <p><code>parseLipidNames</code> reads the provided lipid names vector and returns structural information as a data frame.
+Will return a cell with the "Grammar" column set to "NOT_PARSEABLE" if none of the parsers was able to parse the provided name successfully.
+If any error was raised, returns an empty data frame.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>isValidLipidName</span>(<span class='no'>lipidName</span>)</pre>
+    <pre class="usage"><span class='fu'>parseLipidNames</span>(<span class='no'>lipidNames</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>lipidName</th>
-      <td><p>The lipid name to check.</p></td>
+      <th>lipidNames</th>
+      <td><p>The vector of lipid names to parse.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>TRUE if the lipidName could be parsed, FALSE otherwise.</p>
+    <p>Data frame where each row reports the parsing result of each element in lipidNames.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>isValidLipidName</span>(<span class='st'>"PC 32:1"</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>isValidLipidName</span>(<span class='st'>"PC(32:1)"</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>isValidLipidName</span>(<span class='st'>"PCX(32:1)"</span>)</div><div class='output co'>#&gt; [1] FALSE</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>parseLipidNames</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"PC 32:1"</span>,<span class='st'>"LPC 34:1"</span>,<span class='st'>"TG(18:1_18:0_16:1)"</span>))</div><div class='output co'>#&gt;                       Normalized Name      Original Name   Grammar
+#&gt; PC 32:1                       PC 32:1            PC 32:1    Goslin
+#&gt; LPC 34:1                     LPC 34:1           LPC 34:1    Goslin
+#&gt; TG(18:1_18:0_16:1) TAG 18:1-18:0-16:1 TG(18:1_18:0_16:1) LipidMaps
+#&gt;                    Lipid Maps Category         Lipid Maps Main Class
+#&gt; PC 32:1                             GP Glycerophosphocholines [GP01]
+#&gt; LPC 34:1                            GP Glycerophosphocholines [GP01]
+#&gt; TG(18:1_18:0_16:1)                  GL      Triradylglycerols [GL03]
+#&gt;                    Functional Class Abbr Functional Class Synonyms
+#&gt; PC 32:1                             [PC]                      [PC]
+#&gt; LPC 34:1                           [LPC]             [LPC, LysoPC]
+#&gt; TG(18:1_18:0_16:1)                  [TG]                 [TAG, TG]
+#&gt;                                    Level Total C Total OH Total DB FA1 Position
+#&gt; PC 32:1                          SPECIES      32        0        1           NA
+#&gt; LPC 34:1           STRUCTURAL_SUBSPECIES      34        0        1            1
+#&gt; TG(18:1_18:0_16:1)  MOLECULAR_SUBSPECIES      52        0        2           -1
+#&gt;                    FA1 C FA1 OH FA1 DB FA1 Bond Type FA2 Position FA2 C FA2 OH
+#&gt; PC 32:1               NA     NA     NA            NA           NA    NA     NA
+#&gt; LPC 34:1              34      0      1         ESTER           NA    NA     NA
+#&gt; TG(18:1_18:0_16:1)    18      0      1         ESTER           -1    18      0
+#&gt;                    FA2 DB FA2 Bond Type LCB Position LCB C LCB OH LCB DB
+#&gt; PC 32:1                NA            NA           NA    NA     NA     NA
+#&gt; LPC 34:1               NA            NA           NA    NA     NA     NA
+#&gt; TG(18:1_18:0_16:1)      0         ESTER           NA    NA     NA     NA
+#&gt;                    LCB Bond Type FA3 Position FA3 C FA3 OH FA3 DB FA3 Bond Type
+#&gt; PC 32:1                       NA           NA    NA     NA     NA            NA
+#&gt; LPC 34:1                      NA           NA    NA     NA     NA            NA
+#&gt; TG(18:1_18:0_16:1)            NA           -1    16      0      1         ESTER
+#&gt;                    FA4 Position FA4 C FA4 OH FA4 DB FA4 Bond Type
+#&gt; PC 32:1                      NA    NA     NA     NA            NA
+#&gt; LPC 34:1                     NA    NA     NA     NA            NA
+#&gt; TG(18:1_18:0_16:1)           NA    NA     NA     NA            NA</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

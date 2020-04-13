@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -39,7 +43,6 @@
 <meta property="og:description" content="parseLipidName reads the provided lipid name and returns structural information as a named vector.
 Will return a vector with the &quot;Grammar&quot; element set to &quot;NOT_PARSEABLE&quot; if none of the parsers was able to parse the provided name successfully.
 If any error was raised, returns an empty vector." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -57,7 +60,7 @@ If any error was raised, returns an empty vector." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -148,7 +151,7 @@ If any error was raised, returns an empty vector.</p>
 #&gt;           Lipid Maps Main Class           Functional Class Abbr 
 #&gt; "Glycerophosphocholines [GP01]"                          "[PC]" 
 #&gt;       Functional Class Synonyms                           Level 
-#&gt;           "[GD1c(NeuGc/NeuGc)]"                       "SPECIES" 
+#&gt;                          "[PC]"                       "SPECIES" 
 #&gt;                         Total C                        Total OH 
 #&gt;                            "32"                             "0" 
 #&gt;                        Total DB                    FA1 Position 
@@ -176,28 +179,28 @@ If any error was raised, returns an empty vector.</p>
 #&gt;                           FA4 C                          FA4 OH 
 #&gt;                            "NA"                            "NA" 
 #&gt;                          FA4 DB                   FA4 Bond Type 
-#&gt;                            "NA"                            "NA" </div><div class='input'><span class='fu'>parseLipidName</span>(<span class='st'>"LPC 18:1_16:0"</span>)</div><div class='output co'>#&gt;                 Normalized Name                   Original Name 
-#&gt;                 "LPC 18:1_16:0"                 "LPC 18:1_16:0" 
+#&gt;                            "NA"                            "NA" </div><div class='input'><span class='fu'>parseLipidName</span>(<span class='st'>"LPC 34:1"</span>)</div><div class='output co'>#&gt;                 Normalized Name                   Original Name 
+#&gt;                      "LPC 34:1"                      "LPC 34:1" 
 #&gt;                         Grammar             Lipid Maps Category 
-#&gt;                     "LipidMaps"                            "GP" 
+#&gt;                        "Goslin"                            "GP" 
 #&gt;           Lipid Maps Main Class           Functional Class Abbr 
 #&gt; "Glycerophosphocholines [GP01]"                         "[LPC]" 
 #&gt;       Functional Class Synonyms                           Level 
-#&gt;                        "[GT1b]"          "MOLECULAR_SUBSPECIES" 
+#&gt;                 "[LPC, LysoPC]"         "STRUCTURAL_SUBSPECIES" 
 #&gt;                         Total C                        Total OH 
 #&gt;                            "34"                             "0" 
 #&gt;                        Total DB                    FA1 Position 
-#&gt;                             "1"                            "-1" 
+#&gt;                             "1"                             "1" 
 #&gt;                           FA1 C                          FA1 OH 
-#&gt;                            "18"                             "0" 
+#&gt;                            "34"                             "0" 
 #&gt;                          FA1 DB                   FA1 Bond Type 
 #&gt;                             "1"                         "ESTER" 
 #&gt;                    FA2 Position                           FA2 C 
-#&gt;                            "-1"                            "16" 
+#&gt;                            "NA"                            "NA" 
 #&gt;                          FA2 OH                          FA2 DB 
-#&gt;                             "0"                             "0" 
+#&gt;                            "NA"                            "NA" 
 #&gt;                   FA2 Bond Type                    LCB Position 
-#&gt;                         "ESTER"                            "NA" 
+#&gt;                            "NA"                            "NA" 
 #&gt;                           LCB C                          LCB OH 
 #&gt;                            "NA"                            "NA" 
 #&gt;                          LCB DB                   LCB Bond Type 
@@ -211,27 +214,58 @@ If any error was raised, returns an empty vector.</p>
 #&gt;                           FA4 C                          FA4 OH 
 #&gt;                            "NA"                            "NA" 
 #&gt;                          FA4 DB                   FA4 Bond Type 
-#&gt;                            "NA"                            "NA" </div><div class='input'><span class='fu'>parseLipidName</span>(<span class='st'>"TG(18:1_18:0_16:1)"</span>)</div><div class='output co'>#&gt; <span class='message'>Could not parse the provided lipid name TG(18:1_18:0_16:1)  with any of the available parsers!</span></div><div class='output co'>#&gt; NULL</div></pre>
+#&gt;                            "NA"                            "NA" </div><div class='input'><span class='fu'>parseLipidName</span>(<span class='st'>"TG(18:1_18:0_16:1)"</span>)</div><div class='output co'>#&gt;            Normalized Name              Original Name 
+#&gt;       "TAG 18:1-18:0-16:1"       "TG(18:1_18:0_16:1)" 
+#&gt;                    Grammar        Lipid Maps Category 
+#&gt;                "LipidMaps"                       "GL" 
+#&gt;      Lipid Maps Main Class      Functional Class Abbr 
+#&gt; "Triradylglycerols [GL03]"                     "[TG]" 
+#&gt;  Functional Class Synonyms                      Level 
+#&gt;                "[TAG, TG]"     "MOLECULAR_SUBSPECIES" 
+#&gt;                    Total C                   Total OH 
+#&gt;                       "52"                        "0" 
+#&gt;                   Total DB               FA1 Position 
+#&gt;                        "2"                       "-1" 
+#&gt;                      FA1 C                     FA1 OH 
+#&gt;                       "18"                        "0" 
+#&gt;                     FA1 DB              FA1 Bond Type 
+#&gt;                        "1"                    "ESTER" 
+#&gt;               FA2 Position                      FA2 C 
+#&gt;                       "-1"                       "18" 
+#&gt;                     FA2 OH                     FA2 DB 
+#&gt;                        "0"                        "0" 
+#&gt;              FA2 Bond Type               LCB Position 
+#&gt;                    "ESTER"                       "NA" 
+#&gt;                      LCB C                     LCB OH 
+#&gt;                       "NA"                       "NA" 
+#&gt;                     LCB DB              LCB Bond Type 
+#&gt;                       "NA"                       "NA" 
+#&gt;               FA3 Position                      FA3 C 
+#&gt;                       "-1"                       "16" 
+#&gt;                     FA3 OH                     FA3 DB 
+#&gt;                        "0"                        "1" 
+#&gt;              FA3 Bond Type               FA4 Position 
+#&gt;                    "ESTER"                       "NA" 
+#&gt;                      FA4 C                     FA4 OH 
+#&gt;                       "NA"                       "NA" 
+#&gt;                     FA4 DB              FA4 Bond Type 
+#&gt;                       "NA"                       "NA" </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
 
       <footer>
       <div class="copyright">
-  <p>Developed by Nils Hoffmann.</p>
+  <p>Developed by Nils Hoffmann, Dominik Kopczynski.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>
