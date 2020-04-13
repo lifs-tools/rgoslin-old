@@ -1,5 +1,5 @@
 ---
-title: "introduction"
+title: "Using R Goslin to parse and normalize lipid nomenclature"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{introduction}
@@ -14,6 +14,55 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r results="hide"}
+library(dplyr)
+library(knitr)
+library(kableExtra)
+```
+### Supported nomenclatures
+
+- LipidMAPS
+- SwissLipids
+- Liebisch nomenclature
+- Fragments (as full parts)
+
+### Using the library
+
+In order to use the provided translation functions of rgoslin, you first need to load the library.
+```{r}
 library(rgoslin)
+```
+
+To check, whether a given lipid name can be parsed by any of the parsers supplied by cppGoslin.
+```{r}
+isValidLipidName("PC 32:1")
+```
+
+
+Using `parseLipidName` with a lipid name returns a named vector of properties of the parsed lipid name.
+```{r}
+pc32vector <- parseLipidName("PC 32:1")
+pc32df <- as.data.frame(t(pc32vector))
+```
+
+
+```{r echo = FALSE, results = 'asis'}
+kable(pc32df %>% select(-starts_with("FA"),-starts_with("LCB")), caption = "Lipid name parsing results for PC 32:1, FA and LCB columns omitted for brevity.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "200px")
+```
+
+```{r echo = FALSE, results = 'asis'}
+kable(pc32df %>% select(`Normalized Name`, starts_with("FA"),starts_with("LCB")), caption = "Lipid name parsing results for PC 32:1 with FA and LCB columns.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "200px")
+```
+
+
+```{r}
+multipleLipidNames <- parseLipidNames(c("PC 32:1","LPC 34:1","TG(18:1_18:0_16:1)"))
+
+```
+
+```{r echo = FALSE, results = 'asis'}
+kable(multipleLipidNames %>% select(-starts_with("FA"),-starts_with("LCB")), caption = "Lipid name parsing results for PC 32:1, LPC 34:1, TG(18:1_18:0_16:1), FA and LCB columns omitted for brevity.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "300px")
+```
+```{r echo = FALSE, results = 'asis'}
+kable(multipleLipidNames %>% select(`Normalized Name`, starts_with("FA"), starts_with("LCB")), caption = "Lipid name parsing results for PC 32:1, LPC 34:1, TG(18:1_18:0_16:1) with FA and LCB columns.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "300px")
 ```
