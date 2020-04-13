@@ -27,17 +27,7 @@ SOFTWARE.
 #include "LipidMolecularSubspecies.h"
 
 LipidMolecularSubspecies::LipidMolecularSubspecies (string _head_group) : LipidSpecies(_head_group) {
-    int num_carbon = 0;
-    int num_hydroxyl = 0;
-    int num_double_bonds = 0;
-    LipidFaBondType lipid_FA_bond_type = ESTER;
-    
     info.level = MOLECULAR_SUBSPECIES;
-    info.num_carbon = num_carbon;
-    info.num_hydroxyl = num_hydroxyl;
-    info.num_double_bonds = num_double_bonds;
-    info.lipid_FA_bond_type = lipid_FA_bond_type;
-    
 }
 
 
@@ -49,12 +39,8 @@ LipidMolecularSubspecies::LipidMolecularSubspecies (string _head_group, vector<F
     LipidFaBondType lipid_FA_bond_type = ESTER;
     if (_fa) {
         for (unsigned int i = 0; i < _fa->size(); ++i){
-            MolecularFattyAcid *fas = new MolecularFattyAcid(_fa->at(i));
+            FattyAcid *fas = new FattyAcid(_fa->at(i));
             delete _fa->at(i);
-            
-            if (fas->position != -1) {
-                throw ConstraintViolationException("MolecularFattyAcid " + fas->name + " must have position set to -1! Was: " + to_string(fas->position));
-            }
             
             if (fa.find(fas->name) != fa.end()){
                 throw ConstraintViolationException("FA names must be unique! FA with name " + fas->name + " was already added!");
@@ -102,7 +88,7 @@ string LipidMolecularSubspecies::build_lipid_subspecies_name(string fa_separator
         for (unsigned int i = 0; i < fa_list.size(); ++i){
             if (i > 0) s << fa_separator;
             FattyAcid *fatty_acid = fa_list.at(i);
-            s << fatty_acid->to_string(special_case, level);
+            s << fatty_acid->to_string(special_case);
         }
     }
     
@@ -151,6 +137,7 @@ string LipidMolecularSubspecies::get_lipid_string(LipidLevel level) {
 
 
 bool LipidMolecularSubspecies::validate(){
+    /*
     if (use_head_group) return true;
     if (lipid_classes.find(lipid_class) == lipid_classes.end()) return false;
     if (lipid_classes.at(lipid_class).max_num_fa == 0) return true;
@@ -162,5 +149,6 @@ bool LipidMolecularSubspecies::validate(){
         num_lcb += kv.second->lcb;
     }
     if (lipid_category == SP && num_lcb != 1) return false;
+    */
     return true;
 }

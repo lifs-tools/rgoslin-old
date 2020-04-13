@@ -26,7 +26,8 @@ SOFTWARE.
 
 #include "FattyAcid.h"
 
-FattyAcid::FattyAcid(string _name, int _num_carbon, int _num_double_bonds, int _num_hydroxyl, LipidFaBondType _lipid_FA_bond_type, bool _lcb, int _position){
+
+FattyAcid::FattyAcid(string _name, int _num_carbon, int _num_double_bonds, int _num_hydroxyl, LipidFaBondType _lipid_FA_bond_type, bool _lcb, int _position, map<int, string> *_double_bond_positions){
     name = _name;
     position = _position;
     num_carbon = _num_carbon;
@@ -34,31 +35,64 @@ FattyAcid::FattyAcid(string _name, int _num_carbon, int _num_double_bonds, int _
     num_hydroxyl = _num_hydroxyl;
     lipid_FA_bond_type = _lipid_FA_bond_type;
     lcb = _lcb;
+    if (_double_bond_positions != NULL){
+        for (auto kv : *_double_bond_positions){
+            double_bond_positions.insert({kv.first, kv.second});
+        }
+    }
+
     
     if (num_carbon < 2){
-        throw ConstraintViolationException("FattyAcid must have at least 2 carbons! Got " + to_string(num_carbon));
+        throw ConstraintViolationException("FattyAcid must have at least 2 carbons! Got " + std::to_string(num_carbon));
     }
     
-    if (position < -1){
-        throw ConstraintViolationException("FattyAcid position must be greater or equal to -1 (undefined) or greater or equal to 0 (0 = first position)!");
+    if (position < 0){
+        throw ConstraintViolationException("FattyAcid position must be greater or equal to 0! Got " + std::to_string(position));
+    }
+    
+    if (num_double_bonds < 0){
+        throw ConstraintViolationException("FattyAcid must have at least 0 double bonds! Got " + std::to_string(num_double_bonds));
     }
     
     if (num_hydroxyl < 0){
-        throw ConstraintViolationException("FattyAcid must have at least 0 hydroxy groups! Got " + to_string(num_hydroxyl));
+        throw ConstraintViolationException("FattyAcid must have at least 0 hydroxy groups! Got " + std::to_string(num_hydroxyl));
     }
 }
 
-FattyAcid::FattyAcid(FattyAcid* fa){
-    name = fa->name;
-    position = fa->position;
-    num_carbon = fa->num_carbon;
-    num_hydroxyl = fa->num_hydroxyl;
-    lipid_FA_bond_type = fa->lipid_FA_bond_type;
-    lcb = fa->lcb;
+
+FattyAcid::FattyAcid(){
+    name = "";
+    position = 0;
+    num_carbon = 0;
+    num_double_bonds = 0;
+    num_hydroxyl = 0;
+    lipid_FA_bond_type = ESTER;
+    lcb = false;
 }
 
-FattyAcid::~FattyAcid(){
 
+FattyAcid::FattyAcid(FattyAcid* fa){
+    if (fa) {
+        name = fa->name;
+        position = fa->position;
+        num_carbon = fa->num_carbon;
+        num_hydroxyl = fa->num_hydroxyl;
+        num_double_bonds = fa->num_double_bonds;
+        lipid_FA_bond_type = fa->lipid_FA_bond_type;
+        lcb = fa->lcb;
+        for (auto kv : fa->double_bond_positions){
+            double_bond_positions.insert({kv.first, kv.second});
+        }
+    }
+    else {
+        name = "";
+        position = 0;
+        num_carbon = 0;
+        num_double_bonds = 0;
+        num_hydroxyl = 0;
+        lipid_FA_bond_type = ESTER;
+        lcb = false;
+    }
 }
 
 string FattyAcid::suffix(LipidFaBondType lipid_FA_bond_type){
@@ -70,12 +104,24 @@ string FattyAcid::suffix(LipidFaBondType lipid_FA_bond_type){
 }
 
 
-string FattyAcid::to_string(bool special_case, LipidLevel level){
+string FattyAcid::to_string(bool special_case){
     stringstream s;
-    
     string lipid_suffix = suffix(lipid_FA_bond_type);
     if (special_case && lipid_suffix.length() > 0) s << "O-";
     s << num_carbon << ":" << num_double_bonds;
+    
+    if (double_bond_positions.size()){
+        stringstream db;
+        db << "(";
+        int j = 0;
+        for (auto it : double_bond_positions){
+            if (j > 0) db << ",";
+            db << it.first << it.second;
+            ++j;
+        }
+        db << ")";
+        s << db.str();
+    }
     
     if (num_hydroxyl) s << ";" << num_hydroxyl;
     s << lipid_suffix;
