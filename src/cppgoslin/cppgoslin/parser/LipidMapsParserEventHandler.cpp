@@ -128,7 +128,7 @@ void LipidMapsParserEventHandler::set_isomeric_level(TreeNode* node){
 
 void LipidMapsParserEventHandler::add_db_position(TreeNode* node){
     if (current_fa != NULL){
-       ((IsomericFattyAcid*)current_fa)->double_bond_positions.insert({db_position, db_cistrans});
+        current_fa->double_bond_positions.insert({db_position, db_cistrans});
     }
 }
 
@@ -160,28 +160,23 @@ void LipidMapsParserEventHandler::increment_hydroxyl(TreeNode* node){
 }
         
 void LipidMapsParserEventHandler::new_fa(TreeNode *node) {
-    current_fa = new IsomericFattyAcid("FA" + to_string(fa_list->size() + 1), 2, 0, 0, ESTER, false, -1, NULL);
+    current_fa = new FattyAcid("FA" + std::to_string(fa_list->size() + 1), 2, 0, 0, ESTER, false, 0, NULL);
 }
     
     
 
 void LipidMapsParserEventHandler::new_lcb(TreeNode *node) {
-    lcb = new IsomericFattyAcid("LCB", 2, 0, 1, ESTER, true, 1, NULL);
+    lcb = new FattyAcid("LCB", 2, 0, 1, ESTER, true, 1, NULL);
     current_fa = lcb;
 }
         
         
 
 void LipidMapsParserEventHandler::clean_lcb(TreeNode *node) {
-    FattyAcid* tmp_lcb = lcb;
     if (level == SPECIES){
+        FattyAcid* tmp_lcb = lcb;
         lcb = new LipidSpeciesInfo(tmp_lcb);
         lcb->lipid_FA_bond_type = ESTER;
-        delete tmp_lcb;
-    }
-        
-    else if (level == STRUCTURAL_SUBSPECIES){
-        lcb = new StructuralFattyAcid(tmp_lcb);
         delete tmp_lcb;
     }
     
@@ -192,30 +187,18 @@ void LipidMapsParserEventHandler::clean_lcb(TreeNode *node) {
         
 
 void LipidMapsParserEventHandler::append_fa(TreeNode *node) {
-    FattyAcid* tmp_fa = current_fa;
     switch(level){
         case SPECIES:
             {
+                FattyAcid* tmp_fa = current_fa;
                 current_fa = new LipidSpeciesInfo(tmp_fa);
-            }
-            break;
-        
-        case MOLECULAR_SUBSPECIES:
-            {
-                current_fa = new MolecularFattyAcid(tmp_fa);
+                delete tmp_fa;
             }
             break;
         
         case STRUCTURAL_SUBSPECIES:
-            {
-                current_fa = new StructuralFattyAcid(tmp_fa);
-                current_fa->position = fa_list->size() + 1;
-            }
-            break;
-        
         case ISOMERIC_SUBSPECIES:
             {
-                current_fa = new IsomericFattyAcid(tmp_fa);
                 current_fa->position = fa_list->size() + 1;
             }
             break;
@@ -225,9 +208,10 @@ void LipidMapsParserEventHandler::append_fa(TreeNode *node) {
     }
     
     if (current_fa->num_carbon > 0) fa_list->push_back(current_fa);
-    else omit_fa = true;
-    
-    delete tmp_fa;
+    else{
+        omit_fa = true;
+        delete current_fa;
+    }
     current_fa = NULL;
 }
     
@@ -253,7 +237,7 @@ void LipidMapsParserEventHandler::add_hydroxyl_lcb(TreeNode* node){
     
     
 void LipidMapsParserEventHandler::add_double_bonds(TreeNode* node){
-    ((MolecularFattyAcid*)current_fa)->num_double_bonds = atoi(node->get_text().c_str());
+    current_fa->num_double_bonds = atoi(node->get_text().c_str());
 }
     
     
@@ -264,7 +248,6 @@ void LipidMapsParserEventHandler::add_carbon(TreeNode* node){
     
 
 void LipidMapsParserEventHandler::build_lipid(TreeNode* node){
-    
     if (omit_fa && head_group_exceptions.find(head_group) != head_group_exceptions.end()){
         head_group = "L" + head_group;
     }
