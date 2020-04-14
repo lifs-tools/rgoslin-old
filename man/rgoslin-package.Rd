@@ -15,4 +15,13 @@ implementations for parsing of lipid names from LipidMAPS, SwissLipids and other
 \references{
 NA
 }
+\author{
+\strong{Maintainer}: Nils Hoffmann \email{nils.hoffmann@isas.de}
+
+Authors:
+\itemize{
+  \item Dominik Kopczynski \email{dominik.kopczynski@isas.de}
+}
+
+}
 \keyword{internal}
