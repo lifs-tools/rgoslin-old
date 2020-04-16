@@ -5,6 +5,10 @@ rcpp_is_valid_lipid_name <- function(lipid_name) {
     .Call(`_rgoslin_rcpp_is_valid_lipid_name`, lipid_name)
 }
 
+rcpp_parse_lipid_name_with_grammar <- function(lipid_name, target_grammar) {
+    .Call(`_rgoslin_rcpp_parse_lipid_name_with_grammar`, lipid_name, target_grammar)
+}
+
 rcpp_parse_lipid_name <- function(lipid_name) {
     .Call(`_rgoslin_rcpp_parse_lipid_name`, lipid_name)
 }
