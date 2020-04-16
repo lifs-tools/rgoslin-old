@@ -1,9 +1,83 @@
+# R implementation for parsing of lipid shorthand nomenclature names
+This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project.
+
+[https://github.com/lifs-tools/goslin](Goslin) defines multiple grammers compatible with ANTLRv4 for different sources of shorthand lipid nomenclature. This allows to generate parsers based on the defined grammars,
+which provide immediate feedback whether a processed lipid shorthand notation string is compliant with a particular grammar, or not.
+
+> **_NOTE:_**  This is an *early* development version, please use at your own risk and report issues to help improve it!
+
+rgoslin uses the Goslin grammars and the cppgoslin parser to support the following general tasks:
+
+1. Facilitate the parsing of shorthand lipid names dialects.
+2. Provide a structural representation of the shorthand lipid after parsing.
+3. Use the structural representation to generate normalized names.
+
+## Related Projects
+
+- [Goslin grammars and reference test files](http://github.com/lifs-tools/goslin)
+- [C++ implementation](https://github.com/lifs-tools/cppgoslin)
+- [Java implementation](https://github.com/lifs-tools/jgoslin)
+- [Python implementation](https://github.com/lifs-tools/pygoslin)
+- [Webapplication and REST API](https://github.com/lifs-tools/goslin-webapp)
+
+## Installation ##
+
+### Prerequisites
+Install the `devtools` package with the following command.
+```R
+if(!require(devtools)) { install.packages("devtools") }
+```
+  
+Run
+
+```R
+  install_github("lifs-tools/rgoslin")
+```
+to install from the github repository.
+
+This will install the latest, potentially unstable development version of the package with all required dependencies into your local R installation.
+
+If you want to use a proper release version, referenced by a Git tag (here: v1.0.6) install the package as follows:
+
+```R
+  install_github("lifs-tools/rgoslin", ref="v1.0.0")
+```
+
+If you have cloned the code locally, use devtools as follows.
+Make sure you set the working directory to where the API code is located.
+Then execute
+
+```R
+library(devtools)
+install(".")
+```
+
+To run the tests, execute
+```R
+library(devtools)
+test()
+```
+
+### Usage
+
+To load the package, start an R session and type
+
+```R
+  library(rgoslin)
+```
+
+Type the following to see the package vignette / tutorial:
+
+```R
+  vignette('introduction', package = 'rgoslin')
+```
+
 ## Adding cppgoslin as a Git subtree
 
 In the root of your git project, run the git subtree command, with `<PREFIX>` replaced by the subdirectory path where you want the subtree to live:
 
 ~~~~
-git subtree add --prefix=<PREFIX> https://gitlab.isas.de/kopczynski/cppgoslin.git master
+git subtree add --prefix=<PREFIX> https://github.com/lifs-tools/cppgoslin.git master
 ~~~~
 
 Instead of `master`, you can choose any other branch or tag to clone.
@@ -15,12 +89,12 @@ For pulling and pushing, you have to change into the root directory of the host 
 
 ### Pulling
 ~~~~
-git subtree pull --prefix=<PREFIX> https://gitlab.isas.de/kopczynski/cppgoslin.git master
+git subtree pull --prefix=<PREFIX> https://github.com/lifs-tools/cppgoslin.git master
 ~~~~
 
 ### Pushing
 ~~~~
-git subtree push --prefix=<PREFIX> https://gitlab.isas.de/kopczynski/cppgoslin.git master
+git subtree push --prefix=<PREFIX> https://github.com/lifs-tools/cppgoslin.git master
 ~~~~
 
 Alternatively, you can create shortcuts/aliases in your repository's `.git/config` file:
@@ -36,5 +110,4 @@ Alternatively, you can create shortcuts/aliases in your repository's `.git/confi
 Make sure to replace `<PREFIX>` with the proper path from your repository root directory to the directory where you placed your subtree in!
 
 This allows you to run `git cppgoslin-pull` to pull the latest master version, or `git cppgoslin-push` to push your latest local commits on the cppgoslin subtree to the upstream repository.
-
 
