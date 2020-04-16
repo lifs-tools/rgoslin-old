@@ -23,7 +23,7 @@ library(kableExtra)
 
 - LipidMAPS
 - SwissLipids
-- Liebisch nomenclature
+- Shorthand (Liebisch et al.) nomenclature
 - Fragments (as full parts)
 
 ### Using the library
@@ -33,7 +33,7 @@ In order to use the provided translation functions of rgoslin, you first need to
 library(rgoslin)
 ```
 
-To check, whether a given lipid name can be parsed by any of the parsers supplied by cppGoslin.
+To check, whether a given lipid name can be parsed by any of the parsers supplied by cppGoslin, you can use the `isValidLipidName` method. It will return `TRUE` if the given name can be parsed by any of the available parsers and `FALSE` if the name was not parseable.
 ```{r}
 isValidLipidName("PC 32:1")
 ```
@@ -54,6 +54,7 @@ kable(pc32df %>% select(-starts_with("FA"),-starts_with("LCB")), caption = "Lipi
 kable(pc32df %>% select(`Normalized Name`, starts_with("FA"),starts_with("LCB")), caption = "Lipid name parsing results for PC 32:1 with FA and LCB columns.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "200px")
 ```
 
+If you want to parse multiple lipid names, use the `parseLipidNames` method with a vector of lipid names. This returns a data frame of properties of the parsed lipid names with one row per lipid.
 
 ```{r}
 multipleLipidNames <- parseLipidNames(c("PC 32:1","LPC 34:1","TG(18:1_18:0_16:1)"))
