@@ -14,6 +14,7 @@ rgoslin uses the Goslin grammars and the cppgoslin parser to support the followi
 
 ## Related Projects
 
+- [This project](https://github.com/lifs-tools/rgoslin)
 - [Goslin grammars and reference test files](http://github.com/lifs-tools/goslin)
 - [C++ implementation](https://github.com/lifs-tools/cppgoslin)
 - [Java implementation](https://github.com/lifs-tools/jgoslin)
