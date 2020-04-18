@@ -1,8 +1,8 @@
 Package: rgoslin
 Type: Package
 Title: Lipid name parsing and normalization
-Version: 1.0.0
-Date: 2020-02-12
+Version: 1.0.1
+Date: 2020-04-18
 Authors@R: c(
     person("Nils", "Hoffmann", email = "nils.hoffmann@isas.de", role=c("aut","cre")),
     person("Dominik", "Kopczynski", email = "dominik.kopczynski@isas.de", role=c("aut")))
