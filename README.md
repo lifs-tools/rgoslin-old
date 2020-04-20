@@ -1,5 +1,5 @@
 # R implementation for parsing of lipid shorthand nomenclature names
-(https://travis-ci.org/lifs-tools/rgoslin.svg?branch=master)[![Build Status]](https://travis-ci.org/lifs-tools/rgoslin)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3757672.svg)](https://doi.org/10.5281/zenodo.3757672)
+[![Build Status](https://travis-ci.org/lifs-tools/rgoslin.svg?branch=master)](https://travis-ci.org/lifs-tools/rgoslin)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3757672.svg)](https://doi.org/10.5281/zenodo.3757672)
 
 This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project.
 
