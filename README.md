@@ -1,6 +1,7 @@
 # R implementation for parsing of lipid shorthand nomenclature names
-[![Build Status](https://travis-ci.org/lifs-tools/rgoslin.svg?branch=master)](https://travis-ci.org/lifs-tools/rgoslin)
-This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project. [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3757672.svg)](https://doi.org/10.5281/zenodo.3757672)
+(https://travis-ci.org/lifs-tools/rgoslin.svg?branch=master)[![Build Status]](https://travis-ci.org/lifs-tools/rgoslin)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3757672.svg)](https://doi.org/10.5281/zenodo.3757672)
+
+This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project.
 
 [https://github.com/lifs-tools/goslin](Goslin) defines multiple grammers compatible with ANTLRv4 for different sources of shorthand lipid nomenclature. This allows to generate parsers based on the defined grammars,
 which provide immediate feedback whether a processed lipid shorthand notation string is compliant with a particular grammar, or not.
