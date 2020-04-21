@@ -1,11 +1,19 @@
 language: r
-cache: packages
 r:
   - release
 
-language: c++
-cache: ccache
+cache:
+  - $HOME/.ccache
+  - packages: true
 
+addons:
+  apt:
+    packages:
+     - ccache
+
+before_install:
+  - mkdir $HOME/.R && echo -e 'CXX_STD = CXX14\n\nVER=\nCCACHE=ccache\nCC=$(CCACHE) gcc$(VER) -std=gnu99\nCXX=$(CCACHE) g++$(VER)\nC11=$(CCACHE) g++$(VER)\nC14=$(CCACHE) g++$(VER)\nFC=$(CCACHE) gfortran$(VER)\nF77=$(CCACHE) gfortran$(VER)' > $HOME/.R/Makevars && 
+  - echo -e 'max_size = 5.0G\nsloppiness = include_file_ctime\nhash_dir=false' > $HOME/.ccache/ccache.conf
 before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
 warnings_are_errors: false
 before_deploy: Rscript -e "install.packages(c('devtools'))" && Rscript -e "library('devtools')" -e "devtools::build(binary = TRUE, args = c('--preclean'))" && Rscript -e "devtools::document()" -e "pkgdown::build_site()"
