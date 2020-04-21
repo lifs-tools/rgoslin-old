@@ -12,4 +12,5 @@ before_deploy: Rscript -e "install.packages(c('devtools'))" && Rscript -e "libra
 deploy:
   provider: script
   script: Rscript -e 'pkgdown::deploy_site_github()'
+  github_token: $TRAVIS_DEPLOY_KEY_ORG
   skip_cleanup: true
