@@ -17,5 +17,5 @@ warnings_are_errors: false
 before_deploy: Rscript -e "install.packages(c('devtools'))" && Rscript -e "library('devtools')" -e "devtools::build(binary = TRUE, args = c('--preclean'))" && Rscript -e "devtools::document()" -e "pkgdown::build_site()"
 deploy:
   provider: script
-  script: if [ "$TRAVIS_OS_NAME" = "linux" ]; Rscript -e 'pkgdown::deploy_site_github(ssh_id = Sys.getenv("TRAVIS_DEPLOY_KEY_ORG", ""))'; fi
+  script: if [ "$TRAVIS_OS_NAME" = "linux" ]; then Rscript -e 'pkgdown::deploy_site_github(ssh_id = Sys.getenv("TRAVIS_DEPLOY_KEY_ORG", ""))'; fi
   skip_cleanup: true
