@@ -18,10 +18,10 @@ r_packages:
   - devtools
   - pkgdown
 
-    #before_cache: Rscript -e 'remotes::install_cran("pkgdown")'
+install:
+  - travis_wait 30 Rscript -e "0"     
 warnings_are_errors: false
 before_deploy: Rscript -e "devtools::build(binary = TRUE, args = c('--preclean'))" && Rscript -e "devtools::document()" -e "pkgdown::build_site()"
-#before_deploy: Rscript -e "install.packages(c('devtools'))" && Rscript -e "library('devtools')" -e "devtools::build(binary = TRUE, args = c('--preclean'))" && Rscript -e "devtools::document()" -e "pkgdown::build_site()"
 # only report coverage for the release version
 after_success:
   - if ["$TRAVIS_OS_NAME" = "linux" ]; then Rscript -e 'covr::codecov()'; fi
