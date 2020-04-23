@@ -40,10 +40,10 @@ to install from the github repository.
 
 This will install the latest, potentially unstable development version of the package with all required dependencies into your local R installation.
 
-If you want to use a proper release version, referenced by a Git tag (here: v1.0.6) install the package as follows:
+If you want to use a proper release version, referenced by a Git tag (here: v1.0.2) install the package as follows:
 
 ```R
-  install_github("lifs-tools/rgoslin", ref="v1.0.0")
+  install_github("lifs-tools/rgoslin", ref="v1.0.2")
 ```
 
 If you have cloned the code locally, use devtools as follows.
