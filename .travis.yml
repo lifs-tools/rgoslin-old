@@ -1,6 +1,6 @@
 os:
   - linux
-  - osx    
+#  - osx    
 osx_image: xcode10.1
 language: r
 r:
@@ -8,7 +8,7 @@ r:
 
 compiler:
   - gcc
-  - clang
+#  - clang
 
 cache:
   - packages: true
@@ -24,8 +24,8 @@ warnings_are_errors: false
 before_deploy: Rscript -e "devtools::build(binary = TRUE, args = c('--preclean'))" && Rscript -e "devtools::document()" -e "pkgdown::build_site()"
 # only report coverage for the release version
 after_success:
-  - if ["$TRAVIS_OS_NAME" = "linux" ]; then Rscript -e 'covr::codecov()'; fi
+  - Rscript -e 'covr::codecov()'
 deploy:
   provider: script
-  script: if [ "$TRAVIS_OS_NAME" = "linux" ]; then Rscript -e 'pkgdown::deploy_site_github(ssh_id = Sys.getenv("TRAVIS_DEPLOY_KEY_ORG", ""))'; fi
+  script: Rscript -e 'pkgdown::deploy_site_github(ssh_id = Sys.getenv("TRAVIS_DEPLOY_KEY_ORG", ""))'
   skip_cleanup: true
