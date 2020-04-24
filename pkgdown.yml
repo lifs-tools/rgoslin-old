@@ -3,7 +3,7 @@ pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2020-04-23T11:00Z
+last_built: 2020-04-24T07:21Z
 urls:
   reference: https://lifs-tools.github.io/rgoslin//reference
   article: https://lifs-tools.github.io/rgoslin//articles
