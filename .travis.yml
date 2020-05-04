@@ -1,38 +1,44 @@
-os:
-  - linux
-    #  - osx    
-osx_image: xcode10.1
-language: r
-r:
-  - release
-
-compiler:
-  - gcc
-    #  - clang
-
+language: R
+sudo: required
 cache:
-  - packages: true
+ - packages
+ - apt: true
 
-r_packages:
-  - covr
-  - devtools
-  - pkgdown
-  - knitr
-  - rmarkdown
-  - kableExtra
-  - dplyr
-  - pkgKitten
-  - testthat
-  - Rcpp  
+r_github_packages:
+  - r-lib/covr
+  - r-lib/pkgdown
 
-install:
-  - travis_wait 30 Rscript -e "0"     
-warnings_are_errors: false
-before_deploy: Rscript -e "devtools::build(binary = TRUE, args = c('--preclean'))" && Rscript -e "devtools::document()" -e "pkgdown::build_site()"
-# only report coverage for the release version
-after_success:
-  - Rscript -e 'covr::codecov()'
-deploy:
-  provider: script
-  script: Rscript -e 'pkgdown::deploy_site_github(ssh_id = Sys.getenv("TRAVIS_DEPLOY_KEY_ORG", ""))'
-  skip_cleanup: true
+matrix:
+  include:
+  - r: release
+    script:
+      - R CMD build .
+      - R CMD check *tar.gz --as-cran
+    after_success:
+            #      - tar -C .. -xf $PKG_TARBALL
+      - Rscript -e 'covr::codecov()'
+      - rm -rf RTest.Rcheck
+      - Rscript -e 'devtools::document()'
+      - Rscript -e 'pkgdown::build_site()'
+    deploy:
+            #      - provider: releases
+            #        api_key: $GITHUB_TOKEN
+            #        file: $PKG_TARBALL
+            #        skip_cleanup: true
+            #        on:
+            #          tags: true
+      - provider: pages
+        skip-cleanup: true
+        github-token: $TRAVIS_DEPLOY_KEY_ORG
+        keep-history: false
+        local-dir: docs
+        on:
+          branch: gh-pages
+  - r: release
+    os: osx
+    osx_image: xcode10.1
+    compiler:
+      - clang
+    script:
+      - R CMD build .
+      - R CMD check *tar.gz --as-cran
