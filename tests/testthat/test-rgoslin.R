@@ -17,6 +17,10 @@ test_that("lipid name parsing with grammar works", {
   expect_equal(is.vector(vec), TRUE)
   expect_equal(vec[["Original Name"]], originalName)
   expect_equal(vec[["Normalized Name"]], "LPC 34:1")
+  expect_equal(vec[["Species Name"]], "LPC 34:1")
+  expect_equal(vec[["Molecular Subspecies Name"]], "NA")
+  expect_equal(vec[["Structural Subspecies Name"]], "NA")
+  expect_equal(vec[["Isomeric Subspecies Name"]], "NA")
   expect_equal(vec[["Lipid Maps Category"]], "GP")
   
   originalName <- "TG(16:1(5E)/18:0/20:2(3Z,6Z))"
@@ -24,6 +28,10 @@ test_that("lipid name parsing with grammar works", {
   expect_equal(is.vector(vec), TRUE)
   expect_equal(vec[["Original Name"]], originalName)
   expect_equal(vec[["Normalized Name"]], "TAG 16:1(5E)/18:0/20:2(3Z,6Z)")
+  expect_equal(vec[["Species Name"]], "TAG 54:3")
+  expect_equal(vec[["Molecular Subspecies Name"]], "TAG 16:1_18:0_20:2")
+  expect_equal(vec[["Structural Subspecies Name"]], "TAG 16:1/18:0/20:2")
+  expect_equal(vec[["Isomeric Subspecies Name"]], "TAG 16:1(5E)/18:0/20:2(3Z,6Z)")
   expect_equal(vec[["Lipid Maps Category"]], "GL")
 })
 

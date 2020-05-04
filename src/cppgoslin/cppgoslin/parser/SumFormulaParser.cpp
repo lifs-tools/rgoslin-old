@@ -23,36 +23,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "cppgoslin/parser/SumFormulaParser.h"
 
-#ifndef FATTY_ACID_H
-#define FATTY_ACID_H
-
-
-#include <string>
-#include "cppgoslin/domain/LipidExceptions.h"
-#include "cppgoslin/domain/LipidEnums.h"
-#include <sstream>
-
-using namespace std;
-using namespace goslin;
-
-class FattyAcid {
-public:
-    string name;
-    int position;
-    int num_carbon;
-    int num_hydroxyl;
-    int num_double_bonds;
-    LipidFaBondType lipid_FA_bond_type;
-    map<int, string> double_bond_positions;
-    bool lcb;
+SumFormulaParser::SumFormulaParser() : Parser<ElementTable*>(new SumFormulaParserEventHandler(), GrammarString(sum_formula_grammar), DEFAULT_QUOTE){
     
+}
 
-    FattyAcid(string name, int num_carbon, int num_double_bonds, int num_hydroxyl, LipidFaBondType lipid_FA_bond_type, bool lcb, int position, map<int, string> *_double_bond_positions);
-    FattyAcid();
-    FattyAcid(FattyAcid* fa);
-    string to_string(bool special_case = false);
-    ElementTable* get_elements();
-    static string suffix(LipidFaBondType _lipid_FA_bond_type);
-};
-#endif /* FATTY_ACID_H */
+
+SumFormulaParser::~SumFormulaParser(){
+    delete parser_event_handler;
+}

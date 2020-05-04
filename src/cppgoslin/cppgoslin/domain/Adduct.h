@@ -29,9 +29,14 @@ SOFTWARE.
 
 #include <string>
 #include "cppgoslin/domain/LipidExceptions.h"
+#include "cppgoslin/domain/Element.h"
+#include "cppgoslin/parser/SumFormulaParser.h"
 #include <sstream>
 
+
+
 using namespace std;
+
 
 class Adduct{
 public:
@@ -39,10 +44,13 @@ public:
     string adduct_string;
     int charge;
     int charge_sign;
+    static SumFormulaParser adduct_sum_formula_parser;
     
     Adduct(string _sum_formula, string _adduct_string, int _charge, int _sign);
     void set_charge_sign(int sign);
     string get_lipid_string();
+    ElementTable* get_elements();
+    int get_charge();
 };
 
 #endif /* ADDUCT_H */
