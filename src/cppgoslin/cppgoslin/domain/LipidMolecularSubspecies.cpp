@@ -105,13 +105,12 @@ string LipidMolecularSubspecies::get_lipid_string(LipidLevel level) {
     switch (level){
         case NO_LEVEL:
         case MOLECULAR_SUBSPECIES:
-            
             if (!validate()){
                 stringstream st;
                 st << "Number of fatty acyl chains for '" << get_class_string(lipid_class);
                 st << "' is incorrect, should be [";
                 int ii = 0;
-                for (auto p : lipid_classes.at(lipid_class).possible_num_fa){
+                for (auto p : LipidClasses::get_instance().lipid_classes.at(lipid_class).possible_num_fa){
                     if (ii++ > 0) st << ", ";
                     st << p;
                 }

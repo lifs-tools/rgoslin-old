@@ -24,32 +24,32 @@ SOFTWARE.
 */
 
 
-#ifndef CPPGOSLIN_H
-#define CPPGOSLIN_H
+#ifndef SUM_FORMULA_PARSER_EVENT_HANDLER_H
+#define SUM_FORMULA_PARSER_EVENT_HANDLER_H
 
-#include "cppgoslin/domain/Adduct.h"
 #include "cppgoslin/domain/Element.h"
-#include "cppgoslin/domain/FattyAcid.h"
-#include "cppgoslin/domain/Fragment.h"
-#include "cppgoslin/domain/LipidAdduct.h"
-#include "cppgoslin/domain/LipidEnums.h"
-#include "cppgoslin/domain/LipidExceptions.h"
-#include "cppgoslin/domain/LipidIsomericSubspecies.h"
-#include "cppgoslin/domain/LipidMolecularSubspecies.h"
-#include "cppgoslin/domain/LipidSpecies.h"
-#include "cppgoslin/domain/LipidSpeciesInfo.h"
-#include "cppgoslin/domain/LipidStructuralSubspecies.h"
-#include "cppgoslin/domain/StringFunctions.h"
 #include "cppgoslin/parser/BaseParserEventHandler.h"
-#include "cppgoslin/parser/GoslinFragmentParserEventHandler.h"
-#include "cppgoslin/parser/GoslinParserEventHandler.h"
-#include "cppgoslin/parser/SwissLipidsParserEventHandler.h"
-#include "cppgoslin/parser/SumFormulaParserEventHandler.h"
-#include "cppgoslin/parser/HmdbParserEventHandler.h"
-#include "cppgoslin/parser/KnownGrammars.h"
-#include "cppgoslin/parser/KnownParsers.h"
-#include "cppgoslin/parser/LipidMapsParserEventHandler.h"
-#include "cppgoslin/parser/Parser.h"
-#include "cppgoslin/parser/SumFormulaParser.h"
+#include <string>
+#include <set>
+#include <map>
+#include <vector>
 
-#endif /* CPPGOSLIN_H */
+using namespace std;
+using namespace goslin;
+
+class SumFormulaParserEventHandler : public BaseParserEventHandler<ElementTable*> {
+public:
+    Element element;
+    size_t count;
+    
+    SumFormulaParserEventHandler();
+    void reset_parser(TreeNode *node);
+    void element_group_post_event(TreeNode *node);
+    void element_pre_event(TreeNode *node);
+    void single_element_group_pre_event(TreeNode *node);
+    void count_pre_event(TreeNode *node);
+};
+
+
+#endif /* SUM_FORMULA_PARSER_EVENT_HANDLER_H */
+        

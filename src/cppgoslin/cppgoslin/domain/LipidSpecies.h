@@ -31,6 +31,7 @@ SOFTWARE.
 #include <vector>
 #include <map>
 #include <sstream>
+#include "cppgoslin/domain/Element.h"
 #include "cppgoslin/domain/LipidEnums.h"
 #include "cppgoslin/domain/LipidExceptions.h"
 #include "cppgoslin/domain/LipidSpeciesInfo.h"
@@ -60,6 +61,7 @@ public:
     LipidSpecies(string _head_group, LipidCategory _lipid_category = NO_CATEGORY, LipidClass lipid_class = NO_CLASS, LipidSpeciesInfo* lipid_species_info = NULL);
     virtual string get_lipid_string(LipidLevel level = NO_LEVEL);
     string get_class_name();
+    ElementTable* get_elements();
     
     static LipidCategory get_category(string _head_group);
     static LipidClass get_class(string _head_group);

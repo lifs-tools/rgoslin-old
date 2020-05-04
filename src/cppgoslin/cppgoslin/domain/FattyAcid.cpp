@@ -127,3 +127,42 @@ string FattyAcid::to_string(bool special_case){
     s << lipid_suffix;
     return s.str();
 }
+
+
+ElementTable* FattyAcid::get_elements(){
+    ElementTable* table = create_empty_table();
+    
+    if (!lcb){ 
+        
+        if (num_carbon > 0 || num_double_bonds > 0){
+            table->at(ELEMENT_C) = num_carbon; // C
+            switch(lipid_FA_bond_type)
+            {
+                case ESTER:
+                    table->at(ELEMENT_H) = (2 * num_carbon - 1 - 2 * num_double_bonds); // H
+                    table->at(ELEMENT_O) = (1 + num_hydroxyl); // O
+                    break;
+                case ETHER_PLASMENYL:
+                    table->at(ELEMENT_H) = (2 * num_carbon - 1 - 2 * num_double_bonds + 2); // H
+                    table->at(ELEMENT_O) = num_hydroxyl; // O
+                    break;
+                case ETHER_PLASMANYL:
+                    table->at(ELEMENT_H) = ((num_carbon + 1) * 2 - 1 - 2 * num_double_bonds); // H
+                    table->at(ELEMENT_O) = num_hydroxyl; // O
+                    break;
+                default:
+                    throw LipidException("Mass cannot be computed for fatty acyl chain with bond type: " + std::to_string(lipid_FA_bond_type));
+            }
+        }
+    }
+    else 
+    {
+        // long chain base
+        table->at(ELEMENT_C) = num_carbon; // C
+        table->at(ELEMENT_H) = (2 * (num_carbon - num_double_bonds) + 1); // H
+        table->at(ELEMENT_O) = num_hydroxyl; // O
+        table->at(ELEMENT_N) = 1; // N
+    }
+    
+    return table;
+}

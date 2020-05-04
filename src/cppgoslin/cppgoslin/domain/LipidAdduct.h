@@ -29,8 +29,10 @@ SOFTWARE.
 
 #include "cppgoslin/domain/FattyAcid.h"
 #include <string>
+#include <math.h>
 #include "cppgoslin/domain/LipidExceptions.h"
 #include "cppgoslin/domain/LipidEnums.h"
+#include "cppgoslin/domain/Element.h"
 #include "cppgoslin/domain/LipidSpecies.h"
 #include "cppgoslin/domain/Adduct.h"
 #include "cppgoslin/domain/Fragment.h"
@@ -51,6 +53,9 @@ public:
     string get_lipid_string(LipidLevel level = NO_LEVEL);
     string get_lipid_fragment_string(LipidLevel level = NO_LEVEL);
     string get_class_name();
+    double get_mass();
+    string get_sum_formula();
+    ElementTable* get_elements();
 };
 
 #endif /* LIPID_ADDUCT_H */

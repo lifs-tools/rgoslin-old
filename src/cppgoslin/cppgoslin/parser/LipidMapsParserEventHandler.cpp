@@ -39,6 +39,7 @@ LipidMapsParserEventHandler::LipidMapsParserEventHandler() : BaseParserEventHand
     reg("sphingoxine_pre_event", mediator_event);
     
     reg("sgl_species_pre_event", set_species_level);
+    reg("species_fa_pre_event", set_species_level);
     reg("tgl_species_pre_event", set_species_level);
     reg("dpl_species_pre_event", set_species_level);
     reg("cl_species_pre_event", set_species_level);
@@ -54,6 +55,7 @@ LipidMapsParserEventHandler::LipidMapsParserEventHandler() : BaseParserEventHand
     reg("hg_cl_pre_event", set_head_group_name);
     reg("hg_dpl_pre_event", set_head_group_name);
     reg("hg_lpl_pre_event", set_head_group_name);
+    reg("hg_threepl_pre_event", set_head_group_name);
     reg("hg_fourpl_pre_event", set_head_group_name);
     reg("sphingosine_name_pre_event", set_head_group_name);
     reg("sphinganine_name_pre_event", set_head_group_name);
@@ -219,7 +221,10 @@ void LipidMapsParserEventHandler::append_fa(TreeNode *node) {
 void LipidMapsParserEventHandler::add_ether(TreeNode* node){
     string ether = node->get_text();
     if (ether == "O-") current_fa->lipid_FA_bond_type = ETHER_PLASMANYL;
-    else if (ether == "P-") current_fa->lipid_FA_bond_type = ETHER_PLASMENYL;
+    else if (ether == "P-"){
+        current_fa->lipid_FA_bond_type = ETHER_PLASMENYL;
+        current_fa->num_double_bonds += 1;
+    }
 }
     
     
@@ -237,7 +242,7 @@ void LipidMapsParserEventHandler::add_hydroxyl_lcb(TreeNode* node){
     
     
 void LipidMapsParserEventHandler::add_double_bonds(TreeNode* node){
-    current_fa->num_double_bonds = atoi(node->get_text().c_str());
+    current_fa->num_double_bonds += atoi(node->get_text().c_str());
 }
     
     

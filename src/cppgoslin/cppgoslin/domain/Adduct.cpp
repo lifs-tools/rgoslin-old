@@ -26,13 +26,17 @@ SOFTWARE.
 
 #include "Adduct.h"
 
+
+
     
 Adduct::Adduct(string _sum_formula, string _adduct_string, int _charge, int _sign){
     sum_formula = _sum_formula;
     adduct_string = _adduct_string;
     charge = _charge;
     set_charge_sign(_sign);
+    
 }
+
 
 void Adduct::set_charge_sign(int sign){
     if (sign != -1 || sign != 0 || sign != 1){
@@ -50,8 +54,39 @@ string Adduct::get_lipid_string(){
     }
     stringstream stst;
     stst << "[M" << sum_formula << adduct_string << "]" << charge << ((charge_sign > 0) ? "+" : "-");
-    string output;
-    stst >> output;
     
-    return output;
+    return stst.str();
 }
+
+ElementTable* Adduct::get_elements(){
+    ElementTable* elements = create_empty_table();
+    try{
+        
+        //SumFormulaParser* adduct_sum_formula_parser = SumFormulaParser::get_instance();
+        string adduct_name = adduct_string.substr(1);
+        ElementTable* adduct_elements = SumFormulaParser::get_instance().parse(adduct_name);
+        for (auto e : *adduct_elements) elements->at(e.first) += e.second;
+        delete adduct_elements;
+        
+    }
+    catch (...) {
+        return elements;
+    }
+    
+    if (adduct_string.length() > 0 && adduct_string[0] == '-'){
+        for (auto e : element_order){
+            elements->at(e) *= -1;
+        }
+    }
+    
+    return elements;
+}
+
+
+
+int Adduct::get_charge(){
+    return charge * charge_sign;
+}
+
+
+
