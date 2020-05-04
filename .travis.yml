@@ -1,6 +1,6 @@
 os:
   - linux
-#  - osx    
+    #  - osx    
 osx_image: xcode10.1
 language: r
 r:
@@ -8,7 +8,7 @@ r:
 
 compiler:
   - gcc
-#  - clang
+    #  - clang
 
 cache:
   - packages: true
@@ -17,6 +17,13 @@ r_packages:
   - covr
   - devtools
   - pkgdown
+  - knitr
+  - rmarkdown
+  - kableExtra
+  - dplyr
+  - pkgKitten
+  - testthat
+  - Rcpp  
 
 install:
   - travis_wait 30 Rscript -e "0"     
