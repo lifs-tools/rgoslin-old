@@ -74,7 +74,7 @@ If any error was raised, returns an empty data frame." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rgoslin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@ If any error was raised, returns an empty data frame." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/introduction.html">introduction</a>
+      <a href="../articles/introduction.html">Using R Goslin to parse and normalize lipid nomenclature</a>
     </li>
   </ul>
 </li>
@@ -148,34 +148,46 @@ If any error was raised, returns an empty data frame.</p>
 #&gt; PC 32:1                       PC 32:1            PC 32:1    Goslin
 #&gt; LPC 34:1                     LPC 34:1           LPC 34:1    Goslin
 #&gt; TG(18:1_18:0_16:1) TAG 18:1-18:0-16:1 TG(18:1_18:0_16:1) LipidMaps
-#&gt;                    Lipid Maps Category         Lipid Maps Main Class
-#&gt; PC 32:1                             GP Glycerophosphocholines [GP01]
-#&gt; LPC 34:1                            GP Glycerophosphocholines [GP01]
-#&gt; TG(18:1_18:0_16:1)                  GL      Triradylglycerols [GL03]
+#&gt;                    Lipid Maps Category                   Lipid Maps Main Class
+#&gt; PC 32:1                             GP           Glycerophosphocholines [GP01]
+#&gt; LPC 34:1                            GP Monoacylglycerophosphocholines [GP0105]
+#&gt; TG(18:1_18:0_16:1)                  GL               Triacylglycerols [GL0301]
+#&gt;                    Species Name Molecular Subspecies Name
+#&gt; PC 32:1                 PC 32:1                        NA
+#&gt; LPC 34:1               LPC 34:1                  LPC 34:1
+#&gt; TG(18:1_18:0_16:1)     TAG 52:2        TAG 18:1-18:0-16:1
+#&gt;                    Structural Subspecies Name Isomeric Subspecies Name
+#&gt; PC 32:1                                    NA                       NA
+#&gt; LPC 34:1                             LPC 34:1                       NA
+#&gt; TG(18:1_18:0_16:1)                         NA                       NA
 #&gt;                    Functional Class Abbr Functional Class Synonyms
 #&gt; PC 32:1                             [PC]                      [PC]
 #&gt; LPC 34:1                           [LPC]             [LPC, LysoPC]
 #&gt; TG(18:1_18:0_16:1)                  [TG]                 [TAG, TG]
-#&gt;                                    Level Total C Total OH Total DB FA1 Position
-#&gt; PC 32:1                          SPECIES      32        0        1           NA
-#&gt; LPC 34:1           STRUCTURAL_SUBSPECIES      34        0        1            1
-#&gt; TG(18:1_18:0_16:1)  MOLECULAR_SUBSPECIES      52        0        2           -1
-#&gt;                    FA1 C FA1 OH FA1 DB FA1 Bond Type FA2 Position FA2 C FA2 OH
+#&gt;                                    Level Total C Total OH Total DB    Mass
+#&gt; PC 32:1                          SPECIES      32        0        1 731.547
+#&gt; LPC 34:1           STRUCTURAL_SUBSPECIES      34        0        1 745.599
+#&gt; TG(18:1_18:0_16:1)  MOLECULAR_SUBSPECIES      52        0        2 858.768
+#&gt;                    Sum Formula FA1 Position FA1 C FA1 OH FA1 DB FA1 Bond Type
+#&gt; PC 32:1             C40H78NO8P           NA    NA     NA     NA            NA
+#&gt; LPC 34:1            C42H84NO7P            1    34      0      1         ESTER
+#&gt; TG(18:1_18:0_16:1)   C55H102O6            0    18      0      1         ESTER
+#&gt;                    FA2 Position FA2 C FA2 OH FA2 DB FA2 Bond Type LCB Position
+#&gt; PC 32:1                      NA    NA     NA     NA            NA           NA
+#&gt; LPC 34:1                     NA    NA     NA     NA            NA           NA
+#&gt; TG(18:1_18:0_16:1)            0    18      0      0         ESTER           NA
+#&gt;                    LCB C LCB OH LCB DB LCB Bond Type FA3 Position FA3 C FA3 OH
 #&gt; PC 32:1               NA     NA     NA            NA           NA    NA     NA
-#&gt; LPC 34:1              34      0      1         ESTER           NA    NA     NA
-#&gt; TG(18:1_18:0_16:1)    18      0      1         ESTER           -1    18      0
-#&gt;                    FA2 DB FA2 Bond Type LCB Position LCB C LCB OH LCB DB
+#&gt; LPC 34:1              NA     NA     NA            NA           NA    NA     NA
+#&gt; TG(18:1_18:0_16:1)    NA     NA     NA            NA            0    16      0
+#&gt;                    FA3 DB FA3 Bond Type FA4 Position FA4 C FA4 OH FA4 DB
 #&gt; PC 32:1                NA            NA           NA    NA     NA     NA
 #&gt; LPC 34:1               NA            NA           NA    NA     NA     NA
-#&gt; TG(18:1_18:0_16:1)      0         ESTER           NA    NA     NA     NA
-#&gt;                    LCB Bond Type FA3 Position FA3 C FA3 OH FA3 DB FA3 Bond Type
-#&gt; PC 32:1                       NA           NA    NA     NA     NA            NA
-#&gt; LPC 34:1                      NA           NA    NA     NA     NA            NA
-#&gt; TG(18:1_18:0_16:1)            NA           -1    16      0      1         ESTER
-#&gt;                    FA4 Position FA4 C FA4 OH FA4 DB FA4 Bond Type
-#&gt; PC 32:1                      NA    NA     NA     NA            NA
-#&gt; LPC 34:1                     NA    NA     NA     NA            NA
-#&gt; TG(18:1_18:0_16:1)           NA    NA     NA     NA            NA</div></pre>
+#&gt; TG(18:1_18:0_16:1)      1         ESTER           NA    NA     NA     NA
+#&gt;                    FA4 Bond Type
+#&gt; PC 32:1                       NA
+#&gt; LPC 34:1                      NA
+#&gt; TG(18:1_18:0_16:1)            NA</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -191,7 +203,7 @@ If any error was raised, returns an empty data frame.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
