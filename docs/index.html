@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rgoslin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/introduction.html">introduction</a>
+      <a href="articles/introduction.html">Using R Goslin to parse and normalize lipid nomenclature</a>
     </li>
   </ul>
 </li>
@@ -71,12 +71,70 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+<div id="r-implementation-for-parsing-of-lipid-shorthand-nomenclature-names" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#r-implementation-for-parsing-of-lipid-shorthand-nomenclature-names" class="anchor"></a>R implementation for parsing of lipid shorthand nomenclature names</h1></div>
 
+<p>This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project.</p>
+<p><a href="Goslin">https://github.com/lifs-tools/goslin</a> defines multiple grammers compatible with ANTLRv4 for different sources of shorthand lipid nomenclature. This allows to generate parsers based on the defined grammars, which provide immediate feedback whether a processed lipid shorthand notation string is compliant with a particular grammar, or not.</p>
+<blockquote>
+<p><strong><em>NOTE:</em></strong> This is an <em>early</em> development version, please use at your own risk and report issues to help improve it!</p>
+</blockquote>
+<p>rgoslin uses the Goslin grammars and the cppgoslin parser to support the following general tasks:</p>
+<ol>
+<li>Facilitate the parsing of shorthand lipid names dialects.</li>
+<li>Provide a structural representation of the shorthand lipid after parsing.</li>
+<li>Use the structural representation to generate normalized names.</li>
+</ol>
+<div id="related-projects" class="section level2">
+<h2 class="hasAnchor">
+<a href="#related-projects" class="anchor"></a>Related Projects</h2>
+<ul>
+<li><a href="https://github.com/lifs-tools/rgoslin">This project</a></li>
+<li><a href="http://github.com/lifs-tools/goslin">Goslin grammars and reference test files</a></li>
+<li><a href="https://github.com/lifs-tools/cppgoslin">C++ implementation</a></li>
+<li><a href="https://github.com/lifs-tools/jgoslin">Java implementation</a></li>
+<li><a href="https://github.com/lifs-tools/pygoslin">Python implementation</a></li>
+<li><a href="https://github.com/lifs-tools/goslin-webapp">Webapplication and REST API</a></li>
+</ul>
+</div>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<div id="prerequisites" class="section level3">
+<h3 class="hasAnchor">
+<a href="#prerequisites" class="anchor"></a>Prerequisites</h3>
+<p>Install the <code>devtools</code> package with the following command.</p>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="kw">if</span>(!<span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">devtools</span>)) { <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>) }</pre></div>
+<p>Run</p>
+<div class="sourceCode" id="cb2"><pre class="r">  <span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"lifs-tools/rgoslin"</span>)</pre></div>
+<p>to install from the github repository.</p>
+<p>This will install the latest, potentially unstable development version of the package with all required dependencies into your local R installation.</p>
+<p>If you want to use a proper release version, referenced by a Git tag (here: <code>v1.0.2</code>) install the package as follows:</p>
+<div class="sourceCode" id="cb3"><pre class="r">  <span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"lifs-tools/rgoslin"</span>, <span class="kw">ref</span><span class="kw">=</span><span class="st">"v1.0.2"</span>)</pre></div>
+<p>If you want to work off of a specific branch (here: <code>adding_masses</code>), install the package as follows:</p>
+<div class="sourceCode" id="cb4"><pre class="r">  <span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"lifs-tools/rgoslin"</span>, <span class="kw">ref</span><span class="kw">=</span><span class="st">"adding_masses"</span>)</pre></div>
+<p>If you have cloned the code locally, use devtools as follows. Make sure you set the working directory to where the API code is located. Then execute</p>
+<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">devtools</span>)
+<span class="fu"><a href="https://devtools.r-lib.org//reference/install.html">install</a></span>(<span class="st">"."</span>)</pre></div>
+<p>To run the tests, execute</p>
+<div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">devtools</span>)
+<span class="fu"><a href="https://devtools.r-lib.org//reference/test.html">test</a></span>()</pre></div>
+</div>
+<div id="usage" class="section level3">
+<h3 class="hasAnchor">
+<a href="#usage" class="anchor"></a>Usage</h3>
+<p>To load the package, start an R session and type</p>
+<div class="sourceCode" id="cb7"><pre class="r">  <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">rgoslin</span>)</pre></div>
+<p>Type the following to see the package vignette / tutorial:</p>
+<div class="sourceCode" id="cb8"><pre class="r">  <span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">'introduction'</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">'rgoslin'</span>)</pre></div>
+</div>
+</div>
 <div id="adding-cppgoslin-as-a-git-subtree" class="section level2">
 <h2 class="hasAnchor">
 <a href="#adding-cppgoslin-as-a-git-subtree" class="anchor"></a>Adding cppgoslin as a Git subtree</h2>
 <p>In the root of your git project, run the git subtree command, with <code>&lt;PREFIX&gt;</code> replaced by the subdirectory path where you want the subtree to live:</p>
-<pre><code>git subtree add --prefix=&lt;PREFIX&gt; https://gitlab.isas.de/kopczynski/cppgoslin.git master</code></pre>
+<pre><code>git subtree add --prefix=&lt;PREFIX&gt; https://github.com/lifs-tools/cppgoslin.git master</code></pre>
 <p>Instead of <code>master</code>, you can choose any other branch or tag to clone. For more information on git subtree, see <a href="https://github.com/git/git/blob/master/contrib/subtree/git-subtree.txt">Git Subtree</a> or <a href="https://blog.developer.atlassian.com/the-power-of-git-subtree/">this article</a>.</p>
 </div>
 <div id="pulling-and-pushing-of-a-git-subtree" class="section level2">
@@ -86,12 +144,12 @@
 <div id="pulling" class="section level3">
 <h3 class="hasAnchor">
 <a href="#pulling" class="anchor"></a>Pulling</h3>
-<pre><code>git subtree pull --prefix=&lt;PREFIX&gt; https://gitlab.isas.de/kopczynski/cppgoslin.git master</code></pre>
+<pre><code>git subtree pull --prefix=&lt;PREFIX&gt; https://github.com/lifs-tools/cppgoslin.git master</code></pre>
 </div>
 <div id="pushing" class="section level3">
 <h3 class="hasAnchor">
 <a href="#pushing" class="anchor"></a>Pushing</h3>
-<pre><code>git subtree push --prefix=&lt;PREFIX&gt; https://gitlab.isas.de/kopczynski/cppgoslin.git master</code></pre>
+<pre><code>git subtree push --prefix=&lt;PREFIX&gt; https://github.com/lifs-tools/cppgoslin.git master</code></pre>
 <p>Alternatively, you can create shortcuts/aliases in your repository’s <code>.git/config</code> file:</p>
 <pre><code>[alias]
     # the acronym stands for "subtree pull"
@@ -102,7 +160,7 @@
 <p>This allows you to run <code>git cppgoslin-pull</code> to pull the latest master version, or <code>git cppgoslin-push</code> to push your latest local commits on the cppgoslin subtree to the upstream repository.</p>
 </div>
 </div>
-
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -122,7 +180,15 @@
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://travis-ci.org/lifs-tools/rgoslin"><img src="https://travis-ci.org/lifs-tools/rgoslin.svg?branch=master" alt="Build Status"></a></li>
+<li><a href="https://codecov.io/gh/lifs-tools/rgoslin"><img src="https://codecov.io/gh/lifs-tools/rgoslin/branch/master/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://doi.org/10.5281/zenodo.3757672"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.3757672.svg" alt="DOI"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
@@ -131,7 +197,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
