@@ -15,25 +15,19 @@ matrix:
       - R CMD build .
       - R CMD check *tar.gz --as-cran
     after_success:
-            #      - tar -C .. -xf $PKG_TARBALL
       - Rscript -e 'covr::codecov()'
       - rm -rf RTest.Rcheck
       - Rscript -e 'devtools::document()'
       - Rscript -e 'pkgdown::build_site()'
     deploy:
-            #      - provider: releases
-            #        api_key: $GITHUB_TOKEN
-            #        file: $PKG_TARBALL
-            #        skip_cleanup: true
-            #        on:
-            #          tags: true
       - provider: pages
         skip-cleanup: true
         github-token: $TRAVIS_DEPLOY_KEY_ORG
         keep-history: false
         local-dir: docs
         on:
-          branch: gh-pages
+          tags: true
+        target_branch: gh-pages
   - r: release
     os: osx
     osx_image: xcode10.1
