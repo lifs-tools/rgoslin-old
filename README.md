@@ -52,6 +52,12 @@ If you want to work off of a specific branch (here: `adding_masses`), install th
   install_github("lifs-tools/rgoslin", ref="adding_masses")
 ```
 
+If you also want to build the help and vignette, add the following arguments:
+
+```R
+  install_github("lifs-tools/rgoslin", ref="adding_masses", build_manual = TRUE, build_vignettes = TRUE)
+```
+
 If you have cloned the code locally, use devtools as follows.
 Make sure you set the working directory to where the API code is located.
 Then execute
