@@ -321,3 +321,4 @@ SEXP rcpp_parse_lipid_name(std::string lipid_name) {
         return lipidDetails;
     }
 }
+
