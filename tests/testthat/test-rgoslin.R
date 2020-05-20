@@ -33,6 +33,9 @@ test_that("lipid name parsing with grammar works", {
   expect_equal(vec[["Structural Subspecies Name"]], "TAG 16:1(5E)/18:0/20:2(3Z,6Z)")
   expect_equal(vec[["Isomeric Subspecies Name"]], "TAG 16:1(5E)/18:0/20:2(3Z,6Z)")
   expect_equal(vec[["Lipid Maps Category"]], "GL")
+  expect_equal(vec[["FA1 DB Positions"]], "[5E]")
+  expect_equal(vec[["FA2 DB Positions"]], "[]")
+  expect_equal(vec[["FA3 DB Positions"]], "[3Z, 6Z]")
 })
 
 test_that("multiple lipid names parsing works", {
