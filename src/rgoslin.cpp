@@ -127,11 +127,13 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
     lipidDetails["FA1 OH"] = chr_na;
     lipidDetails["FA1 DB"] = chr_na;
     lipidDetails["FA1 Bond Type"] = chr_na;
+    lipidDetails["FA1 DB Positions"] = chr_na;
     lipidDetails["FA2 Position"] = chr_na;
     lipidDetails["FA2 C"] = chr_na;
     lipidDetails["FA2 OH"] = chr_na;
     lipidDetails["FA2 DB"] = chr_na;
     lipidDetails["FA2 Bond Type"] = chr_na;
+    lipidDetails["FA2 DB Positions"] = chr_na;
     lipidDetails["LCB Position"] = chr_na;
     lipidDetails["LCB C"] = chr_na;
     lipidDetails["LCB OH"] = chr_na;
@@ -142,11 +144,13 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
     lipidDetails["FA3 OH"] = chr_na;
     lipidDetails["FA3 DB"] = chr_na;
     lipidDetails["FA3 Bond Type"] = chr_na;
+    lipidDetails["FA3 DB Positions"] = chr_na;
     lipidDetails["FA4 Position"] = chr_na;
     lipidDetails["FA4 C"] = chr_na;
     lipidDetails["FA4 OH"] = chr_na;
     lipidDetails["FA4 DB"] = chr_na;
     lipidDetails["FA4 Bond Type"] = chr_na;
+    lipidDetails["FA4 DB Positions"] = chr_na;
     
     if (lipidAdduct){
         // grammar = parser->grammar_name;
@@ -243,6 +247,15 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 default: warning("Unknown bond type in FA " + prefix + " of " + lipid_name); fa_bond_type = "UNKNOWN";
                 }
                 lipidDetails[prefix + "Bond Type"] = fa_bond_type;
+                std::ostringstream dbPos;
+                dbPos << "[";
+                std::vector<std::string> dbPosPairs;
+                for (auto kv : fap->double_bond_positions){
+                    dbPosPairs.push_back(std::to_string(kv.first) + kv.second);
+                }
+                dbPos << join(dbPosPairs, ", ");
+                dbPos << "]";
+                lipidDetails[prefix + "DB Positions"] = dbPos.str();
                 ++faCnt;
             }
         }
