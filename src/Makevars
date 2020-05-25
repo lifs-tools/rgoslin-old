@@ -10,7 +10,7 @@ PKG_CPPFLAGS= -I"." -I"./cppgoslin" -I"./cppgoslin/cppgoslin" -I"./cppgoslin/cpp
 
 # space separated list of sublibrary directories
 SUBDIRS = cppgoslin/
-# pick up any static libraries of sub libraries
+# pick up any (static) libraries of sub libraries
 SUBLIBS = $(addsuffix *.a,$(SUBDIRS))
 
 # ensure that sub libraries are build before the Rcpp objects (we generate some headers that are needed for compilation)
@@ -31,6 +31,7 @@ clean: subclean
 
 subclean:
 	@-rm -rf *.a
+	@-rm -rf *.so
 	@for d in $(SUBDIRS); do \
 		(cd $${d} && $(MAKE) clean) || exit 1; \
 	done
