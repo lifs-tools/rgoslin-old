@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://lifs-tools.github.io/rgoslin//index.html</loc>
+  </url>
+  <url>
+    <loc>https://lifs-tools.github.io/rgoslin//reference/isValidLipidName.html</loc>
+  </url>
+  <url>
+    <loc>https://lifs-tools.github.io/rgoslin//reference/parseLipidName.html</loc>
+  </url>
+  <url>
+    <loc>https://lifs-tools.github.io/rgoslin//reference/parseLipidNameWithGrammar.html</loc>
+  </url>
+  <url>
+    <loc>https://lifs-tools.github.io/rgoslin//reference/parseLipidNames.html</loc>
+  </url>
+  <url>
+    <loc>https://lifs-tools.github.io/rgoslin//reference/parseLipidNamesWithGrammar.html</loc>
+  </url>
+  <url>
+    <loc>https://lifs-tools.github.io/rgoslin//reference/rgoslin-package.html</loc>
+  </url>
+  <url>
+    <loc>https://lifs-tools.github.io/rgoslin//articles/introduction.html</loc>
+  </url>
+</urlset>
