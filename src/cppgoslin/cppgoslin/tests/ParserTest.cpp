@@ -214,9 +214,54 @@ int main(int argc, char** argv){
     lipid = swiss_lipids_parser.parse(lipid_name);
     assert (lipid);
     assert (lipid->lipid->info.level == SPECIES);
-    assert (lipid->get_lipid_string() == "LPG 22:1a");
+    assert (lipid->get_lipid_string() == "LPG O-22:1a");
     delete lipid;
     
+    
+    
+    lipid_name = "PC O-16:1/12:0";
+    lipid = lipid_parser.parse(lipid_name);
+    assert (lipid);
+    assert (lipid->get_lipid_string() == "PC O-16:1/12:0");
+    try {
+        cout << lipid->get_mass() << endl;
+        assert (false);
+    }
+    catch(LipidException &e){ }
+    delete lipid;
+    
+    
+    lipid_name = "LPC O-16:1";
+    lipid = lipid_parser.parse(lipid_name);
+    assert (lipid);
+    assert (lipid->get_lipid_string() == "LPC O-16:1");
+    try {
+        cout << lipid->get_sum_formula() << endl;
+        assert (false);
+    }
+    catch(LipidException &e){ }
+    delete lipid;
+    
+    
+    lipid_name = "LPC O-16:1a";
+    lipid = lipid_parser.parse(lipid_name);
+    assert (lipid);
+    assert (lipid->get_lipid_string() == "LPC O-16:1a");
+    delete lipid;
+    
+    
+    lipid_name = "LPE O-16:4p";
+    lipid = lipid_parser.parse(lipid_name);
+    assert (lipid);
+    assert (lipid->get_lipid_string() == "LPE O-16:4p");
+    delete lipid;
+    
+    
+    lipid_name = "LPE O-16:2p";
+    lipid = lipid_parser.parse(lipid_name);
+    assert (lipid);
+    assert (lipid->get_lipid_string(CLASS) == "LPE");
+    delete lipid;
     
     
     lipid_name = "fail";
@@ -443,7 +488,7 @@ int main(int argc, char** argv){
                         {"TG(13:0/22:3(10Z,13Z,16Z)/22:5(7Z,10Z,13Z,16Z,19Z))[iso6]", "TAG 13:0/22:3(10Z,13Z,16Z)/22:5(7Z,10Z,13Z,16Z,19Z)"},
                         {"13R-HODE", "13R-HODE"},
                         {"CL(1'-[20:0/20:0],3'-[20:4(5Z,8Z,11Z,14Z)/18:2(9Z,12Z)])", "CL 20:0/20:0/20:4(5Z,8Z,11Z,14Z)/18:2(9Z,12Z)"},
-                        {"PA(P-20:0/18:3(6Z,9Z,12Z))", "PA 20:1p/18:3(6Z,9Z,12Z)"},
+                        {"PA(P-20:0/18:3(6Z,9Z,12Z))", "PA O-20:1p/18:3(6Z,9Z,12Z)"},
                         {"M(IP)2C(t18:0/20:0(2OH))", "M(IP)2C 18:0;3/20:0;1"},
                         {"Cer(d16:2(4E,6E)/22:0(2OH))", "Cer 16:2(4E,6E);2/22:0;1"},
                         {"MG(18:1(11E)/0:0/0:0)[rac]", "MAG 18:1(11E)"},
@@ -461,9 +506,9 @@ int main(int argc, char** argv){
     
     
     // testing lyso lipids
-    lipid = lipid_parser.parse("LPA 16:1a");
+    lipid = lipid_parser.parse("LPA O-16:1a");
     assert (lipid != NULL);
-    assert (lipid->get_lipid_string() == "LPA 16:1a");
+    assert (lipid->get_lipid_string() == "LPA O-16:1a");
     delete lipid;
     
     lipid = lipid_parser.parse("LPC O-16:1a");
@@ -474,6 +519,11 @@ int main(int argc, char** argv){
     lipid = lipid_parser.parse("LPE O-16:1p");
     assert (lipid != NULL);
     assert (lipid->get_lipid_string() == "LPE O-16:1p");
+    delete lipid;
+    
+    lipid = lipid_parser.parse("LPS O-16:1p");
+    assert (lipid != NULL);
+    assert (lipid->get_lipid_string() == "LPS O-16:1p");
     delete lipid;
     
     lipid = lipid_parser.parse("LCB 18:1;2");

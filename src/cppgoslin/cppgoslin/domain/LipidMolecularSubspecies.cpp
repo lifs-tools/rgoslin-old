@@ -53,11 +53,11 @@ LipidMolecularSubspecies::LipidMolecularSubspecies (string _head_group, vector<F
                 num_hydroxyl += fas->num_hydroxyl;
                 num_double_bonds += fas->num_double_bonds;
                 
-                if (lipid_FA_bond_type == ESTER && (fas->lipid_FA_bond_type == ETHER_PLASMANYL || fas->lipid_FA_bond_type == ETHER_PLASMENYL)){
+                if (lipid_FA_bond_type == ESTER && (fas->lipid_FA_bond_type == ETHER_PLASMANYL || fas->lipid_FA_bond_type == ETHER_PLASMENYL || fas->lipid_FA_bond_type == ETHER_UNSPECIFIED)){
                     lipid_FA_bond_type = fas->lipid_FA_bond_type;
                 }
                 
-                else if (lipid_FA_bond_type != ESTER && (fas->lipid_FA_bond_type == ETHER_PLASMANYL || fas->lipid_FA_bond_type == ETHER_PLASMENYL)){
+                else if (lipid_FA_bond_type != ESTER && (fas->lipid_FA_bond_type == ETHER_PLASMANYL || fas->lipid_FA_bond_type == ETHER_PLASMENYL || fas->lipid_FA_bond_type == ETHER_UNSPECIFIED)){
                     throw ConstraintViolationException("Only one FA can define an ether bond to the head group! Tried to add " + to_string(fas->lipid_FA_bond_type) + " over existing " + to_string(lipid_FA_bond_type));
                 }
             }
@@ -81,7 +81,8 @@ using namespace std;
 string LipidMolecularSubspecies::build_lipid_subspecies_name(string fa_separator, LipidLevel level){
     stringstream s;
     s << (!use_head_group ? get_class_string(lipid_class) : head_group);
-    bool special_case = (lipid_class == PC) | (lipid_class == LPC) | (lipid_class == PE) | (lipid_class == LPE);
+    // bool special_case = (lipid_class == PC) | (lipid_class == LPC) | (lipid_class == PE) | (lipid_class == LPE);
+    bool special_case = lipid_category == GP;
     
     if (fa_list.size() > 0){
         s << ((lipid_category !=  ST) ? " " : "/");
