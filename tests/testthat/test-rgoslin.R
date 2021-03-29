@@ -65,3 +65,18 @@ test_that("multiple lipid names parsing with grammar works", {
   expect_equal(as.character(df[2, "Normalized Name"]), "LPC 34:1")
   expect_equal(as.character(df[3, "Normalized Name"]), "TAG 18:1-18:0-16:1")
 })
+
+test_that("lipid name with adduct parsing with grammar works", {
+  originalName <- "PC 34:1 [M+H]1+"
+  vec <- rgoslin::parseLipidNameWithGrammar(originalName, "Goslin")
+  expect_equal(is.vector(vec), TRUE)
+  expect_equal(vec[["Original Name"]], originalName)
+  expect_equal(vec[["Normalized Name"]], "PC 34:1")
+  expect_equal(vec[["Adduct"]], "[M+H]1+")
+  expect_equal(vec[["AdductCharge"]], "1")
+  expect_equal(vec[["Species Name"]], "PC 34:1")
+  expect_equal(vec[["Molecular Subspecies Name"]], "NA")
+  expect_equal(vec[["Structural Subspecies Name"]], "NA")
+  expect_equal(vec[["Isomeric Subspecies Name"]], "NA")
+  expect_equal(vec[["Lipid Maps Category"]], "GP")
+})
