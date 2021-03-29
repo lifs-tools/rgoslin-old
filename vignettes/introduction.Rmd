@@ -125,5 +125,20 @@ kable(multipleLipidNamesWithGrammar %>% select(-starts_with("FA"),-starts_with("
 kable(multipleLipidNamesWithGrammar %>% select(`Normalized Name`, starts_with("FA"), starts_with("LCB")), caption = "Lipid name parsing results for Goslin grammar and lipids PC 32:1, LPC 34:1, TG(18:1_18:0_16:1) with FA and LCB columns.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "300px")
 ```
 
+### Parsing Adducts
+
+The Goslin parser also support reading of lipid shorthand names with adducts:
+
+```{r}
+originalNames <- c("PC 32:1[M+H]1+","PC 32:1")
+lipidNamesWithAdduct <- parseLipidNamesWithGrammar(originalNames, "Goslin")
+```
+
+This will populate the columns "Adduct" and "AdductCharge" with the respective values. Please note that we require the adduct and its charge in IUPAC recommended nomenclature: 
+
+```{r echo = FALSE, results = 'asis'}
+kable(lipidNamesWithAdduct %>% select(-starts_with("FA"),-starts_with("LCB")), caption = "Lipid name parsing results for Goslin grammar and lipids PC 32:1[M+H]1+ and PC 32:1, FA and LCB columns omitted for brevity.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "300px")
+```
+
 ### Getting help & support
 If you find any issues with the library, would like to have other functionality included, require help or would like to contribute, please contact us via our [GitHub Project](https://github.com/lifs-tools/rgoslin) or via the [LIFS support page](https://lifs.isas.de/support.html).

@@ -108,6 +108,8 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
     lipidDetails["Normalized Name"] = chr_na;
     lipidDetails["Original Name"] = chr_na;
     lipidDetails["Grammar"] = chr_na;
+    lipidDetails["Adduct"] = chr_na;
+    lipidDetails["AdductCharge"] = chr_na;
     lipidDetails["Lipid Maps Category"] = chr_na;
     lipidDetails["Lipid Maps Main Class"] = chr_na;
     lipidDetails["Species Name"] = chr_na;
@@ -156,6 +158,8 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
         // grammar = parser->grammar_name;
         std::string originalName = chr_na;
         std::string nativeLevelName = chr_na;
+        std::string adductString = chr_na;
+        std::string adductCharge = chr_na;
         std::string lipidMapsCategory = chr_na;
         std::string lipidMapsMainClass = chr_na;
         std::string species = chr_na;
@@ -168,13 +172,20 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
         std::string mass = chr_na;
         std::string formula = chr_na;
         
-        lipidMapsCategory = lipidAdduct->get_lipid_string(CATEGORY);
-        lipidMapsMainClass = lipidAdduct->get_lipid_string(CLASS);
-        species = lipidAdduct->get_lipid_string(SPECIES);
+        Adduct* adduct = lipidAdduct->adduct;
+        lipidMapsCategory = lipidAdduct->lipid->get_lipid_string(CATEGORY);
+        lipidMapsMainClass = lipidAdduct->lipid->get_lipid_string(CLASS);
+        species = lipidAdduct->lipid->get_lipid_string(SPECIES);
         LipidSpecies* lipid = lipidAdduct->lipid;
         if(lipid) {
             LipidSpeciesInfo info = (*lipid).info;
-            nativeLevelName = lipidAdduct->get_lipid_string(info.level);
+            nativeLevelName = lipidAdduct->lipid->get_lipid_string(info.level);
+            if(adduct) {
+                adductString = lipidAdduct->adduct->get_lipid_string();
+                std::ostringstream acs;
+                acs << lipidAdduct->adduct->get_charge();
+                adductCharge = acs.str();
+            }
             lipidMapsMainClass = lipid->get_class_name();
             headGroup = lipid->head_group;
             LipidClassMeta lcMeta = LipidClasses::get_instance().lipid_classes.at(lipid->get_class(headGroup));
@@ -199,6 +210,8 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             // Normalized Name	Original Name	Grammar	Lipid Maps Category	Lipid Maps Main Class	Functional Class Abbr	Functional Class Synonyms	Level	Total #C	Total #OH	Total #DB	FA1 Position	FA1 #C	FA1 #OH	FA1 #DB	FA1 Bond Type	FA2 Position	FA2 #C	FA2 #OH	FA2 #DB	FA2 Bond Type	LCB Position	LCB #C	LCB #OH	LCB #DB	LCB Bond Type	FA3 Position	FA3 #C	FA3 #OH	FA3 #DB	FA3 Bond Type	FA4 Position	FA4 #C	FA4 #OH	FA4 #DB	FA4 Bond Type        
             lipidDetails["Normalized Name"] = nativeLevelName;
             lipidDetails["Original Name"] = lipid_name;
+            lipidDetails["Adduct"] = adductString;
+            lipidDetails["AdductCharge"] = adductCharge;
             lipidDetails["Grammar"] = grammar;
             lipidDetails["Lipid Maps Category"] = lipidMapsCategory;
             lipidDetails["Lipid Maps Main Class"] = lipidMapsMainClass;
