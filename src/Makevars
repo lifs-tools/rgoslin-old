@@ -32,7 +32,7 @@ clean: subclean
 subclean:
 	@-rm -rf *.a
 	@-rm -rf *.so
-        @-rm -f *.exe
+	@-rm -f *.exe
 	@for d in $(SUBDIRS); do \
 		(cd $${d} && $(MAKE) clean) || exit 1; \
 	done
