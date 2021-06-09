@@ -4,11 +4,11 @@ Title: Lipid Name Parsing and Normalization
 Version: 1.1.3.1000
 Date: 2021-03-29
 Authors@R: c(
-    person("Nils", "Hoffmann", email = "nils.hoffmann@isas.de", role=c("aut","cre")),
+    person("Nils", "Hoffmann", email = "nils.hoffmann@cebitec.uni-bielefeld.de", role=c("aut","cre")),
     person("Dominik", "Kopczynski", email = "dominik.kopczynski@isas.de", role=c("aut")))
 Author: Nils Hoffmann [aut, cre],
   Dominik Kopczynski [aut]
-Maintainer: Nils Hoffmann <nils.hoffmann@isas.de>
+Maintainer: Nils Hoffmann <nils.hoffmann@cebitec.uni-bielefeld.de>
 Description: rGoslin is the R implementation for the Grammar of Succint Lipid Nomenclature. It parses different short hand notation dialects for lipid names and normalizes them to a standard name and provides calculated monoisotopic masses and sum formulas.
 License: MIT + file LICENSE
 Imports: Rcpp (>= 1.0.3)
