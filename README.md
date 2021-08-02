@@ -1,4 +1,4 @@
-# R implementation for parsing of lipid shorthand nomenclature names
+# R implementation for parsing of lipid shorthand nomenclature names, version 2.0
 [![Build Status](https://travis-ci.org/lifs-tools/rgoslin.svg?branch=master)](https://travis-ci.org/lifs-tools/rgoslin)[![codecov](https://codecov.io/gh/lifs-tools/rgoslin/branch/master/graph/badge.svg)](https://codecov.io/gh/lifs-tools/rgoslin)[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3757672.svg)](https://doi.org/10.5281/zenodo.3757672)
 
 This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project.
@@ -6,9 +6,7 @@ This project is a parser, validator and normalizer implementation for shorthand 
 [https://github.com/lifs-tools/goslin](Goslin) defines multiple grammers compatible with ANTLRv4 for different sources of shorthand lipid nomenclature. This allows to generate parsers based on the defined grammars,
 which provide immediate feedback whether a processed lipid shorthand notation string is compliant with a particular grammar, or not.
 
-> **_NOTE:_**  This is an *early* development version, please use at your own risk and report issues to help improve it!
-
-rgoslin uses the Goslin grammars and the cppgoslin parser to support the following general tasks:
+Here, rgoslin 2.0 uses the Goslin grammars and the cppgoslin parser to support the following general tasks:
 
 1. Facilitate the parsing of shorthand lipid names dialects.
 2. Provide a structural representation of the shorthand lipid after parsing.
@@ -40,10 +38,10 @@ to install from the github repository.
 
 This will install the latest, potentially unstable development version of the package with all required dependencies into your local R installation.
 
-If you want to use a proper release version, referenced by a Git tag (here: `v1.0.2`) install the package as follows:
+If you want to use a proper release version, referenced by a Git tag (here: `v2.0.1`) install the package as follows:
 
 ```R
-  install_github("lifs-tools/rgoslin", ref="v1.0.2")
+  install_github("lifs-tools/rgoslin", ref="v2.0.1")
 ```
 
 If you want to work off of a specific branch (here: `adding_masses`), install the package as follows:
@@ -117,9 +115,9 @@ Alternatively, you can create shortcuts/aliases in your repository's `.git/confi
 ~~~~
 [alias]
     # the acronym stands for "subtree pull"
-    cppgoslin-pull = "!f() { git subtree pull --prefix <PREFIX> https://gitlab.isas.de/kopczynski/cppgoslin.git master; }; f"
+    cppgoslin-pull = "!f() { git subtree pull --prefix <PREFIX> git@github.com:lifs-tools/cppgoslin.git master; }; f"
     # the acronym stands for "subtree push"
-    cppgoslin-push = "!f() { git subtree push --prefix <PREFIX> https://gitlab.isas.de/kopczynski/cppgoslin.git master; }; f"
+    cppgoslin-push = "!f() { git subtree push --prefix <PREFIX> git@github.com:lifs-tools/cppgoslin.git master; }; f"
 ~~~~
 
 Make sure to replace `<PREFIX>` with the proper path from your repository root directory to the directory where you placed your subtree in!
