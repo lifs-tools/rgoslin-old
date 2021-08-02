@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,8 +32,11 @@ SOFTWARE.
 #include "cppgoslin/domain/LipidStructuralSubspecies.h"
 #include "cppgoslin/domain/LipidIsomericSubspecies.h"
 #include "cppgoslin/domain/FattyAcid.h"
+#include "cppgoslin/domain/Headgroup.h"
+#include "cppgoslin/domain/FunctionalGroup.h"
 #include "cppgoslin/parser/BaseParserEventHandler.h"
 #include <string>
+#include <math.h>
 #include <set>
 #include <map>
 #include <vector>
@@ -56,6 +58,7 @@ public:
     int db_position;
     string db_cistrans;
     bool unspecified_ether;
+    Headgroup* headgroup;
         
     GoslinParserEventHandler();
     ~GoslinParserEventHandler();

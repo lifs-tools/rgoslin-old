@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,22 +25,37 @@ SOFTWARE.
 
 #include "cppgoslin/parser/KnownParsers.h"
 
+FattyAcidParser::FattyAcidParser() : Parser<LipidAdduct*>(new FattyAcidParserEventHandler(), GrammarString(fatty_acid_grammar), DEFAULT_QUOTE){
+        
+}
+
+
+FattyAcidParser::~FattyAcidParser(){
+    delete parser_event_handler;
+}
+        
+LipidAdduct* FattyAcidParser::parse(string lipid_name){
+    return Parser<LipidAdduct*>::parse(to_lower(lipid_name));
+}
+
+
+
+ShorthandParser::ShorthandParser() : Parser<LipidAdduct*>(new ShorthandParserEventHandler(), GrammarString(shorthand_grammar), DEFAULT_QUOTE){
+        
+}
+
+
+ShorthandParser::~ShorthandParser(){
+    delete parser_event_handler;
+}
+
+
 GoslinParser::GoslinParser() : Parser<LipidAdduct*>(new GoslinParserEventHandler(), GrammarString(goslin_grammar), DEFAULT_QUOTE){
         
 }
 
 
 GoslinParser::~GoslinParser(){
-    delete parser_event_handler;
-}
-
-
-GoslinFragmentParser::GoslinFragmentParser() : Parser<LipidAdduct*>(new GoslinFragmentParserEventHandler(), GrammarString(goslin_fragment_grammar), DEFAULT_QUOTE){
-        
-}
-
-
-GoslinFragmentParser::~GoslinFragmentParser(){
     delete parser_event_handler;
 }
 
@@ -75,11 +89,12 @@ HmdbParser::~HmdbParser(){
 
 
 LipidParser::LipidParser(){
+    parser_list.push_back(new ShorthandParser());
     parser_list.push_back(new GoslinParser());
+    parser_list.push_back(new FattyAcidParser());
     parser_list.push_back(new LipidMapsParser());
     parser_list.push_back(new SwissLipidsParser());
     parser_list.push_back(new HmdbParser());
-    parser_list.push_back(new GoslinFragmentParser());
 }
 
 LipidParser::~LipidParser(){

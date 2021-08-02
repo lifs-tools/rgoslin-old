@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +33,7 @@ SOFTWARE.
 #include <vector>
 #include <math.h>
 #include <map>
+#include <cassert>
 
 
 using namespace std;
@@ -46,7 +46,8 @@ int main(int argc, char** argv){
     
     
     // test several more lipid names
-    ifstream infile("cppgoslin/tests/lipid-masses.csv");
+    ifstream infile("data/goslin/testfiles/lipid-masses.csv");
+    assert(infile.good());
     string line;
     int ii = 0;
     while (getline(infile, line)){
@@ -71,7 +72,6 @@ int main(int argc, char** argv){
                 cout << lipid_name << ": " << e.what() << endl;
                 assert (false);
             }
-            
             
             assert (lipid->get_lipid_string(CLASS) == lipid_class);
             assert (compute_sum_formula(lipid->lipid->get_elements()) == lipid_formula);

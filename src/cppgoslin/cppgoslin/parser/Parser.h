@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -70,7 +69,6 @@ public:
     map<uint64_t, set<uint64_t>> NTtoNT;
     map<uint64_t, string> NTtoRule;
     map<uint64_t, vector<uint64_t>*> substitution;
-    //vector<set<uint64_t>> left_pair;
     vector<Bitfield*> right_pair;
     int avg_pair;
     char quote;
@@ -93,7 +91,8 @@ public:
     static string de_escape(string text, char _quote);
     uint64_t add_terminal(string text);
     vector<uint64_t>* collect_one_backwards(uint64_t rule_index);
-    vector<uint64_t>* collect_backwards(uint64_t child_rule_index, unsigned parent_rule_index);
+    vector< vector<uint64_t>* >* collect_backwards(uint64_t child_rule_index, unsigned parent_rule_index);
+    vector< vector<uint64_t>* >* collect_backwards(uint64_t child_rule_index, unsigned parent_rule_index, set<uint64_t>* visited, vector<uint64_t>* path, vector< vector<uint64_t>* >* collection);
     void raise_events(TreeNode *node);
     void fill_tree(TreeNode *node, DPNode *dp_node);
     T parse(string text_to_parse, bool throw_error = true);

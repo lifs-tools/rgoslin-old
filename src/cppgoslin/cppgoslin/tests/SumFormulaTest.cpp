@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +52,8 @@ int main(int argc, char** argv){
     // test several more lipid names
     vector<string> lipid_names;
     vector<string> sum_formulas;
-    ifstream infile("cppgoslin/tests/formulas-lipid-maps.csv");
+    ifstream infile("data/goslin/testfiles/formulas-lipid-maps.csv");
+    assert(infile.good());
     string line;
     while (getline(infile, line)){
         vector<string>* tokens = split_string(line, ',', '"');
@@ -76,7 +76,7 @@ int main(int argc, char** argv){
             assert(lipid != NULL);
             
             if (lipid->get_sum_formula() != correct_formula){
-                cout << "Error for lipid '" << lipid_name << "': " << lipid->get_sum_formula() << " != " << correct_formula << endl;
+                cout << "Error for lipid '" << lipid_name << "': " << lipid->get_sum_formula() << " != " << correct_formula << " (reference)" << endl;
                 assert(false);
             }
             delete lipid;
@@ -89,9 +89,7 @@ int main(int argc, char** argv){
             }
         }
     }
-    
-    
-    
+    cout << "All tests passed without any problem" << endl;
     
     
     
@@ -99,7 +97,8 @@ int main(int argc, char** argv){
     lipid_names.clear();
     sum_formulas.clear();
     
-    ifstream infile2("cppgoslin/tests/formulas-swiss-lipids.csv");
+    ifstream infile2("data/goslin/testfiles/formulas-swiss-lipids.csv");
+    assert(infile2.good());
     while (getline(infile2, line)){
         vector<string>* tokens = split_string(line, ',', '"');
         line = strip(line, ' ');
@@ -109,7 +108,7 @@ int main(int argc, char** argv){
         }
         delete tokens;
     }
-    infile.close();
+    infile2.close();
         
     
     for (uint32_t i = 0; i < lipid_names.size(); ++i){

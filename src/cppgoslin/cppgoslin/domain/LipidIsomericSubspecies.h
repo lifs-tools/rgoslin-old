@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +30,7 @@ SOFTWARE.
 #include "cppgoslin/domain/LipidExceptions.h"
 #include "cppgoslin/domain/LipidStructuralSubspecies.h"
 #include "cppgoslin/domain/FattyAcid.h"
+#include "cppgoslin/domain/Headgroup.h"
 #include <sstream>
 #include <vector>
 
@@ -39,8 +39,7 @@ using namespace goslin;
 
 class LipidIsomericSubspecies : public LipidStructuralSubspecies {
 public:
-    LipidIsomericSubspecies(string head_group, vector<FattyAcid*>* fa = NULL);
-    ~LipidIsomericSubspecies();
+    LipidIsomericSubspecies(Headgroup* _headgroup, vector<FattyAcid*>* _fa = NULL);
     string build_lipid_isomeric_substructure_name();
     string get_lipid_string(LipidLevel level = NO_LEVEL);
     LipidLevel get_lipid_level();

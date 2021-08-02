@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -63,8 +62,8 @@ uint64_t Parser<T>::get_next_free_rule_index(){
 
 template <class T>
 Parser<T>::~Parser(){
-    for (auto& kv : substitution){
-        delete kv.second;
+    for (auto& element : substitution){
+        delete element.second;
     }
     
     for (auto& b : right_pair){
@@ -265,17 +264,43 @@ void Parser<T>::read_grammar(string grammar){
     
     
     // creating substitution dictionary for adding single rule chains into the parsing tree
+    set<uint64_t> visited;
     for (auto& kv : NTtoNT){
-        for (auto& rule : kv.second){
+        set<uint64_t> values = set<uint64_t>(kv.second);
+        values.insert(kv.first);
+        for (auto& rule : values){
+            if (contains(visited, rule)) continue;
+            visited.insert(rule);
+            
             vector<uint64_t>* topnodes = collect_one_backwards(rule);
             for (auto& rule_top : *topnodes){
-                vector<uint64_t>* chain = collect_backwards(rule, rule_top);
-                if (chain){
-                    chain->push_back(rule);
+                vector< vector<uint64_t>* >* chains = collect_backwards(rule, rule_top);
+                
+                for (auto chain : *chains){
+                    if (chain->size() <= 1){
+                        delete chain;
+                    }
                     
-                    uint64_t key = kv.first + (rule_top << 16);
-                    substitution.insert({key, chain});
+                    while (chain->size() > 1){
+                        uint64_t top = chain->at(0);
+                        chain->erase(chain->begin());
+                        uint64_t key = kv.first + (top << 16);
+                        if (uncontains(substitution, key)){
+                            substitution.insert({key, chain});
+                        
+                            if (chain->size() > 1){
+                                vector<uint64_t>* new_chain = new vector<uint64_t>();
+                                for (auto &e : *chain) new_chain->push_back(e);
+                                chain = new_chain;
+                            }
+                        }
+                        else {
+                            delete chain;
+                            break;
+                        }
+                    }
                 }
+                delete chains;
             }
             delete topnodes;
         }
@@ -317,12 +342,11 @@ void Parser<T>::read_grammar(string grammar){
         right_pair.push_back(new Bitfield(next_free_rule_index));
     }
     
+    
     for (auto& kvp : NTtoNT){
         if (kvp.first <= MASK) continue;
         right_pair.at(kvp.first >> SHIFT)->insert(kvp.first & MASK);
     }
-    
-    
 }
 
 
@@ -575,23 +599,47 @@ vector<uint64_t>* Parser<T>::collect_one_backwards(uint64_t rule_index){
 
 
 template <class T>
-vector<uint64_t>* Parser<T>::collect_backwards(uint64_t child_rule_index, unsigned parent_rule_index){
-    if (uncontains(NTtoNT, child_rule_index)) return NULL;
+vector< vector<uint64_t>* >* Parser<T>::collect_backwards(uint64_t child_rule_index, unsigned parent_rule_index){
+    set<uint64_t> visited;
+    vector<uint64_t> path;
+    vector< vector<uint64_t>* >* collection = new vector< vector<uint64_t>* >();
     
-    for (auto previous_index : NTtoNT.at(child_rule_index)){
-        if (previous_index == parent_rule_index) return new vector<uint64_t>;
-        
-        else if (contains(NTtoNT, previous_index)){
-            vector<uint64_t>* collection = collect_backwards(previous_index, parent_rule_index);
-            if (collection != NULL){
-                collection->push_back(previous_index);
-                return collection;
+    return collect_backwards(child_rule_index, parent_rule_index, &visited, &path, collection);
+}
+
+
+template <class T>
+vector< vector<uint64_t>* >* Parser<T>::collect_backwards(uint64_t child_rule_index, unsigned parent_rule_index, set<uint64_t>* visited, vector<uint64_t>* path, vector< vector<uint64_t>* >* collection){
+    // provides all single linkage paths from a child rule to a parent rule,
+    // and yes, there can be several paths
+    
+    if (uncontains(NTtoNT, child_rule_index)){
+        return collection;
+    }
+    
+    
+    visited->insert(child_rule_index);
+    path->push_back(child_rule_index);
+    
+    for (auto previous_rule : NTtoNT.at(child_rule_index)){
+        if (uncontains_p(visited, previous_rule)){
+            if (previous_rule == parent_rule_index){
+                vector<uint64_t>* found_path = new vector<uint64_t>();
+                found_path->push_back(parent_rule_index);
+                for (int i = (int)path->size() - 1; i >= 0; --i) found_path->push_back(path->at(i));
+                collection->push_back(found_path);
+            }
+            
+            else{
+                collection = collect_backwards(previous_rule, parent_rule_index, visited, path, collection);
             }
         }
     }
-    return NULL;
-}
+    path->pop_back();
+    visited->erase(child_rule_index);
     
+    return collection;
+}
     
     
     
@@ -599,7 +647,7 @@ vector<uint64_t>* Parser<T>::collect_backwards(uint64_t child_rule_index, unsign
 template <class T>
 void Parser<T>::raise_events(TreeNode *node){
     if (node != NULL){
-        string node_rule_name = node->fire_event ?  NTtoRule.at(node->rule_index) : "";
+        string node_rule_name = node->fire_event ? NTtoRule.at(node->rule_index) : "";
         if (node->fire_event) parser_event_handler->handle_event(node_rule_name + "_pre_event", node);
         
         if (node->left != NULL) { // node.terminal is != None when node is leaf
@@ -632,7 +680,7 @@ void Parser<T>::fill_tree(TreeNode *node, DPNode *dp_node){
     
     uint64_t subst_key = bottom_rule + (top_rule << 16);
     
-    if ((bottom_rule != top_rule) and (contains(substitution, subst_key))){
+    if ((bottom_rule != top_rule) && (contains(substitution, subst_key))){
         for (auto& rule_index : *substitution.at(subst_key)){
             node->left = new TreeNode(rule_index, contains(NTtoRule, rule_index));
             node = node->left;
@@ -659,6 +707,7 @@ void Parser<T>::fill_tree(TreeNode *node, DPNode *dp_node){
 // re-implementation of Cocke-Younger-Kasami algorithm
 template <class T>
 T Parser<T>::parse(string text_to_parse, bool throw_error){
+    
     string old_lipid = text_to_parse;
     if (used_eof) text_to_parse += string(1, EOF_SIGN);
     parser_event_handler->content = NULL;
@@ -749,7 +798,6 @@ void Parser<T>::parse_regular(string text_to_parse){
             }
         }
         
-
         
         for (int i = n - 1; i > 0; --i){
             if (contains_p(DP[0][i], START_RULE)){

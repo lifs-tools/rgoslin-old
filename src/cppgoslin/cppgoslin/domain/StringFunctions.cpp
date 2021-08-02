@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +38,28 @@ string goslin::compute_sum_formula(ElementTable* elements){
 }
 
 
+string goslin::to_lower(string st){
+    string s = string(st);
+    std::transform(s.begin(), s.end(), s.begin(),[](unsigned char c){ return std::tolower(c); });
+    return s;
+}
+
+
+string goslin::to_upper(string st){
+    string s = string(st);
+    std::transform(s.begin(), s.end(), s.begin(),[](unsigned char c){ return std::toupper(c); });
+    return s;
+}
+
+bool goslin::endswith(const string &main_str, const string &to_match){
+    if(main_str.size() >= to_match.size() &&
+            main_str.compare(main_str.size() - to_match.size(), to_match.size(), to_match) == 0)
+            return true;
+        else
+            return false;
+}
+
+
 string goslin::strip(string s, char c){
     if (s.length() > 0) {
         uint32_t st = 0;
@@ -57,7 +78,7 @@ string goslin::strip(string s, char c){
 
 
 ElementTable* goslin::create_empty_table(){
-    return new ElementTable{{ELEMENT_C, 0}, {ELEMENT_C13, 0}, {ELEMENT_H, 0}, {ELEMENT_H2, 0}, {ELEMENT_N, 0}, {ELEMENT_N15, 0}, {ELEMENT_O, 0}, {ELEMENT_O17, 0}, {ELEMENT_O18, 0}, {ELEMENT_P, 0}, {ELEMENT_P32, 0}, {ELEMENT_S, 0}, {ELEMENT_S34, 0}, {ELEMENT_S33, 0}};
+    return new ElementTable{{ELEMENT_C, 0}, {ELEMENT_C13, 0}, {ELEMENT_H, 0}, {ELEMENT_H2, 0}, {ELEMENT_N, 0}, {ELEMENT_N15, 0}, {ELEMENT_O, 0}, {ELEMENT_O17, 0}, {ELEMENT_O18, 0}, {ELEMENT_P, 0}, {ELEMENT_P32, 0}, {ELEMENT_S, 0}, {ELEMENT_S34, 0}, {ELEMENT_S33, 0}, {ELEMENT_F, 0}, {ELEMENT_Cl, 0}, {ELEMENT_Br, 0}, {ELEMENT_I, 0}, {ELEMENT_As, 0}};
 }
 
 
@@ -101,7 +122,7 @@ vector<string>* goslin::split_string(string text, char separator, char _quote, b
     string sb_string;
     sb_string = sb.str();
     
-    if (sb_string.length() > 0){
+    if (sb_string.length() > 0 || (last_char == ',' && with_empty)){
         tokens->push_back(sb_string);
     }
     if (in_quote){

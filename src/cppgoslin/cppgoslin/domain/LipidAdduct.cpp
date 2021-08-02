@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +61,19 @@ string LipidAdduct::get_lipid_string(LipidLevel level){
 
 
 string LipidAdduct::get_class_name(){
-    return (lipid) ? lipid->get_class_name() : "";
+    return (lipid) ? lipid->headgroup->get_class_name() : "";
+}
+
+
+
+LipidLevel LipidAdduct::get_lipid_level(){
+    return lipid->get_lipid_level();
+}
+
+
+    
+string LipidAdduct::get_extended_class(){
+    return lipid ? lipid->get_extended_class() : "";
 }
 
 

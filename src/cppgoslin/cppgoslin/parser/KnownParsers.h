@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,25 +27,33 @@ SOFTWARE.
 #define KNOWN_PARSERS_H
 
 
-#include "cppgoslin/parser/GoslinFragmentParserEventHandler.h"
+#include "cppgoslin/parser/FattyAcidParserEventHandler.h"
+#include "cppgoslin/parser/ShorthandParserEventHandler.h"
 #include "cppgoslin/parser/GoslinParserEventHandler.h"
 #include "cppgoslin/parser/LipidMapsParserEventHandler.h"
 #include "cppgoslin/parser/SwissLipidsParserEventHandler.h"
 #include "cppgoslin/parser/HmdbParserEventHandler.h"
-//#include "cppgoslin/parser/BaseParserEventHandler.h"
 #include "cppgoslin/parser/KnownGrammars.h"
+
+class FattyAcidParser : public Parser<LipidAdduct*> {
+public:
+    FattyAcidParser();
+    ~FattyAcidParser();
+    LipidAdduct* parse(string lipid_name);
+};
+
+
+class ShorthandParser : public Parser<LipidAdduct*> {
+public:
+    ShorthandParser();
+    ~ShorthandParser();
+};
+
 
 class GoslinParser : public Parser<LipidAdduct*> {
 public:
     GoslinParser();
     ~GoslinParser();
-};
-
-
-class GoslinFragmentParser : public Parser<LipidAdduct*> {
-public:
-    GoslinFragmentParser();
-    ~GoslinFragmentParser();
 };
 
 

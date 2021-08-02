@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,13 +39,11 @@ using namespace goslin;
 
 class LipidMolecularSubspecies : public LipidSpecies {
 public:
-    LipidMolecularSubspecies (string head_group);
-    LipidMolecularSubspecies (string head_group, vector<FattyAcid*> *_fa);
-    ~LipidMolecularSubspecies();
-    string build_lipid_subspecies_name(string fa_separator, LipidLevel level = NO_LEVEL);
+    LipidMolecularSubspecies (Headgroup* _headgroup, vector<FattyAcid*> *_fa);
+    string build_lipid_subspecies_name(LipidLevel level = NO_LEVEL);
     string get_lipid_string(LipidLevel level = NO_LEVEL);
     LipidLevel get_lipid_level();
-    bool validate();
+    ElementTable* get_elements();
 };
 
 #endif /* LIPID_MOLECULAR_SUBSPECIES_H */

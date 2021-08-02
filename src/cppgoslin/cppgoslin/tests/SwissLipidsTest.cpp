@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,13 +38,13 @@ using namespace goslin;
 int main(int argc, char** argv){
     
     LipidAdduct* lipid;
-    string test_file = "cppgoslin/tests/swiss-lipids-test.csv";
+    string test_file = "data/goslin/testfiles/swiss-lipids-test.csv";
     SwissLipidsParser parser;
-    
     
     // test several more lipid names
     vector<string> lipid_names;
     ifstream infile(test_file);
+    assert(infile.good());
     string line;
     while (getline(infile, line)){
         line = strip(line, ' ');
@@ -53,8 +52,7 @@ int main(int argc, char** argv){
     }
     infile.close();
     
-    
-    for (auto lipid_name : lipid_names){
+    for (auto &lipid_name : lipid_names){
         try {
             lipid = parser.parse(lipid_name);
             assert(lipid != NULL);

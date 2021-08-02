@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,45 +25,69 @@ SOFTWARE.
 
 #include "LipidSpeciesInfo.h"
 
-LipidSpeciesInfo::LipidSpeciesInfo () : FattyAcid() {
-    level = UNDEFINED_LEVEL;
+LipidSpeciesInfo::LipidSpeciesInfo (LipidClass lipid_class) : FattyAcid("info") {
+    level = NO_LEVEL;
+    num_ethers = 0;
+    num_specified_fa = 0;
+    extended_class = ESTER;
+    ClassMap &lipid_classes = LipidClasses::get_instance().lipid_classes;
+    total_fa = contains(lipid_classes, lipid_class) ? lipid_classes.at(lipid_class).max_num_fa : 0;
 }
 
 
-LipidSpeciesInfo::LipidSpeciesInfo (FattyAcid *fa) : FattyAcid(fa) {
-    level = UNDEFINED_LEVEL;
-}
-
-void LipidSpeciesInfo::clone(FattyAcid *fa){
-    if (fa) {
-        name = fa->name;
-        position = fa->position;
-        num_carbon = fa->num_carbon;
-        num_hydroxyl = fa->num_hydroxyl;
-        num_double_bonds = fa->num_double_bonds;
-        lipid_FA_bond_type = fa->lipid_FA_bond_type;
-        lcb = fa->lcb;
-        for (auto kv : fa->double_bond_positions){
-            double_bond_positions.insert({kv.first, kv.second});
-        }
-    }
-    else {
-        name = "";
-        position = 0;
-        num_carbon = 0;
-        num_double_bonds = 0;
-        num_hydroxyl = 0;
-        lipid_FA_bond_type = ESTER;
-        lcb = false;
-    }
-}
-
-
-ElementTable* LipidSpeciesInfo::get_elements(int num_fa){
-
+ElementTable* LipidSpeciesInfo::get_elements(){
     ElementTable* elements = FattyAcid::get_elements();
-    elements->at(ELEMENT_O) += num_fa - 1;
-    elements->at(ELEMENT_H) -= num_fa - 1;
+    elements->at(ELEMENT_O) -= (num_ethers == 0);
+    elements->at(ELEMENT_H) += num_ethers == 0 ? 1 : -1;
     
     return elements;
+}
+
+
+void LipidSpeciesInfo::add(FattyAcid* _fa){
+    lcb |= _fa->lcb;
+    if (_fa->lipid_FA_bond_type == ETHER_PLASMENYL || _fa->lipid_FA_bond_type == ETHER_PLASMANYL){
+        num_ethers += 1;
+        lipid_FA_bond_type = ETHER_PLASMANYL;
+        extended_class = _fa->lipid_FA_bond_type;
+    }
+            
+    else{
+        num_specified_fa += 1;
+    }
+    for (auto &kv : *(_fa->functional_groups)){
+        if (uncontains_p(functional_groups, kv.first)) functional_groups->insert({kv.first, vector<FunctionalGroup*>()});
+        for (auto func_group : kv.second) {
+            functional_groups->at(kv.first).push_back(func_group->copy());
+        }
+    }
+        
+    ElementTable* e = _fa->get_elements();
+    num_carbon += e->at(ELEMENT_C);
+    delete e;
+    double_bonds->num_double_bonds += _fa->get_double_bonds();
+}
+
+
+string LipidSpeciesInfo::to_string(){
+    stringstream info_string;
+    info_string << ether_prefix[num_ethers];
+    for (auto &kv : double_bonds->double_bond_positions) cout << kv.first << ": " << kv.second << endl;
+    info_string << num_carbon << ":" << double_bonds->get_num();
+    
+    
+    ElementTable *elements = get_functional_group_elements();
+    for (int i = 2; i < (int)element_order.size(); ++i){
+        Element e = element_order.at(i);
+        if (elements->at(e) > 0){
+            info_string << ";" << element_shortcut.at(e);
+            if (elements->at(e) > 1){
+                info_string << elements->at(e);
+            }
+        }
+    } 
+    delete elements;
+    
+        
+    return info_string.str();
 }

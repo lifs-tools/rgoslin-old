@@ -1,8 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
-                   Nils Hoffmann  -  nils.hoffmann {at} isas.de
+Copyright (c) the authors (listed in global LICENSE file)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +44,7 @@ int main(int argc, char** argv){
     // test several more lipid names
     vector<string> lipid_names;
     ifstream infile(test_file);
+    assert(infile.good());
     string line;
     while (getline(infile, line)){
         line = strip(line, ' ');
