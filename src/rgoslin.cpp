@@ -102,73 +102,74 @@ std::string get_lipid_name_for_level(LipidAdduct* lipidAdduct, LipidLevel level)
  * the NA_STRING.
  */
 SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string grammar) {
-    CharacterVector lipidDetails;
     String chr_na = NA_STRING;
-    lipidDetails["Normalized Name"] = chr_na;
-    lipidDetails["Original Name"] = chr_na;
-    lipidDetails["Grammar"] = chr_na;
-    lipidDetails["Adduct"] = chr_na;
-    lipidDetails["AdductCharge"] = chr_na;
-    lipidDetails["Lipid Maps Category"] = chr_na;
-    lipidDetails["Lipid Maps Main Class"] = chr_na;
-    lipidDetails["Species Name"] = chr_na;
-    lipidDetails["Molecular Subspecies Name"] = chr_na;
-    lipidDetails["Structural Subspecies Name"] = chr_na;
-    lipidDetails["Isomeric Subspecies Name"] = chr_na;
-    lipidDetails["Functional Class Abbr"] = chr_na;
-    lipidDetails["Functional Class Synonyms"] = chr_na;
-    lipidDetails["Level"] = chr_na;
-    lipidDetails["Total C"] = chr_na;
-    lipidDetails["Total OH"] = chr_na;
-    lipidDetails["Total DB"] = chr_na;
-    lipidDetails["Mass"] = chr_na;
-    lipidDetails["Sum Formula"] = chr_na;
-    lipidDetails["FA1 Position"] = chr_na;
-    lipidDetails["FA1 C"] = chr_na;
-    lipidDetails["FA1 OH"] = chr_na;
-    lipidDetails["FA1 DB"] = chr_na;
-    lipidDetails["FA1 Bond Type"] = chr_na;
-    lipidDetails["FA1 DB Positions"] = chr_na;
-    lipidDetails["FA2 Position"] = chr_na;
-    lipidDetails["FA2 C"] = chr_na;
-    lipidDetails["FA2 OH"] = chr_na;
-    lipidDetails["FA2 DB"] = chr_na;
-    lipidDetails["FA2 Bond Type"] = chr_na;
-    lipidDetails["FA2 DB Positions"] = chr_na;
-    lipidDetails["LCB Position"] = chr_na;
-    lipidDetails["LCB C"] = chr_na;
-    lipidDetails["LCB OH"] = chr_na;
-    lipidDetails["LCB DB"] = chr_na;
-    lipidDetails["LCB Bond Type"] = chr_na;
-    lipidDetails["FA3 Position"] = chr_na;
-    lipidDetails["FA3 C"] = chr_na;
-    lipidDetails["FA3 OH"] = chr_na;
-    lipidDetails["FA3 DB"] = chr_na;
-    lipidDetails["FA3 Bond Type"] = chr_na;
-    lipidDetails["FA3 DB Positions"] = chr_na;
-    lipidDetails["FA4 Position"] = chr_na;
-    lipidDetails["FA4 C"] = chr_na;
-    lipidDetails["FA4 OH"] = chr_na;
-    lipidDetails["FA4 DB"] = chr_na;
-    lipidDetails["FA4 Bond Type"] = chr_na;
-    lipidDetails["FA4 DB Positions"] = chr_na;
+    
+    DataFrame lipidDetails = DataFrame::create();
+    lipidDetails.push_back(chr_na, "Normalized.Name");
+    lipidDetails.push_back(chr_na, "Original.Name");
+    lipidDetails.push_back(chr_na, "Grammar");
+    lipidDetails.push_back(chr_na, "Adduct");
+    lipidDetails.push_back(chr_na, "Adduct.Charge");
+    lipidDetails.push_back(chr_na, "Lipid.Maps.Category");
+    lipidDetails.push_back(chr_na, "Lipid.Maps.Main.Class");
+    lipidDetails.push_back(chr_na, "Species.Name");
+    lipidDetails.push_back(chr_na, "Molecular.Subspecies.Name");
+    lipidDetails.push_back(chr_na, "Structural.Subspecies.Name");
+    lipidDetails.push_back(chr_na, "Isomeric.Subspecies.Name");
+    lipidDetails.push_back(chr_na, "Functional.Class.Abbr");
+    lipidDetails.push_back(chr_na, "Functional.Class.Synonyms");
+    lipidDetails.push_back(chr_na, "Level");
+    lipidDetails.push_back(chr_na, "Total.C");
+    lipidDetails.push_back(chr_na, "Total.OH");
+    lipidDetails.push_back(chr_na, "Total.DB");
+    lipidDetails.push_back(chr_na, "Mass");
+    lipidDetails.push_back(chr_na, "Sum.Formula");
+    lipidDetails.push_back(chr_na, "FA1.Position");
+    lipidDetails.push_back(chr_na, "FA1.C");
+    lipidDetails.push_back(chr_na, "FA1.OH");
+    lipidDetails.push_back(chr_na, "FA1.DB");
+    lipidDetails.push_back(chr_na, "FA1.Bond.Type");
+    lipidDetails.push_back(chr_na, "FA1.DB.Positions");
+    lipidDetails.push_back(chr_na, "FA2.Position");
+    lipidDetails.push_back(chr_na, "FA2.C");
+    lipidDetails.push_back(chr_na, "FA2.OH");
+    lipidDetails.push_back(chr_na, "FA2.DB");
+    lipidDetails.push_back(chr_na, "FA2.Bond.Type");
+    lipidDetails.push_back(chr_na, "FA2.DB.Positions");
+    lipidDetails.push_back(chr_na, "LCB.Position");
+    lipidDetails.push_back(chr_na, "LCB.C");
+    lipidDetails.push_back(chr_na, "LCB.OH");
+    lipidDetails.push_back(chr_na, "LCB.DB");
+    lipidDetails.push_back(chr_na, "LCB.Bond.Type");
+    lipidDetails.push_back(chr_na, "FA3.Position");
+    lipidDetails.push_back(chr_na, "FA3.C");
+    lipidDetails.push_back(chr_na, "FA3.OH");
+    lipidDetails.push_back(chr_na, "FA3.DB");
+    lipidDetails.push_back(chr_na, "FA3.Bond.Type");
+    lipidDetails.push_back(chr_na, "FA3.DB.Positions");
+    lipidDetails.push_back(chr_na, "FA4.Position");
+    lipidDetails.push_back(chr_na, "FA4.C");
+    lipidDetails.push_back(chr_na, "FA4.OH");
+    lipidDetails.push_back(chr_na, "FA4.DB");
+    lipidDetails.push_back(chr_na, "FA4.Bond.Type");
+    lipidDetails.push_back(chr_na, "FA4.DB.Positions");
     
     if (lipidAdduct){
         // grammar = parser->grammar_name;
         std::string originalName = chr_na;
         std::string nativeLevelName = chr_na;
         std::string adductString = chr_na;
-        std::string adductCharge = chr_na;
+        int adductCharge = 0;
         std::string lipidMapsCategory = chr_na;
         std::string lipidMapsMainClass = chr_na;
         std::string species = chr_na;
         std::string headGroup = chr_na;
         std::string headGroupSynonyms = chr_na;
         std::string level = chr_na;
-        std::string totalC = chr_na;
-        std::string totalOH = chr_na;
-        std::string totalDB = chr_na;
-        std::string mass = chr_na;
+        int totalC = 0;
+        int totalOH = 0;
+        int totalDB = 0;
+        double mass = 0;
         std::string formula = chr_na;
         
         Adduct* adduct = lipidAdduct->adduct;
@@ -181,65 +182,47 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             nativeLevelName = lipidAdduct->lipid->get_lipid_string(info->level);
             if(adduct) {
                 adductString = lipidAdduct->adduct->get_lipid_string();
-                std::ostringstream acs;
-                acs << lipidAdduct->adduct->get_charge();
-                adductCharge = acs.str();
+                adductCharge = lipidAdduct->adduct->get_charge();
             }
             lipidMapsMainClass = lipid->headgroup->get_class_name();
             headGroup = lipid->headgroup->headgroup;
             LipidClassMeta lcMeta = LipidClasses::get_instance().lipid_classes.at(lipid->headgroup->get_class(headGroup));
             headGroupSynonyms = "[" + join(lcMeta.synonyms, ", ") + "]";
             level = get_lipid_level_str(info->level);
-            totalC = std::to_string(info->num_carbon);
-            totalOH = std::to_string(((info->functional_groups->find("OH") != info->functional_groups->end()) ? info->functional_groups->at("OH").size() : 0));
-            totalDB = std::to_string(info->double_bonds->get_num());
-            std::ostringstream massbuffer;
-            massbuffer << std::fixed << setprecision(6) << lipidAdduct->get_mass();
-            mass = massbuffer.str();
+            totalC = info->num_carbon;
+            totalOH = ((info->functional_groups->find("OH") != info->functional_groups->end()) ? info->functional_groups->at("OH").size() : 0);
+            totalDB = info->double_bonds->get_num();
+            mass = lipidAdduct->get_mass();
             formula = lipidAdduct->get_sum_formula();
             
 
             // Normalized Name	Original Name	Grammar	Lipid Maps Category	Lipid Maps Main Class	Functional Class Abbr	Functional Class Synonyms	Level	Total #C	Total #OH	Total #DB	FA1 Position	FA1 #C	FA1 #OH	FA1 #DB	FA1 Bond Type	FA2 Position	FA2 #C	FA2 #OH	FA2 #DB	FA2 Bond Type	LCB Position	LCB #C	LCB #OH	LCB #DB	LCB Bond Type	FA3 Position	FA3 #C	FA3 #OH	FA3 #DB	FA3 Bond Type	FA4 Position	FA4 #C	FA4 #OH	FA4 #DB	FA4 Bond Type        
-            lipidDetails["Normalized Name"] = nativeLevelName;
-            lipidDetails["Original Name"] = lipid_name;
+            lipidDetails["Normalized.Name"] = nativeLevelName;
+            lipidDetails["Original.Name"] = lipid_name;
             lipidDetails["Adduct"] = adductString;
-            lipidDetails["AdductCharge"] = adductCharge;
+            lipidDetails["Adduct.Charge"] = adductCharge;
             lipidDetails["Grammar"] = grammar;
-            lipidDetails["Lipid Maps Category"] = lipidMapsCategory;
-            lipidDetails["Lipid Maps Main Class"] = lipidMapsMainClass;
-            lipidDetails["Species Name"] = species;
-            lipidDetails["Molecular Subspecies Name"] = get_lipid_name_for_level(lipidAdduct, MOLECULAR_SUBSPECIES);
-            lipidDetails["Structural Subspecies Name"] = get_lipid_name_for_level(lipidAdduct, STRUCTURAL_SUBSPECIES);
-            lipidDetails["Isomeric Subspecies Name"] = get_lipid_name_for_level(lipidAdduct, ISOMERIC_SUBSPECIES);
-            lipidDetails["Functional Class Abbr"] = "[" + headGroup + "]";
-            lipidDetails["Functional Class Synonyms"] = headGroupSynonyms;
+            lipidDetails["Lipid.Maps.Category"] = lipidMapsCategory;
+            lipidDetails["Lipid.Maps.Main.Class"] = lipidMapsMainClass;
+            lipidDetails["Species.Name"] = species;
+            lipidDetails["Molecular.Subspecies.Name"] = get_lipid_name_for_level(lipidAdduct, MOLECULAR_SUBSPECIES);
+            lipidDetails["Structural.Subspecies.Name"] = get_lipid_name_for_level(lipidAdduct, STRUCTURAL_SUBSPECIES);
+            lipidDetails["Isomeric.Subspecies.Name"] = get_lipid_name_for_level(lipidAdduct, ISOMERIC_SUBSPECIES);
+            lipidDetails["Functional.Class.Abbr"] = "[" + headGroup + "]";
+            lipidDetails["Functional.Class.Synonyms"] = headGroupSynonyms;
             lipidDetails["Level"] = level;
-            lipidDetails["Total C"] = totalC;
-            lipidDetails["Total OH"] = totalOH;
-            lipidDetails["Total DB"] = totalDB;
+            lipidDetails["Total.C"] = totalC;
+            lipidDetails["Total.OH"] = totalOH;
+            lipidDetails["Total.DB"] = totalDB;
             lipidDetails["Mass"] = mass;
-            lipidDetails["Sum Formula"] = formula;
+            lipidDetails["Sum.Formula"] = formula;
             int faCnt = 1;
             for(FattyAcid* fap : lipid->get_fa_list()) {
-                std::ostringstream prefs;
-                if(fap->lcb) {
-                    prefs << "LCB ";
-                } else {
-                    prefs << "FA" << faCnt << " ";
-                }
-                string prefix = prefs.str();
-                std::ostringstream pos;
-                pos << fap->position;
-                lipidDetails[prefix + "Position"] = pos.str();
-                std::ostringstream nc;
-                nc << fap->num_carbon;
-                lipidDetails[prefix + "C"] = nc.str();
-                std::ostringstream noh;
-                noh << ((fap->functional_groups->find("OH") != fap->functional_groups->end()) ? fap->functional_groups->at("OH").size() : 0);
-                lipidDetails[prefix + "OH"] = noh.str();
-                std::ostringstream ndb;
-                ndb << fap->double_bonds->get_num();
-                lipidDetails[prefix + "DB"] = ndb.str();
+                string prefix = (fap->lcb ? "LCB" : "FA") + std::to_string(faCnt) + ".";
+                lipidDetails[prefix + "Position"] = fap->position;
+                lipidDetails[prefix + "C"] = fap->num_carbon;
+                lipidDetails[prefix + "OH"] = ((fap->functional_groups->find("OH") != fap->functional_groups->end()) ? fap->functional_groups->at("OH").size() : 0);
+                lipidDetails[prefix + "DB"] = lipidAdduct->get_mass();
                 string fa_bond_type = "ESTER";
                 switch(fap->lipid_FA_bond_type){
                 case (UNDEFINED_FA): fa_bond_type = "UNDEFINED"; break;
@@ -249,7 +232,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 case (NO_FA): fa_bond_type = "NO_FA"; break;
                 default: warning("Unknown bond type in FA " + prefix + " of " + lipid_name); fa_bond_type = "UNKNOWN";
                 }
-                lipidDetails[prefix + "Bond Type"] = fa_bond_type;
+                lipidDetails[prefix + "Bond.Type"] = fa_bond_type;
                 std::ostringstream dbPos;
                 dbPos << "[";
                 std::vector<std::string> dbPosPairs;
@@ -258,14 +241,14 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 }
                 dbPos << join(dbPosPairs, ", ");
                 dbPos << "]";
-                lipidDetails[prefix + "DB Positions"] = dbPos.str();
+                lipidDetails[prefix + "DB.Positions"] = dbPos.str();
                 ++faCnt;
             }
         }
         delete lipidAdduct;
     } else {
-        lipidDetails["Normalized Name"] = chr_na;
-        lipidDetails["Original Name"] = lipid_name;
+        lipidDetails["Normalized.Name"] = chr_na;
+        lipidDetails["Original.Name"] = lipid_name;
         lipidDetails["Grammar"] = "NOT_PARSEABLE";
         warning("Could not find matching parser for grammar '" +grammar+"'! Valid ones are 'Goslin', 'GoslinFragments', 'SwissLipids', 'LipidMaps', 'HMDB'");
     }
@@ -290,7 +273,7 @@ SEXP rcpp_parse_lipid_name_with_grammar(std::string lipid_name, std::string targ
             if(target_grammar.compare(parser->grammar_name)==0) {
                 lipidAdduct = parser->parse(lipid_name, false);
                 if (lipidAdduct){
-                    lipidDetails = handle_lipid(lipidAdduct, lipid_name, parser->grammar_name);
+                    return handle_lipid(lipidAdduct, lipid_name, parser->grammar_name);
                 }
             }
         } catch (LipidException &e){
@@ -308,7 +291,6 @@ SEXP rcpp_parse_lipid_name_with_grammar(std::string lipid_name, std::string targ
 // [[Rcpp::plugins("cpp11")]]
 // [[Rcpp::export]]
 SEXP rcpp_parse_lipid_name(std::string lipid_name) {
-    CharacterVector lipidDetails;
     String chr_na = NA_STRING;
     /* parsing lipid name into a lipid container data structure */
     LipidAdduct* lipidAdduct = NULL;
@@ -316,10 +298,10 @@ SEXP rcpp_parse_lipid_name(std::string lipid_name) {
         /* create instance of lipid parser containing several grammars */
         LipidParser lipid_parser;
         lipidAdduct = lipid_parser.parse(lipid_name);
-        lipidDetails = handle_lipid(lipidAdduct, lipid_name, (lipidAdduct != 0) ? String(lipid_parser.lastSuccessfulParser->grammar_name) : chr_na);
-        return lipidDetails;
+        return handle_lipid(lipidAdduct, lipid_name, (lipidAdduct != 0) ? String(lipid_parser.lastSuccessfulParser->grammar_name) : chr_na);
     } catch(LipidException &e) {
         warning("Parsing of lipid name '" +lipid_name+"' caused an exception: "+ e.what());
+        CharacterVector lipidDetails;
         return lipidDetails;
     }
 }
