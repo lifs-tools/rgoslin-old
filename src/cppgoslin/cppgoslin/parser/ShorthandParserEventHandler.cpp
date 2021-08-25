@@ -49,8 +49,7 @@ ShorthandParserEventHandler::ShorthandParserEventHandler() : BaseParserEventHand
     reg("gl_species_pre_event", set_species_level);
     reg("gl_molecular_species_pre_event", set_molecular_level);
     reg("pl_species_pre_event", set_species_level);
-    reg("pl_molecular_species_double_pre_event", set_molecular_level);
-    reg("pl_molecular_species_triple_pre_event", set_molecular_level);
+    reg("pl_molecular_species_pre_event", set_molecular_level);
     reg("sl_species_pre_event", set_species_level);
     reg("pl_single_pre_event", set_molecular_level);
     reg("unsorted_fa_separator_pre_event", set_molecular_level);
@@ -191,7 +190,7 @@ void ShorthandParserEventHandler::build_lipid(TreeNode *node) {
         }
     }
         
-    else if (true_fa != poss_fa){
+    else if (true_fa != poss_fa && (level == ISOMERIC_SUBSPECIES || level == STRUCTURAL_SUBSPECIES)){
         string hg_name = head_group->headgroup;
         delete head_group;
         throw ConstraintViolationException("Number of described fatty acyl chains (" + std::to_string(true_fa) + ") not allowed for lipid class '" + hg_name + "' (having " + std::to_string(poss_fa) + " fatty aycl chains).");

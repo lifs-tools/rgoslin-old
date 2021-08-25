@@ -1,8 +1,7 @@
 /*
  * MIT License
  * 
- * Copyright (c) 2021 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
- *                    Nils Hoffmann  -  nils.hoffmann {at} isas.de
+ * Copyright (c) the authors (listed in global LICENSE file)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the 'Software'), to deal
@@ -147,11 +146,10 @@ gl_hg_triple : 'TG';
 
 
 
-pl : pl_species | pl_subspecies | pl_molecular_species_double | pl_molecular_species_triple;
+pl : pl_species | pl_subspecies | pl_molecular_species;
 pl_species : pl_hg headgroup_separator fatty_acyl_chain;
 pl_subspecies : pl_single | pl_double | pl_quadro;
-pl_molecular_species_double : pl_hg_triple headgroup_separator fatty_acyl_chain2 | pl_hg_quadro headgroup_separator fatty_acyl_chain2;
-pl_molecular_species_triple : pl_hg_quadro headgroup_separator fatty_acyl_chain3;
+pl_molecular_species : pl_hg_quadro headgroup_separator fatty_acyl_chain2 | pl_hg_quadro headgroup_separator fatty_acyl_chain3;
 pl_single : pl_hg_single headgroup_separator fatty_acyl_chain;
 pl_full : pl_hg_single headgroup_separator fatty_acyl_chain2;
 pl_double : pl_full | pl_hg_double_all headgroup_separator fatty_acyl_chain2;
@@ -240,7 +238,9 @@ func_repetition_separator : COMMA;
 round_open_bracket : ROB;
 round_close_bracket : RCB;
 
-number :  digit;
-digit : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | digit digit;
+number :  digit | digit number;
+digit : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
 
-
+character : 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z' |'0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+charge : '1' | '2' | '3' | '4';
+charge_sign : '-' | '+';

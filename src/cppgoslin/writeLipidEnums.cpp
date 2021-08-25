@@ -191,11 +191,11 @@ void writeLipidEnum(string ofFileName){
     unsigned int cnt = 0;
     for (auto& kv : data){
         // add lipid category, description, max num fa, possible num fa
-        offile << "    {" << kv.first << ", {" << kv.second->at(1) << ", \"" << kv.second->at(2) << "\", ";
+        offile << "    {" << kv.first << ", {" << kv.second->at(1) << ", \"" << kv.second->at(0) << "\", \"" << kv.second->at(2) << "\", ";
         offile << kv.second->at(3) << ", " << kv.second->at(4) << ", {";
         enums << ", " << kv.first;
         
-        vector<string>* tokens = split_string(kv.second->at(5), '|', '"');
+        vector<string>* tokens = split_string(kv.second->at(5), ';', '"');
         for (unsigned int i = 0; i < tokens->size(); ++i){
             string tok = strip(tokens->at(i), ' ');
             if (i > 0) offile << ", ";

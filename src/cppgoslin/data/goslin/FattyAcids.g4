@@ -1,8 +1,7 @@
 /*
  * MIT License
  * 
- * Copyright (c) 2021 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
- *                    Nils Hoffmann  -  nils.hoffmann {at} isas.de
+ * Copyright (c) the authors (listed in global LICENSE file)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the 'Software'), to deal
@@ -29,21 +28,23 @@ grammar FattyAcids;
 /* first rule is always start rule, EOF = end of file */
 lipid : fatty_acid EOF;
 
-fatty_acid: regular_fatty_acid | wax | CAR | ethanolamine | amine | acetic_acid;
-wax : wax_ester fatty_acid_type | wax_ester regular_fatty_acid;
-wax_ester : fatty_acid SPACE | ROB fatty_acid RCB SPACE | methyl SPACE | methyl DASH;
+fatty_acid: regular_fatty_acid | wax | car | ethanolamine | amine | acetic_acid;
+fatty_acid_recursion: regular_fatty_acid;
+wax : wax_ester regular_fatty_acid;
+wax_ester : fatty_acid_recursion SPACE | ROB fatty_acid_recursion RCB SPACE | methyl SPACE | methyl DASH;
 methyl : 'methyl';
-CAR : car_positions DASH CAR_fa '-4-(' CAR_spec ')butanoate';
-CAR_fa : SOB regular_fatty_acid SCB | COB regular_fatty_acid CCB;
-CAR_spec : 'trimethylammonio' | 'trimethylazaniumyl';
+car : car_positions DASH car_fa '-4-(' car_spec ')butanoate';
+car_fa : SOB regular_fatty_acid SCB | COB regular_fatty_acid CCB;
+car_spec : 'trimethylammonio' | 'trimethylazaniumyl';
 
 car_positions : functional_position | ROB car_position RCB DASH functional_position;
-ethanolamine : amine_prefix ROB fatty_acid RCB DASH 'ethanolamine';
+car_position : number;
+ethanolamine : amine_prefix ROB fatty_acid_recursion RCB DASH 'ethanolamine';
 amine : amine_prefix amine_n DASH regular_fatty_acid SPACE 'amine';
 amine_prefix : 'n-' | '(+/-)n-';
-amine_n : fatty_acid | ROB fatty_acid RCB | methyl;
+amine_n : fatty_acid_recursion | ROB fatty_acid_recursion RCB | methyl;
 acetic_acid : acetic_recursion 'acetic acid';
-acetic_recursion : fatty_acid | ROB fatty_acid RCB | SOB fatty_acid SCB | COB fatty_acid CCB;
+acetic_recursion : ROB fatty_acid_recursion RCB | SOB fatty_acid_recursion SCB | COB fatty_acid_recursion CCB;
 
 regular_fatty_acid : ate_type |
                      ol_position_description | 
@@ -84,9 +85,9 @@ prosta : 'prosta' | 'prost' | 'prostan';
 
 acid_type_regular: acid_single_type | acid_single_type cyclo_position;
 acid_type_double: db_num acid_type_regular;
-acid_single_type: 'noic acid' | 'nic acid' | 'nal' | dioic | 'noyloxy' | 'noyl' | ol | dial | 'noate' | 'nate' | CoA | yl | 'ne' | 'yloxy';
-CoA : 'noyl' coa | 'yl' coa | 'nyl' coa;
-coa : 'coa' | '-coa';
+acid_single_type: 'noic acid' | 'nic acid' | 'nal' | dioic | 'noyloxy' | 'noyl' | ol | dial | 'noate' | 'nate' | coa | yl | 'ne' | 'yloxy';
+coa : 'noyl' coa_ending | 'yl' coa_ending | 'nyl' coa_ending;
+coa_ending : 'coa' | '-coa';
 yl : 'yl' | 'nyl' | 'n' DASH yl_ending DASH 'yl' | DASH yl_ending DASH 'yl';
 yl_ending: number;
 
@@ -170,7 +171,7 @@ pos_separator : COMMA;
 
 
 
-number :  digit;
-digit : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | digit digit;
+number :  digit | digit number;
+digit : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
 
 
