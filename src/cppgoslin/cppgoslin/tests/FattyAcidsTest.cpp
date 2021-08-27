@@ -35,20 +35,18 @@ SOFTWARE.
 using namespace std;
 using namespace goslin;
 
+void assertEqual(string s1, string s2, string message = ""){
+    if(s1 != s2){
+        cout << "Assertion failed: '" << s1 << "' != '" << s2 << "'" << endl;
+        if (message.length() > 0) cout << message << endl;
+        exit(-1);
+    }
+}
+
 int main(int argc, char** argv){
     string test_file = "data/goslin/testfiles/fatty-acids-test.csv";
     FattyAcidParser lipid_parser;
     ShorthandParser shorthand_parser;
-    
-
-    
-    if (0){
-        LipidAdduct *l = lipid_parser.parse("1-methyl-cyclopentanol");
-        cout << l->get_lipid_string() << endl;
-        cout << l->get_sum_formula() << endl;
-        return 0;
-    }
-    
         
     // test several more lipid names
     vector<string> lipid_data;
@@ -62,61 +60,35 @@ int main(int argc, char** argv){
     }
     infile.close();
     
-    int not_implemented = 0;
-    int failed = 0;
-    int failed_sum = 0;
-    
-    
-    
+
     ////////////////////////////////////////////////////////////////////////////
     // Test for correctness
     ////////////////////////////////////////////////////////////////////////////
     
-    int i = -1;
-    ofstream off("fails.csv");
-    ofstream correct("correct.csv");
-    for (auto lipid_name : lipid_data){
-        ++i;
+    
+    for (auto lipid_row : lipid_data){
         
-        vector<string> *data = split_string(lipid_name, ',', '"', true);
-        string name = strip(data->at(3), '\"');
-        if (name.length() == 0){
-            delete data;
-            continue;
-        }
-        
-        if (name.find("yn") != string::npos || name.find("furan") != string::npos || endswith(name, "ane") || endswith(name, "one") || name.find("phosphate") != string::npos || name.find("pyran") != string::npos || endswith(name, "olide") || endswith(name, "-one")){
-            not_implemented += 1;
-            delete data;
-            continue;
-        }
+        vector<string> *data = split_string(lipid_row, ',', '"', true);
+        string lmid = strip(data->at(0), '\"');
+        string lipid_name = strip(data->at(1), '\"');
+        string formula = strip(data->at(2), '\"');
+        string expected_lipid_name = strip(data->at(3), '\"');
         
         
-        lipid_names.push_back(name);
         LipidAdduct *lipid = 0;
-        try {
-            //cout << name << endl;
-            lipid = lipid_parser.parse(name);
-        }
-        catch (LipidException &e) {
-            failed += 1;
-            off << name << endl;
-            delete data;
-            continue;
-        }
+        lipid = lipid_parser.parse(lipid_name);
+        
+        
+        assertEqual(expected_lipid_name, lipid->get_lipid_string(), lmid + " '" + lipid_name + "': " + expected_lipid_name + " != " + lipid->get_lipid_string() + " (computed)");
             
         string lipid_formula = lipid->get_sum_formula();
-        ElementTable *e = SumFormulaParser::get_instance().parse(data->at(2));
-        string formula = goslin::compute_sum_formula(e);
+        ElementTable *e = SumFormulaParser::get_instance().parse(formula);
+        formula = goslin::compute_sum_formula(e);
         delete e;
         
-        if (formula != lipid_formula){
-            cout << i << ", " << lipid_name << ": " << formula << " / " << lipid_formula << endl;
-            failed_sum += 1;
-            assert(false);
-        }
+        assertEqual(formula, lipid_formula, "formula " + lmid + " '" + lipid_name + "': " + formula + " != " + lipid_formula + " (computed)");
             
-        if (to_lower(name).find("cyano") != string::npos){
+        if (to_lower(lipid_name).find("cyano") != string::npos) {
             delete lipid;
             delete data;
             continue;
@@ -125,43 +97,27 @@ int main(int argc, char** argv){
         LipidAdduct *lipid2 = shorthand_parser.parse(lipid->get_lipid_string());
         lipid_formula = lipid2->get_sum_formula();
         
-        if (formula != lipid_formula){
-            cout << "current, " << i << ", " << lipid_name << ": " << formula << " != " << lipid_formula << " / " << lipid->get_lipid_string() << endl; 
-            failed_sum += 1;
-        }
+        
+        assertEqual(formula, lipid_formula, "lipid " + lmid + " '" + lipid_name + "': " + formula + " != " + lipid_formula + " (computed)");
         delete lipid2;
         
         lipid2 = shorthand_parser.parse(lipid->get_lipid_string(MOLECULAR_SUBSPECIES));
         lipid_formula = lipid2->get_sum_formula();
         
-        if (formula != lipid_formula){
-            cout << "molecular subspecies, " << i << ", " << lipid_name << ": " << formula << " != " << lipid_formula << endl;
-            failed_sum += 1;
-        }
+        assertEqual(formula, lipid_formula, "molecular " + lmid + " '" + lipid_name + "': " + formula + " != " + lipid_formula + " (computed)");
         delete lipid2;
         
         lipid2 = shorthand_parser.parse(lipid->get_lipid_string(SPECIES));
         lipid_formula = lipid2->get_sum_formula();
         
-        if (formula != lipid_formula){
-            cout << "species, " << i << ", " << lipid_name << ": " << formula << " != " << lipid_formula << endl;
-            failed_sum += 1;
-        }
+        assertEqual(formula, lipid_formula, "species " + lmid + " '" + lipid_name + "': " + formula + " != " + lipid_formula + " (computed)");
         
-        correct << lipid_name << ",\"" << lipid->get_lipid_string() << "\"" << endl;
-            
         delete lipid2;
         delete lipid;
         delete data;
     }
     
-    
-    cout << "In the test, " << not_implemented << " of " << lipid_data.size() << " lipids can not be described by nomenclature" << endl;
-    cout << "In the test, " << failed << " of " << (lipid_data.size() - not_implemented) << " lipids failed" << endl;
-    cout << "In the test, " << failed_sum << " of " << (lipid_data.size() - not_implemented) << " lipid sum formulas failed" << endl;
-    cout << endl;
-    
-    
+    cout << "All tests passed without any problem" << endl;
     return 0;
 }
 
