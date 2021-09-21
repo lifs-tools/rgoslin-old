@@ -29,12 +29,11 @@ SOFTWARE.
 #include "cppgoslin/domain/LipidEnums.h"
 #include "cppgoslin/domain/Adduct.h"
 #include "cppgoslin/domain/LipidAdduct.h"
-#include "cppgoslin/domain/LipidStructuralSubspecies.h"
-#include "cppgoslin/domain/LipidIsomericSubspecies.h"
+#include "cppgoslin/domain/LipidCompleteStructure.h"
 #include "cppgoslin/domain/FattyAcid.h"
 #include "cppgoslin/domain/FunctionalGroup.h"
 #include "cppgoslin/domain/Headgroup.h"
-#include "cppgoslin/parser/BaseParserEventHandler.h"
+#include "cppgoslin/parser/LipidBaseParserEventHandler.h"
 #include <string>
 #include <set>
 #include <map>
@@ -47,23 +46,16 @@ using namespace goslin;
 
 static const set<string> head_group_exceptions = {"PA", "PC", "PE", "PG", "PI", "PS"};
 
-class LipidMapsParserEventHandler : public BaseParserEventHandler<LipidAdduct*> {
+class LipidMapsParserEventHandler : public LipidBaseParserEventHandler {
 public:
-    LipidLevel level;
-    LipidAdduct *lipid;
-    string head_group;
-    FattyAcid *lcb;
-    vector<FattyAcid*> *fa_list;
-    FattyAcid *current_fa;
     bool omit_fa;
     int db_numbers;
-    bool use_head_group;
     int db_position;
     string db_cistrans;
-    Headgroup* headgroup;
     string mod_text;
     int mod_pos;
     int mod_num;
+    bool add_omega_linoleoyloxy_Cer;
     
 
     LipidMapsParserEventHandler();
@@ -84,17 +76,19 @@ public:
     void clean_lcb(TreeNode* node);
     void append_fa(TreeNode* node);
     void add_ether(TreeNode* node);
+    void set_sphingoxine(TreeNode* node);
     void add_hydroxyl(TreeNode* node);
     void add_double_bonds(TreeNode* node);
     void add_carbon(TreeNode* node);
     void build_lipid(TreeNode* node);
     void add_hydroxyl_lcb(TreeNode* node);
     void pure_fa(TreeNode* node);
-    
+    void add_glyco(TreeNode* node);
     void set_isomeric_level(TreeNode* node);
     void add_db_position(TreeNode* node);
     void add_db_position_number(TreeNode* node);
     void add_cistrans(TreeNode* node);
+    void set_omega_head_group_name(TreeNode* node);
         
 };
 #endif /* LIPID_MAPS_PARSER_EVENT_HANDLER_H */

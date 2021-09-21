@@ -42,13 +42,14 @@ class FattyAcid : public FunctionalGroup {
 public:
     int num_carbon;
     LipidFaBondType lipid_FA_bond_type;
-    bool lcb;
     
-    FattyAcid(string name, int num_carbon = 0, DoubleBonds* double_bonds = 0, map<string, vector<FunctionalGroup*> >* functional_groups = 0, LipidFaBondType lipid_FA_bond_type = ESTER, bool lcb = false, int position = 0);
+    FattyAcid(string name, int num_carbon = 0, DoubleBonds* double_bonds = 0, map<string, vector<FunctionalGroup*> >* functional_groups = 0, LipidFaBondType lipid_FA_bond_type = ESTER, int position = 0);
     string to_string(LipidLevel level);
     void compute_elements();
     FattyAcid* copy();
     int get_double_bonds();
+    void set_type(LipidFaBondType _lipid_FA_bond_type);
+    ElementTable* get_functional_group_elements();
     static string get_prefix(LipidFaBondType _lipid_FA_bond_type);
     static bool lipid_FA_bond_type_prefix(LipidFaBondType lipid_FA_bond_type);
     const set<string> fg_exceptions {"acyl", "alkyl", "cy", "cc", "acetoxy"};

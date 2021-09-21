@@ -23,15 +23,14 @@ SOFTWARE.
 */
 
 
-#ifndef LIPID_STRUCTURAL_SUBSPECIES_H
-#define LIPID_STRUCTURAL_SUBSPECIES_H
+#ifndef LIPID_SN_POSITION_H
+#define LIPID_SN_POSITION_H
 
 #include <string>
 #include "cppgoslin/domain/LipidExceptions.h"
-#include "cppgoslin/domain/LipidSpeciesInfo.h"
 #include "cppgoslin/domain/LipidEnums.h"
 #include "cppgoslin/domain/Headgroup.h"
-#include "cppgoslin/domain/LipidMolecularSubspecies.h"
+#include "cppgoslin/domain/LipidMolecularSpecies.h"
 #include <sstream>
 #include <vector>
 #include "cppgoslin/domain/FattyAcid.h"
@@ -40,12 +39,12 @@ SOFTWARE.
 using namespace std;
 using namespace goslin;
 
-class LipidStructuralSubspecies : public LipidMolecularSubspecies {
+class LipidSnPosition : public LipidMolecularSpecies {
 public:
     
-    LipidStructuralSubspecies(Headgroup* _headgroup, vector<FattyAcid*> *_fa = NULL);
+    LipidSnPosition(Headgroup* _headgroup, vector<FattyAcid*> *_fa = NULL);
     string get_lipid_string(LipidLevel level = NO_LEVEL);
     LipidLevel get_lipid_level();
 };
 
-#endif /* LIPID_STRUCTURAL_SUBSPECIES_H */
+#endif /* LIPID_SN_POSITION_H */

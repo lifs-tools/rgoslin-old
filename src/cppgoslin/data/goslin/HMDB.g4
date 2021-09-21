@@ -41,8 +41,10 @@ fa : fa_core | furan_fa | fa_lcb_prefix fa_core | fa_core fa_lcb_suffix | fa_lcb
 fa_core : carbon carbon_db_separator db | ether carbon carbon_db_separator db | methyl carbon carbon_db_separator db;
 
 furan_fa : furan_fa_mono | furan_fa_di;
-furan_fa_mono : number 'M' number | 'MonoMe(' number ',' number ')';
-furan_fa_di : number 'D' number | 'DiMe(' number ',' number ')';
+furan_fa_mono : furan_first_number 'M' furan_second_number | 'MonoMe(' furan_first_number ',' furan_second_number ')';
+furan_fa_di : furan_first_number 'D' furan_second_number | 'DiMe(' furan_first_number ',' furan_second_number ')';
+furan_first_number : number;
+furan_second_number : number;
 
 lcb : lcb_core | fa_lcb_prefix lcb_core | lcb_core fa_lcb_suffix | fa_lcb_prefix lcb_core fa_lcb_suffix;
 lcb_core : hydroxyl carbon carbon_db_separator db;
@@ -156,8 +158,9 @@ pl_four_hg : 'BMP' | 'LBPA' | 'Lysobisphosphatidate' | 'CL' | 'MLCL' | 'DLCL';
 
 /* sphingolipid rules */
 sl : sl_hg sl_lcb | sl_hg headgroup_separator sl_lcb;
-sl_hg : sl_hg_names | sl_hg_prefix sl_hg_names | sl_hg_names sl_hg_suffix | sl_hg_prefix sl_hg_names sl_hg_suffix;
-sl_hg_names : 'HexCer' | 'Hex2Cer' | 'SM' | 'PE-Cer' | 'Cer' | 'CerP' | 'IPC' | 'MIPC' | 'M(IP)2C' | 'Gb3Cer' | 'Gb4Cer' | 'Forssman'  | 'MSGG' | 'DSGG' | 'NOR1' | 'NORint' | 'NOR2' | 'Globo-H' | 'Globo-A' | 'SB1a' | 'SM1b' | 'SM1a' | 'Branched-Forssman' | 'Globo-B' | 'Para-Forssman' | 'Globo-Lex-9' | 'LysoSM' | 'Glucosylceramide' | 'Ceramide' | 'Tetrahexosylceramide' | ganglioside;
+sl_hg : all_sl_hg_names | sl_hg_prefix all_sl_hg_names | all_sl_hg_names sl_hg_suffix | sl_hg_prefix all_sl_hg_names sl_hg_suffix;
+all_sl_hg_names : sl_hg_names | ganglioside;
+sl_hg_names : 'HexCer' | 'Hex2Cer' | 'SM' | 'PE-Cer' | 'Cer' | 'CerP' | 'IPC' | 'MIPC' | 'M(IP)2C' | 'Gb3Cer' | 'Gb4Cer' | 'Forssman'  | 'MSGG' | 'DSGG' | 'NOR1' | 'NORint' | 'NOR2' | 'Globo-H' | 'Globo-A' | 'SB1a' | 'SM1b' | 'SM1a' | 'Branched-Forssman' | 'Globo-B' | 'Para-Forssman' | 'Globo-Lex-9' | 'LysoSM' | 'Glucosylceramide' | 'Ceramide' | 'Tetrahexosylceramide';
 ganglioside : 'Ganglioside' headgroup_separator ganglioside_names | ganglioside_names;
 ganglioside_names : 'Gb3' | 'GA2' | 'GA1' | 'GM3' | 'GM2' | 'GM1' | 'GD3' | 'GT3' | 'GD1' | 'GT1' | 'GQ1' | 'GM4' | 'GD2' | 'GT2' | 'GP1' | 'GD1a' | 'GM1b' | 'GT1b' | 'GQ1b' | 'GT1a' | 'GQ1c' | 'GP1c' | 'GD1c' | 'GD1b' | 'GT1c';
 

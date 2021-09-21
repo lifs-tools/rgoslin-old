@@ -23,38 +23,27 @@ SOFTWARE.
 */
 
 
-#ifndef LIPID_ADDUCT_H
-#define LIPID_ADDUCT_H
+#ifndef LIPID_MOLECULAR_SPECIES_H
+#define LIPID_MOLECULAR_SPECIES_H
 
 #include "cppgoslin/domain/FattyAcid.h"
 #include <string>
-#include <math.h>
 #include "cppgoslin/domain/LipidExceptions.h"
-#include "cppgoslin/domain/LipidEnums.h"
-#include "cppgoslin/domain/Element.h"
 #include "cppgoslin/domain/LipidSpecies.h"
-#include "cppgoslin/domain/Adduct.h"
+#include "cppgoslin/domain/LipidEnums.h"
 #include <sstream>
+#include <typeinfo> 
 
 using namespace std;
 using namespace goslin;
 
-class LipidAdduct {
+class LipidMolecularSpecies : public LipidSpecies {
 public:
-    LipidSpecies *lipid;
-    Adduct *adduct;
-    string sum_formula;
-    
-    LipidAdduct();
-    ~LipidAdduct();
+    LipidMolecularSpecies (Headgroup* _headgroup, vector<FattyAcid*> *_fa);
+    string build_lipid_subspecies_name(LipidLevel level = NO_LEVEL);
     string get_lipid_string(LipidLevel level = NO_LEVEL);
-    string get_lipid_fragment_string(LipidLevel level = NO_LEVEL);
-    string get_class_name();
-    string get_extended_class();
-    double get_mass();
-    string get_sum_formula();
     LipidLevel get_lipid_level();
     ElementTable* get_elements();
 };
 
-#endif /* LIPID_ADDUCT_H */
+#endif /* LIPID_MOLECULAR_SPECIES_H */

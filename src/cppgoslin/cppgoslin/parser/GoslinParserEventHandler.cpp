@@ -28,9 +28,7 @@ SOFTWARE.
 #define reg(x, y) BaseParserEventHandler<LipidAdduct*>::registered_events->insert({x, bind(&GoslinParserEventHandler::y, this, placeholders::_1)})
     
 
-GoslinParserEventHandler::GoslinParserEventHandler() : BaseParserEventHandler<LipidAdduct*>() {
-    fa_list = new vector<FattyAcid*>();
-    
+GoslinParserEventHandler::GoslinParserEventHandler() : LipidBaseParserEventHandler() {    
     reg("lipid_pre_event", reset_lipid);
     reg("lipid_post_event", build_lipid);
     
@@ -61,7 +59,9 @@ GoslinParserEventHandler::GoslinParserEventHandler() : BaseParserEventHandler<Li
     reg("fa2_unsorted_pre_event", set_molecular_subspecies_level);
     reg("fa3_unsorted_pre_event", set_molecular_subspecies_level);
     reg("fa4_unsorted_pre_event", set_molecular_subspecies_level);
-    
+    reg("slbpa_pre_event", set_molecular_subspecies_level);
+    reg("dlcl_pre_event", set_molecular_subspecies_level);
+    reg("mlcl_pre_event", set_molecular_subspecies_level);
     
     reg("lcb_pre_event", new_lcb);
     reg("lcb_post_event", clean_lcb);
@@ -96,13 +96,11 @@ GoslinParserEventHandler::GoslinParserEventHandler() : BaseParserEventHandler<Li
 
 
 GoslinParserEventHandler::~GoslinParserEventHandler(){
-    delete fa_list;
 }
 
 
 void GoslinParserEventHandler::reset_lipid(TreeNode *node) {
-    level = ISOMERIC_SUBSPECIES;
-    lipid = NULL;
+    level = FULL_STRUCTURE;
     head_group = "";
     lcb = NULL;
     fa_list->clear();
@@ -111,7 +109,6 @@ void GoslinParserEventHandler::reset_lipid(TreeNode *node) {
     db_position = 0;
     db_cistrans = "";
     unspecified_ether = false;
-    headgroup = NULL;
 }
 
 
@@ -125,7 +122,7 @@ void GoslinParserEventHandler::set_head_group_name(TreeNode *node) {
 
 
 void GoslinParserEventHandler::set_species_level(TreeNode *node) {
-    level = SPECIES;
+    set_lipid_level(SPECIES);
 }
 
 
@@ -138,6 +135,7 @@ void GoslinParserEventHandler::set_isomeric_level(TreeNode* node){
 void GoslinParserEventHandler::add_db_position(TreeNode* node){
     if (current_fa != NULL){
         current_fa->double_bonds->double_bond_positions.insert({db_position, db_cistrans});
+        if (db_cistrans != "E" && db_cistrans != "Z") set_lipid_level(STRUCTURE_DEFINED);
     }
 }
 
@@ -154,7 +152,7 @@ void GoslinParserEventHandler::add_cistrans(TreeNode* node){
     
 
 void GoslinParserEventHandler::set_molecular_subspecies_level(TreeNode *node) {
-    level = MOLECULAR_SUBSPECIES;
+    set_lipid_level(MOLECULAR_SPECIES);
 }
     
     
@@ -171,13 +169,17 @@ void GoslinParserEventHandler::new_fa(TreeNode *node) {
 
 void GoslinParserEventHandler::new_lcb(TreeNode *node) {
     lcb = new FattyAcid("LCB");
-    lcb->lcb = true;
     current_fa = lcb;
+    set_lipid_level(STRUCTURE_DEFINED);
+    lcb->set_type(LCB_REGULAR);
 }
         
         
 
 void GoslinParserEventHandler::clean_lcb(TreeNode *node) {
+    if (current_fa->double_bonds->double_bond_positions.size() == 0 && current_fa->double_bonds->get_num() > 0){
+        set_lipid_level(SN_POSITION);
+    }
     current_fa = NULL;
 }
     
@@ -189,7 +191,7 @@ void GoslinParserEventHandler::append_fa(TreeNode *node) {
         throw LipidException("Lipid with unspecified ether bond cannot be treated properly.");
     }
     if (current_fa->double_bonds->double_bond_positions.size() == 0 && current_fa->double_bonds->get_num() > 0){
-        level = min(level, STRUCTURAL_SUBSPECIES);
+        set_lipid_level(SN_POSITION);
     }
         
     
@@ -197,7 +199,7 @@ void GoslinParserEventHandler::append_fa(TreeNode *node) {
         throw LipidException("Double bond count does not match with number of double bond positions");
     }
     
-    if (level == STRUCTURAL_SUBSPECIES || level == ISOMERIC_SUBSPECIES){
+    if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE | STRUCTURE_DEFINED | SN_POSITION)){
             current_fa->position = fa_list->size() + 1;
     }
     
@@ -210,30 +212,15 @@ void GoslinParserEventHandler::append_fa(TreeNode *node) {
 
 void GoslinParserEventHandler::build_lipid(TreeNode *node) {
     if (lcb){
-        level = min(level, STRUCTURAL_SUBSPECIES);
+        set_lipid_level(STRUCTURE_DEFINED);
         for (auto& fa : *fa_list) fa->position += 1;
         fa_list->insert(fa_list->begin(), lcb);
     }
     
+    Headgroup *headgroup = prepare_headgroup_and_checks();
     
-    lipid = NULL;
-    LipidSpecies *ls = NULL;
-    
-    headgroup = new Headgroup(head_group);
-    
-    int max_num_fa = contains(LipidClasses::get_instance().lipid_classes, headgroup->lipid_class) ? LipidClasses::get_instance().lipid_classes.at(headgroup->lipid_class).max_num_fa : 0;
-    if (max_num_fa != (int)fa_list->size()) level = min(level, MOLECULAR_SUBSPECIES);
-    
-
-    switch (level){
-        case SPECIES: ls = new LipidSpecies(headgroup, fa_list); break;
-        case MOLECULAR_SUBSPECIES: ls = new LipidMolecularSubspecies(headgroup, fa_list); break;
-        case STRUCTURAL_SUBSPECIES: ls = new LipidStructuralSubspecies(headgroup, fa_list); break;
-        case ISOMERIC_SUBSPECIES: ls = new LipidIsomericSubspecies(headgroup, fa_list); break;
-        default: break;
-    }
-    lipid = new LipidAdduct();
-    lipid->lipid = ls;
+    LipidAdduct *lipid = new LipidAdduct();
+    lipid->lipid = assemble_lipid(headgroup);
     lipid->adduct = adduct;
     BaseParserEventHandler<LipidAdduct*>::content = lipid;
     
@@ -257,9 +244,8 @@ void GoslinParserEventHandler::add_old_hydroxyl(TreeNode *node) {
     int num_h = 0;
     if (old_hydroxyl == "d") num_h = 2;
     else if (old_hydroxyl == "t") num_h = 3;
-    
-    
-    if (Headgroup::get_category(head_group) == SP && current_fa->lcb && head_group != "Cer" && head_group != "LCB") num_h -= 1;
+
+    if (sp_regular_lcb()) num_h -= 1;
     
     FunctionalGroup* functional_group = KnownFunctionalGroups::get_functional_group("OH");
     functional_group->count = num_h;
@@ -283,14 +269,14 @@ void GoslinParserEventHandler::add_carbon(TreeNode *node) {
 
 void GoslinParserEventHandler::add_hydroxyl(TreeNode *node) {
     int num_h = atoi(node->get_text().c_str());
-    
-    if (Headgroup::get_category(head_group) == SP && current_fa->lcb && head_group != "Cer" && head_group != "LCB") num_h -= 1;
+
+    if (sp_regular_lcb()) num_h -= 1;
     
     FunctionalGroup* functional_group = KnownFunctionalGroups::get_functional_group("OH");
     functional_group->count = num_h;
     if (uncontains_p(current_fa->functional_groups, "OH")) current_fa->functional_groups->insert({"OH", vector<FunctionalGroup*>()});
     current_fa->functional_groups->at("OH").push_back(functional_group);
-    level = min(level, STRUCTURAL_SUBSPECIES);
+    level = min(level, STRUCTURE_DEFINED);
 }
     
     

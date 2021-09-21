@@ -38,8 +38,8 @@ using namespace goslin;
 void assertEqual(string s1, string s2, string message = ""){
     if(s1 != s2){
         cout << "Assertion failed: '" << s1 << "' != '" << s2 << "'" << endl;
-        if (message.length() > 0) cout << message << endl;
-        exit(-1);
+        if (message.length() > 0) cout << message << endl << endl;
+        //exit(-1);
     }
 }
 
@@ -74,7 +74,6 @@ int main(int argc, char** argv){
         string formula = strip(data->at(2), '\"');
         string expected_lipid_name = strip(data->at(3), '\"');
         
-        
         LipidAdduct *lipid = 0;
         lipid = lipid_parser.parse(lipid_name);
         
@@ -101,7 +100,7 @@ int main(int argc, char** argv){
         assertEqual(formula, lipid_formula, "lipid " + lmid + " '" + lipid_name + "': " + formula + " != " + lipid_formula + " (computed)");
         delete lipid2;
         
-        lipid2 = shorthand_parser.parse(lipid->get_lipid_string(MOLECULAR_SUBSPECIES));
+        lipid2 = shorthand_parser.parse(lipid->get_lipid_string(MOLECULAR_SPECIES));
         lipid_formula = lipid2->get_sum_formula();
         
         assertEqual(formula, lipid_formula, "molecular " + lmid + " '" + lipid_name + "': " + formula + " != " + lipid_formula + " (computed)");

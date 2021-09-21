@@ -29,12 +29,11 @@ SOFTWARE.
 #include "cppgoslin/domain/LipidEnums.h"
 #include "cppgoslin/domain/Adduct.h"
 #include "cppgoslin/domain/LipidAdduct.h"
-#include "cppgoslin/domain/LipidStructuralSubspecies.h"
-#include "cppgoslin/domain/LipidIsomericSubspecies.h"
+#include "cppgoslin/domain/LipidCompleteStructure.h"
 #include "cppgoslin/domain/FattyAcid.h"
 #include "cppgoslin/domain/Headgroup.h"
 #include "cppgoslin/domain/FunctionalGroup.h"
-#include "cppgoslin/parser/BaseParserEventHandler.h"
+#include "cppgoslin/parser/LipidBaseParserEventHandler.h"
 #include <string>
 #include <math.h>
 #include <set>
@@ -46,19 +45,11 @@ SOFTWARE.
 using namespace std;
 using namespace goslin;
 
-class GoslinParserEventHandler : public BaseParserEventHandler<LipidAdduct*> {
+class GoslinParserEventHandler : public LipidBaseParserEventHandler {
 public:
-    LipidLevel level;
-    LipidAdduct *lipid;
-    string head_group;
-    FattyAcid *lcb;
-    vector<FattyAcid*> *fa_list;
-    FattyAcid *current_fa;
-    Adduct *adduct;
     int db_position;
     string db_cistrans;
     bool unspecified_ether;
-    Headgroup* headgroup;
         
     GoslinParserEventHandler();
     ~GoslinParserEventHandler();

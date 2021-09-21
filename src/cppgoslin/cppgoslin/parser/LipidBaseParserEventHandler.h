@@ -23,27 +23,48 @@ SOFTWARE.
 */
 
 
-#ifndef LIPID_ISOMERIC_SUBSPECIES_H
-#define LIPID_ISOMERIC_SUBSPECIES_H
+#ifndef LIPID_BASE_PARSER_EVENT_HANDLER_H
+#define LIPID_BASE_PARSER_EVENT_HANDLER_H
 
-#include <string>
-#include "cppgoslin/domain/LipidExceptions.h"
-#include "cppgoslin/domain/LipidStructuralSubspecies.h"
+#include "cppgoslin/domain/LipidEnums.h"
+#include "cppgoslin/domain/Adduct.h"
+#include "cppgoslin/domain/LipidAdduct.h"
+#include "cppgoslin/domain/LipidCompleteStructure.h"
 #include "cppgoslin/domain/FattyAcid.h"
 #include "cppgoslin/domain/Headgroup.h"
-#include <sstream>
+#include "cppgoslin/domain/FunctionalGroup.h"
+#include "cppgoslin/parser/BaseParserEventHandler.h"
+#include <string>
+#include <math.h>
+#include <set>
+#include <map>
 #include <vector>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 using namespace goslin;
 
-class LipidIsomericSubspecies : public LipidStructuralSubspecies {
+class LipidBaseParserEventHandler : public BaseParserEventHandler<LipidAdduct*> {
 public:
-    LipidIsomericSubspecies(Headgroup* _headgroup, vector<FattyAcid*>* _fa = NULL);
-    string build_lipid_isomeric_substructure_name();
-    string get_lipid_string(LipidLevel level = NO_LEVEL);
-    LipidLevel get_lipid_level();
-            
+    LipidLevel level;
+    string head_group;
+    FattyAcid *lcb;
+    vector<FattyAcid*> *fa_list;
+    FattyAcid *current_fa;
+    vector<HeadgroupDecorator*> *headgroup_decorators;
+    bool use_head_group;
+    static const set<string> SP_EXCEPTION_CLASSES;
+    Adduct* adduct;
+        
+    LipidBaseParserEventHandler();
+    ~LipidBaseParserEventHandler();
+    void set_lipid_level(LipidLevel _level);
+    bool sp_regular_lcb();
+    Headgroup* prepare_headgroup_and_checks();
+    LipidSpecies *assemble_lipid(Headgroup *headgroup);
 };
 
-#endif /* LIPID_ISOMERIC_SUBSPECIES_H */
+
+#endif /* LIPID_BASE_PARSER_EVENT_HANDLER_H */
+        

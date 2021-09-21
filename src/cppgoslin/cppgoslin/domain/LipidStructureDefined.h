@@ -23,38 +23,28 @@ SOFTWARE.
 */
 
 
-#ifndef LIPID_ADDUCT_H
-#define LIPID_ADDUCT_H
+#ifndef LIPID_STRUCTURE_DEFINED_H
+#define LIPID_STRUCTURE_DEFINED_H
 
-#include "cppgoslin/domain/FattyAcid.h"
 #include <string>
-#include <math.h>
 #include "cppgoslin/domain/LipidExceptions.h"
 #include "cppgoslin/domain/LipidEnums.h"
-#include "cppgoslin/domain/Element.h"
-#include "cppgoslin/domain/LipidSpecies.h"
-#include "cppgoslin/domain/Adduct.h"
+#include "cppgoslin/domain/Headgroup.h"
+#include "cppgoslin/domain/LipidSnPosition.h"
 #include <sstream>
+#include <vector>
+#include "cppgoslin/domain/FattyAcid.h"
+#include <map>
 
 using namespace std;
 using namespace goslin;
 
-class LipidAdduct {
+class LipidStructureDefined : public LipidSnPosition {
 public:
-    LipidSpecies *lipid;
-    Adduct *adduct;
-    string sum_formula;
     
-    LipidAdduct();
-    ~LipidAdduct();
+    LipidStructureDefined(Headgroup* _headgroup, vector<FattyAcid*> *_fa = NULL);
     string get_lipid_string(LipidLevel level = NO_LEVEL);
-    string get_lipid_fragment_string(LipidLevel level = NO_LEVEL);
-    string get_class_name();
-    string get_extended_class();
-    double get_mass();
-    string get_sum_formula();
     LipidLevel get_lipid_level();
-    ElementTable* get_elements();
 };
 
-#endif /* LIPID_ADDUCT_H */
+#endif /* LIPID_STRUCTURE_DEFINED_H */

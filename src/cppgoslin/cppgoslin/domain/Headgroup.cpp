@@ -30,8 +30,12 @@ Headgroup::Headgroup(string _headgroup, vector<HeadgroupDecorator*>* _decorators
     lipid_category = get_category(_headgroup);
     lipid_class = get_class(headgroup);
     use_headgroup = _use_headgroup;
-    decorators = (_decorators != 0) ? _decorators : new vector<HeadgroupDecorator*>();
-    sp_exception = lipid_category == SP && (uncontains(exception_headgroups, _headgroup) || decorators->size() > 0);
+    decorators = new vector<HeadgroupDecorator*>();
+    if (_decorators != 0){
+        for (auto decorator : *_decorators) decorators->push_back(decorator);
+    }
+    sp_exception = lipid_category == SP && contains(LipidClasses::get_instance().lipid_classes.at(lipid_class).special_cases, "SP_Exception") && decorators->size() == 0;
+    
 }
 
 
@@ -42,11 +46,14 @@ Headgroup::~Headgroup(){
         
 
 LipidCategory Headgroup::get_category(string _headgroup){
-    if (!StringCategory.size()){
-        for (const auto& kvp : LipidClasses::get_instance().lipid_classes){
-            LipidCategory category = kvp.second.lipid_category;
-            for (auto hg : kvp.second.synonyms){
-                StringCategory.insert(pair<string, LipidCategory>(hg, category));
+    #pragma omp critical
+    {
+        if (!StringCategory.size()){
+            for (const auto& kvp : LipidClasses::get_instance().lipid_classes){
+                LipidCategory category = kvp.second.lipid_category;
+                for (auto hg : kvp.second.synonyms){
+                    StringCategory.insert(pair<string, LipidCategory>(hg, category));
+                }
             }
         }
     }
@@ -58,11 +65,14 @@ LipidCategory Headgroup::get_category(string _headgroup){
 
 
 LipidClass Headgroup::get_class(string _headgroup){
-    if (!StringClass.size()){
-        for (auto kvp : LipidClasses::get_instance().lipid_classes){
-            LipidClass l_class = kvp.first;
-            for (auto hg : kvp.second.synonyms){
-                StringClass.insert({hg, l_class});
+    #pragma omp critical
+    {
+        if (!StringClass.size()){
+            for (auto kvp : LipidClasses::get_instance().lipid_classes){
+                LipidClass l_class = kvp.first;
+                for (auto hg : kvp.second.synonyms){
+                    StringClass.insert({hg, l_class});
+                }
             }
         }
     }
@@ -73,9 +83,12 @@ LipidClass Headgroup::get_class(string _headgroup){
 
 
 string Headgroup::get_class_string(LipidClass _lipid_class){
-    if (!ClassString.size()){
-        for (auto kvp : LipidClasses::get_instance().lipid_classes){
-            ClassString.insert({kvp.first, kvp.second.synonyms.at(0)});
+    #pragma omp critical
+    {
+        if (!ClassString.size()){
+            for (auto kvp : LipidClasses::get_instance().lipid_classes){
+                ClassString.insert({kvp.first, kvp.second.synonyms.at(0)});
+            }
         }
     }
     auto cl = ClassString.find(_lipid_class);
@@ -107,7 +120,7 @@ string Headgroup::get_lipid_string(LipidLevel level){
     stringstream headgoup_string;
             
     // adding prefixes to the headgroup
-    if (level != ISOMERIC_SUBSPECIES && level != STRUCTURAL_SUBSPECIES){
+    if (!is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE | STRUCTURE_DEFINED)){
         vector<string> prefixes;
         for (auto hgd : *decorators){
             if (!hgd->suffix) prefixes.push_back(hgd->to_string(level));
@@ -120,15 +133,17 @@ string Headgroup::get_lipid_string(LipidLevel level){
             if (!hgd->suffix) headgoup_string << hgd->to_string(level) << "-";
         }
     }
-        
+    
     // adding headgroup
     headgoup_string << hgs;
-        
+    
     // ading suffixes to the headgroup
     for (auto hgd : *decorators){
-        if (hgd->suffix) headgoup_string << hgd->to_string(level);
+        if (hgd->suffix){
+            headgoup_string << hgd->to_string(level);
+        }
     }
-    if (level == ISOMERIC_SUBSPECIES && sp_exception){
+    if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE) && lipid_category == SP && !sp_exception){
         headgoup_string << "(1)";
     }
     
@@ -156,10 +171,6 @@ ElementTable* Headgroup::get_elements(){
             elements->at(kv.first) += kv.second * hgd->count;
         }
         delete hgd_elements;
-    }
-    
-    if (lipid_category == SP && contains(exception_headgroups, get_class_string(lipid_class)) && decorators->size() == 0){
-        elements->at(ELEMENT_O) -= 1;
     }
     
     return elements;

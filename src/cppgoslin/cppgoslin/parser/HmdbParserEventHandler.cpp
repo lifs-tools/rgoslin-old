@@ -28,8 +28,7 @@ SOFTWARE.
 #define reg(x, y) BaseParserEventHandler<LipidAdduct*>::registered_events->insert({x, bind(&HmdbParserEventHandler::y, this, placeholders::_1)})
     
 
-HmdbParserEventHandler::HmdbParserEventHandler() : BaseParserEventHandler<LipidAdduct*>() {
-    fa_list = new vector<FattyAcid*>();
+HmdbParserEventHandler::HmdbParserEventHandler() : LipidBaseParserEventHandler() {
     
     reg("lipid_pre_event", reset_lipid);
     reg("lipid_post_event", build_lipid);
@@ -45,6 +44,7 @@ HmdbParserEventHandler::HmdbParserEventHandler() : BaseParserEventHandler<LipidA
     reg("st_species_hg_pre_event", set_head_group_name);
     reg("st_sub1_hg_pre_event", set_head_group_name);
     reg("st_sub2_hg_pre_event", set_head_group_name);
+    reg("ganglioside_names_pre_event", set_head_group_name);
     reg("fa_species_pre_event", set_species_level);
     reg("gl_molecular_pre_event", set_molecular_level);
     reg("unsorted_fa_separator_pre_event", set_molecular_level);
@@ -64,22 +64,25 @@ HmdbParserEventHandler::HmdbParserEventHandler() : BaseParserEventHandler<LipidA
     reg("db_count_pre_event", add_double_bonds);
     reg("carbon_pre_event", add_carbon);
     reg("fa_lcb_suffix_type_pre_event", add_one_hydroxyl);
-    reg("furan_fa_pre_event", furan_fa);
     reg("interlink_fa_pre_event", interlink_fa);
     reg("lipid_suffix_pre_event", lipid_suffix);
     reg("methyl_pre_event", add_methyl);
+    reg("furan_fa_pre_event", furan_fa);
+    reg("furan_fa_post_event", furan_fa_post);
+    reg("furan_fa_mono_pre_event", furan_fa_mono);
+    reg("furan_fa_di_pre_event", furan_fa_di);
+    reg("furan_first_number_pre_event", furan_fa_first_number);
+    reg("furan_second_number_pre_event", furan_fa_second_number);
     
 }
 
 
 HmdbParserEventHandler::~HmdbParserEventHandler(){
-    delete fa_list;
 }
 
 
 void HmdbParserEventHandler::reset_lipid(TreeNode *node) {
-    level = ISOMERIC_SUBSPECIES;
-    lipid = NULL;
+    level = FULL_STRUCTURE;
     head_group = "";
     lcb = NULL;
     fa_list->clear();
@@ -87,7 +90,7 @@ void HmdbParserEventHandler::reset_lipid(TreeNode *node) {
     use_head_group = false;
     db_position = 0;
     db_cistrans = "";
-    headgroup = NULL;
+    furan.remove_all();
 }
 
 
@@ -100,6 +103,7 @@ void HmdbParserEventHandler::set_isomeric_level(TreeNode* node){
 void HmdbParserEventHandler::add_db_position(TreeNode* node){
     if (current_fa != NULL){
         current_fa->double_bonds->double_bond_positions.insert({db_position, db_cistrans});
+        if (db_cistrans != "E" && db_cistrans != "Z") set_lipid_level(STRUCTURE_DEFINED);
     }
 }
 
@@ -120,14 +124,14 @@ void HmdbParserEventHandler::set_head_group_name(TreeNode *node) {
 
 
 void HmdbParserEventHandler::set_species_level(TreeNode *node) {
-    level = SPECIES;
+    set_lipid_level(SPECIES);
 }
     
 
 
 
 void HmdbParserEventHandler::set_molecular_level(TreeNode *node) {
-    level = MOLECULAR_SUBSPECIES;
+    set_lipid_level(MOLECULAR_SPECIES);
 }
 
 
@@ -146,13 +150,17 @@ void HmdbParserEventHandler::new_fa(TreeNode *node) {
 
 void HmdbParserEventHandler::new_lcb(TreeNode *node) {
     lcb = new FattyAcid("LCB");
-    lcb->lcb = true;
+    lcb->set_type(LCB_REGULAR);
     current_fa = lcb;
+    set_lipid_level(STRUCTURE_DEFINED);
 }
         
         
 
 void HmdbParserEventHandler::clean_lcb(TreeNode *node) {
+    if (current_fa->double_bonds->double_bond_positions.size() == 0 && current_fa->double_bonds->get_num() > 0){
+        set_lipid_level(SN_POSITION);
+    }
     current_fa = NULL;
 }
     
@@ -164,10 +172,10 @@ void HmdbParserEventHandler::append_fa(TreeNode *node) {
         throw LipidException("Double bond count does not match with number of double bond positions");
     }
     if (current_fa->double_bonds->double_bond_positions.size() == 0 && current_fa->double_bonds->get_num() > 0){
-        level = min(level, STRUCTURAL_SUBSPECIES);
+        set_lipid_level(SN_POSITION);
     }
     
-    if (level == STRUCTURAL_SUBSPECIES || level == ISOMERIC_SUBSPECIES){
+    if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE | STRUCTURE_DEFINED | SN_POSITION)){
             current_fa->position = fa_list->size() + 1;
     }
 
@@ -179,30 +187,16 @@ void HmdbParserEventHandler::append_fa(TreeNode *node) {
 
 void HmdbParserEventHandler::build_lipid(TreeNode *node) {
     if (lcb){
-        level = min(level, STRUCTURAL_SUBSPECIES);
+        set_lipid_level(STRUCTURE_DEFINED);
         for (auto& fa : *fa_list) fa->position += 1;
         fa_list->insert(fa_list->begin(), lcb);
     }
     
     
-    lipid = NULL;
-    LipidSpecies *ls = NULL;
+    Headgroup *headgroup = prepare_headgroup_and_checks();
 
-    
-    headgroup = new Headgroup(head_group, 0, use_head_group);
-    
-    int max_num_fa = contains(LipidClasses::get_instance().lipid_classes, headgroup->lipid_class) ? LipidClasses::get_instance().lipid_classes.at(headgroup->lipid_class).max_num_fa : 0;
-    if (max_num_fa != (int)fa_list->size()) level = min(level, MOLECULAR_SUBSPECIES);
-
-    switch (level){
-        case SPECIES: ls = new LipidSpecies(headgroup, fa_list); break;
-        case MOLECULAR_SUBSPECIES: ls = new LipidMolecularSubspecies(headgroup, fa_list); break;
-        case STRUCTURAL_SUBSPECIES: ls = new LipidStructuralSubspecies(headgroup, fa_list); break;
-        case ISOMERIC_SUBSPECIES: ls = new LipidIsomericSubspecies(headgroup, fa_list); break;
-        default: break;
-    }
-    lipid = new LipidAdduct();
-    lipid->lipid = ls;
+    LipidAdduct *lipid = new LipidAdduct();
+    lipid->lipid = assemble_lipid(headgroup);
     BaseParserEventHandler<LipidAdduct*>::content = lipid;
 }
     
@@ -217,7 +211,7 @@ void HmdbParserEventHandler::add_ether(TreeNode *node) {
     
     
 
-void HmdbParserEventHandler::add_hydroxyl(TreeNode *node) {
+void HmdbParserEventHandler::add_methyl(TreeNode *node) {
     FunctionalGroup* functional_group = KnownFunctionalGroups::get_functional_group("Me");
     functional_group->position = current_fa->num_carbon - (node->get_text() == "i-" ? 1 : 2);
     current_fa->num_carbon -= 1;
@@ -227,14 +221,13 @@ void HmdbParserEventHandler::add_hydroxyl(TreeNode *node) {
     
     
 
-void HmdbParserEventHandler::add_methyl(TreeNode *node) {
+void HmdbParserEventHandler::add_hydroxyl(TreeNode *node) {
     string old_hydroxyl = node->get_text();
     int num_h = 0;
     if (old_hydroxyl == "d") num_h = 2;
     else if (old_hydroxyl == "t") num_h = 3;
     
-    
-    if (Headgroup::get_category(head_group) == SP && current_fa->lcb && head_group != "Cer" && head_group != "LCB") num_h -= 1;
+    if (sp_regular_lcb()) num_h -= 1;
     
     FunctionalGroup* functional_group = KnownFunctionalGroups::get_functional_group("OH");
     functional_group->count = num_h;
@@ -267,7 +260,67 @@ void HmdbParserEventHandler::add_carbon(TreeNode *node) {
     
 
 void HmdbParserEventHandler::furan_fa(TreeNode *node) {
-    throw UnsupportedLipidException("Furan fatty acyl chains are currently not supported");
+    furan.remove_all();
+}
+
+
+void HmdbParserEventHandler::furan_fa_post(TreeNode *node) {
+    int l = 4 + furan.get_int("len_first") + furan.get_int("len_second");
+    current_fa->num_carbon = l;
+    
+    int start = 1 + furan.get_int("len_first");
+    int end = 3 + start;
+    DoubleBonds *cyclo_db = new DoubleBonds(2);
+    cyclo_db->double_bond_positions.insert({start, "E"});
+    cyclo_db->double_bond_positions.insert({2 + start, "E"});
+    
+    map<string, vector<FunctionalGroup*> > *cyclo_fg = new map<string, vector<FunctionalGroup*> >();
+    cyclo_fg->insert({"Me", vector<FunctionalGroup*>()});
+    
+    if (furan.get_string("type") == "m"){
+        FunctionalGroup *fg = KnownFunctionalGroups::get_functional_group("Me");
+        fg->position = 1 + start;
+        cyclo_fg->at("Me").push_back(fg);
+    }
+        
+    else if (furan.get_string("type") == "d"){
+        FunctionalGroup *fg = KnownFunctionalGroups::get_functional_group("Me");
+        fg->position = 1 + start;
+        cyclo_fg->at("Me").push_back(fg);
+        fg = KnownFunctionalGroups::get_functional_group("Me");
+        fg->position = 2 + start;
+        cyclo_fg->at("Me").push_back(fg);
+    }
+    
+    vector<Element> *bridge_chain = new vector<Element>{ELEMENT_O};
+    Cycle *cycle = new Cycle(end - start + 1 + bridge_chain->size(), start, end, cyclo_db, cyclo_fg, bridge_chain);
+    current_fa->functional_groups->insert({"cy", vector<FunctionalGroup*>()});
+    current_fa->functional_groups->at("cy").push_back(cycle);
+}
+
+
+
+void HmdbParserEventHandler::furan_fa_mono(TreeNode *node) {
+    furan.set_string("type", "m");
+}
+
+
+
+void HmdbParserEventHandler::furan_fa_di(TreeNode *node) {
+    furan.set_string("type", "d");
+}
+
+
+
+void HmdbParserEventHandler::furan_fa_first_number(TreeNode *node) {
+    furan.set_int("len_first", atoi(node->get_text().c_str()));
+}
+
+
+
+void HmdbParserEventHandler::furan_fa_second_number(TreeNode *node) {
+    furan.set_int("len_second", atoi(node->get_text().c_str()));
+    
 }
     
 

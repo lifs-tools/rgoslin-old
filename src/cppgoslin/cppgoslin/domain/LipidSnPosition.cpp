@@ -23,27 +23,37 @@ SOFTWARE.
 */
 
 
-#ifndef LIPID_MOLECULAR_SUBSPECIES_H
-#define LIPID_MOLECULAR_SUBSPECIES_H
-
-#include "cppgoslin/domain/FattyAcid.h"
-#include <string>
-#include "cppgoslin/domain/LipidExceptions.h"
-#include "cppgoslin/domain/LipidSpecies.h"
-#include "cppgoslin/domain/LipidEnums.h"
-#include <sstream>
-#include <typeinfo> 
+#include "LipidSnPosition.h"
+#include <iostream>
 
 using namespace std;
-using namespace goslin;
 
-class LipidMolecularSubspecies : public LipidSpecies {
-public:
-    LipidMolecularSubspecies (Headgroup* _headgroup, vector<FattyAcid*> *_fa);
-    string build_lipid_subspecies_name(LipidLevel level = NO_LEVEL);
-    string get_lipid_string(LipidLevel level = NO_LEVEL);
-    LipidLevel get_lipid_level();
-    ElementTable* get_elements();
-};
 
-#endif /* LIPID_MOLECULAR_SUBSPECIES_H */
+LipidSnPosition::LipidSnPosition(Headgroup* _headgroup, vector<FattyAcid*> *_fa) : LipidMolecularSpecies (_headgroup, _fa) {
+    info->level = SN_POSITION;
+}
+
+
+
+LipidLevel LipidSnPosition::get_lipid_level(){
+    return SN_POSITION;
+}
+
+
+
+string LipidSnPosition::get_lipid_string(LipidLevel level) {
+    switch(level){
+        case NO_LEVEL:
+        case SN_POSITION:
+            return LipidMolecularSpecies::build_lipid_subspecies_name(SN_POSITION);
+    
+        case MOLECULAR_SPECIES:
+        case CATEGORY:
+        case CLASS:
+        case SPECIES:
+            return LipidMolecularSpecies::get_lipid_string(level);
+        
+        default:
+            throw RuntimeException("LipidSnPosition does not know how to create a lipid string for level " + std::to_string(level));
+    }
+}

@@ -28,8 +28,7 @@ SOFTWARE.
 #define reg(x, y) BaseParserEventHandler<LipidAdduct*>::registered_events->insert({x, bind(&SwissLipidsParserEventHandler::y, this, placeholders::_1)})
     
 
-SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : BaseParserEventHandler<LipidAdduct*>() {
-    fa_list = new vector<FattyAcid*>();
+SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : LipidBaseParserEventHandler() {
     
     reg("lipid_pre_event", reset_lipid);
     reg("lipid_post_event", build_lipid);
@@ -64,21 +63,21 @@ SwissLipidsParserEventHandler::SwissLipidsParserEventHandler() : BaseParserEvent
     reg("db_count_pre_event", add_double_bonds);
     reg("carbon_pre_event", add_carbon);
     reg("sl_lcb_species_pre_event", set_species_level);
-    reg("st_species_fa_post_event", se_species_fa);
-    reg("fa_lcb_suffix_type_pre_event", add_one_hydroxyl);
+    reg("st_species_fa_post_event", set_species_fa);
+    reg("fa_lcb_suffix_type_pre_event", add_fa_lcb_suffix_type);
+    reg("fa_lcb_suffix_number_pre_event", add_suffix_number);
+    reg("pl_three_post_event", set_nape);
     
     debug = "";
 }
 
 
 SwissLipidsParserEventHandler::~SwissLipidsParserEventHandler(){
-    delete fa_list;
 }
 
 
 void SwissLipidsParserEventHandler::reset_lipid(TreeNode *node) {
-    level = ISOMERIC_SUBSPECIES;
-    lipid = NULL;
+    level = FULL_STRUCTURE;
     head_group = "";
     lcb = NULL;
     fa_list->clear();
@@ -86,7 +85,18 @@ void SwissLipidsParserEventHandler::reset_lipid(TreeNode *node) {
     use_head_group = false;
     db_position = 0;
     db_cistrans = "";
-    headgroup = NULL;
+    headgroup_decorators->clear();
+    suffix_number = -1;
+}
+
+
+void SwissLipidsParserEventHandler::set_nape(TreeNode *node){
+    head_group = "PE-N";
+    HeadgroupDecorator* hgd = new HeadgroupDecorator("decorator_acyl", -1, 1, 0, true);
+    headgroup_decorators->push_back(hgd);
+    hgd->functional_groups->insert({"decorator_acyl", vector<FunctionalGroup*>()});
+    hgd->functional_groups->at("decorator_acyl").push_back(fa_list->at(fa_list->size() - 1));
+    fa_list->pop_back();
 }
 
 
@@ -99,6 +109,7 @@ void SwissLipidsParserEventHandler::set_isomeric_level(TreeNode* node){
 void SwissLipidsParserEventHandler::add_db_position(TreeNode* node){
     if (current_fa != NULL){
         current_fa->double_bonds->double_bond_positions.insert({db_position, db_cistrans});
+        if (db_cistrans != "E" && db_cistrans != "Z") set_lipid_level(STRUCTURE_DEFINED);
     }
 }
 
@@ -123,15 +134,16 @@ void SwissLipidsParserEventHandler::set_head_group_name_se(TreeNode *node){
 }
 
 
+
 void SwissLipidsParserEventHandler::set_species_level(TreeNode *node) {
-    level = SPECIES;
+    set_lipid_level(SPECIES);
 }
     
 
 
 
 void SwissLipidsParserEventHandler::set_molecular_level(TreeNode *node) {
-    level = MOLECULAR_SUBSPECIES;
+    set_lipid_level(MOLECULAR_SPECIES);
 }
 
 
@@ -150,13 +162,17 @@ void SwissLipidsParserEventHandler::new_fa(TreeNode *node) {
 
 void SwissLipidsParserEventHandler::new_lcb(TreeNode *node) {
     lcb = new FattyAcid("LCB");
-    lcb->lcb = true;
+    lcb->set_type(LCB_REGULAR);
     current_fa = lcb;
+    set_lipid_level(STRUCTURE_DEFINED);
 }
         
         
 
 void SwissLipidsParserEventHandler::clean_lcb(TreeNode *node) {
+    if (current_fa->double_bonds->double_bond_positions.size() == 0 && current_fa->double_bonds->get_num() > 0){
+        set_lipid_level(SN_POSITION);
+    }
     current_fa = NULL;
 }
     
@@ -169,10 +185,10 @@ void SwissLipidsParserEventHandler::append_fa(TreeNode *node) {
     }
     
     if (current_fa->double_bonds->double_bond_positions.size() == 0 && current_fa->double_bonds->get_num() > 0){
-        level = min(level, STRUCTURAL_SUBSPECIES);
+        set_lipid_level(SN_POSITION);
     }
     
-    if (level == STRUCTURAL_SUBSPECIES || level == ISOMERIC_SUBSPECIES){
+    if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE | STRUCTURE_DEFINED | SN_POSITION)){
             current_fa->position = fa_list->size() + 1;
     }
     
@@ -184,28 +200,15 @@ void SwissLipidsParserEventHandler::append_fa(TreeNode *node) {
 
 void SwissLipidsParserEventHandler::build_lipid(TreeNode *node) {
     if (lcb){
-        level = min(level, STRUCTURAL_SUBSPECIES);
+        set_lipid_level(STRUCTURE_DEFINED);
         for (auto& fa : *fa_list) fa->position += 1;
         fa_list->insert(fa_list->begin(), lcb);
     }
-    
-    lipid = NULL;
-    LipidSpecies *ls = NULL;
 
-    headgroup = new Headgroup(head_group, 0, use_head_group);
+    Headgroup *headgroup = prepare_headgroup_and_checks();
     
-    int max_num_fa = contains(LipidClasses::get_instance().lipid_classes, headgroup->lipid_class) ? LipidClasses::get_instance().lipid_classes.at(headgroup->lipid_class).max_num_fa : 0;
-    if (max_num_fa != (int)fa_list->size()) level = min(level, MOLECULAR_SUBSPECIES);
-
-    switch (level){
-        case SPECIES: ls = new LipidSpecies(headgroup, fa_list); break;
-        case MOLECULAR_SUBSPECIES: ls = new LipidMolecularSubspecies(headgroup, fa_list); break;
-        case STRUCTURAL_SUBSPECIES: ls = new LipidStructuralSubspecies(headgroup, fa_list); break;
-        case ISOMERIC_SUBSPECIES: ls = new LipidIsomericSubspecies(headgroup, fa_list); break;
-        default: break;
-    }
-    lipid = new LipidAdduct();
-    lipid->lipid = ls;
+    LipidAdduct *lipid = new LipidAdduct();
+    lipid->lipid = assemble_lipid(headgroup);
     BaseParserEventHandler<LipidAdduct*>::content = lipid;
 }
     
@@ -226,8 +229,8 @@ void SwissLipidsParserEventHandler::add_hydroxyl(TreeNode *node) {
     else if (old_hydroxyl == "d") num_h = 2;
     else if (old_hydroxyl == "t") num_h = 3;
     
+    if (sp_regular_lcb()) num_h -= 1;
     
-    if (Headgroup::get_category(head_group) == SP && current_fa->lcb && head_group != "Cer" && head_group != "LCB") num_h -= 1;
     FunctionalGroup* functional_group = KnownFunctionalGroups::get_functional_group("OH");
     functional_group->count = num_h;
     if (uncontains_p(current_fa->functional_groups, "OH")) current_fa->functional_groups->insert({"OH", vector<FunctionalGroup*>()});
@@ -251,6 +254,30 @@ void SwissLipidsParserEventHandler::add_one_hydroxyl(TreeNode *node) {
 void SwissLipidsParserEventHandler::add_double_bonds(TreeNode *node) {
     current_fa->double_bonds->num_double_bonds += atoi(node->get_text().c_str());
 }
+
+
+
+void SwissLipidsParserEventHandler::add_suffix_number(TreeNode *node){
+    suffix_number = atoi(node->get_text().c_str());
+}
+
+
+
+void SwissLipidsParserEventHandler::add_fa_lcb_suffix_type(TreeNode *node){
+    string suffix_type = node->get_text();
+    if (suffix_type == "me"){
+        suffix_type = "Me";
+        current_fa->num_carbon -= 1;
+    }
+        
+    FunctionalGroup *functional_group = KnownFunctionalGroups::get_functional_group(suffix_type);
+    functional_group->position = suffix_number;
+    if (functional_group->position == -1) set_lipid_level(STRUCTURE_DEFINED);
+    if (uncontains_p(current_fa->functional_groups, suffix_type)) current_fa->functional_groups->insert({suffix_type, vector<FunctionalGroup*>()});
+    current_fa->functional_groups->at(suffix_type).push_back(functional_group);
+            
+    suffix_number = -1;
+}
     
     
 
@@ -260,7 +287,7 @@ void SwissLipidsParserEventHandler::add_carbon(TreeNode *node) {
 
         
 
-void SwissLipidsParserEventHandler::se_species_fa(TreeNode *node){
+void SwissLipidsParserEventHandler::set_species_fa(TreeNode *node){
     head_group += " 27:1";
     fa_list->at(fa_list->size() -1)->num_carbon -= 27;
     fa_list->at(fa_list->size() -1)->double_bonds->num_double_bonds -= 1;

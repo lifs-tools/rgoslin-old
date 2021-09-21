@@ -23,13 +23,35 @@ SOFTWARE.
 */
 
 
-#include "Fragment.h"
+#include "LipidCompleteStructure.h"
 
+LipidCompleteStructure::LipidCompleteStructure(Headgroup* _headgroup, vector<FattyAcid*> *_fa) : LipidFullStructure(_headgroup, _fa) {            
+    info->level = COMPLETE_STRUCTURE;
     
-Fragment::Fragment(string _name){
-    name = _name;
 }
+
+
+LipidLevel LipidCompleteStructure::get_lipid_level(){
+    return COMPLETE_STRUCTURE;
+}
+
+
+string LipidCompleteStructure::get_lipid_string(LipidLevel level){
+    switch(level){
+        case NO_LEVEL:
+        case COMPLETE_STRUCTURE:
+            return LipidMolecularSpecies::build_lipid_subspecies_name(COMPLETE_STRUCTURE);
+            
+        case FULL_STRUCTURE:
+        case STRUCTURE_DEFINED:
+        case SN_POSITION:
+        case MOLECULAR_SPECIES:
+        case SPECIES:
+        case CLASS:
+        case CATEGORY:
+            return LipidFullStructure::get_lipid_string(level);
     
-string Fragment::get_lipid_string(){
-    return name;
+        default:
+            throw IllegalArgumentException("LipidIsomericSubspecies does not know how to create a lipid string for level " + std::to_string(level));
+    }
 }

@@ -25,11 +25,15 @@ SOFTWARE.
 
 #include "FattyAcid.h"
 
-FattyAcid::FattyAcid(string _name, int _num_carbon, DoubleBonds* _double_bonds, map<string, vector<FunctionalGroup*> >* _functional_groups, LipidFaBondType _lipid_FA_bond_type, bool _lcb, int _position) : FunctionalGroup(_name, _position, 1, _double_bonds, false, "", 0, _functional_groups) {
+FattyAcid::FattyAcid(string _name, int _num_carbon, DoubleBonds* _double_bonds, map<string, vector<FunctionalGroup*> >* _functional_groups, LipidFaBondType _lipid_FA_bond_type, int _position) : FunctionalGroup(_name, _position, 1, _double_bonds, false, "", 0, _functional_groups) {
     
     num_carbon = _num_carbon;
     lipid_FA_bond_type = _lipid_FA_bond_type;
-    lcb = _lcb;
+    
+    if (lipid_FA_bond_type == LCB_REGULAR){
+        functional_groups->insert({"[X]", vector<FunctionalGroup*>()});
+        functional_groups->at("[X]").push_back(KnownFunctionalGroups::get_functional_group("X"));
+    }
     
     if (num_carbon < 0 || num_carbon == 1){
         throw ConstraintViolationException("FattyAcid must have at least 2 carbons! Got " + std::to_string(num_carbon));
@@ -56,7 +60,7 @@ FattyAcid* FattyAcid::copy(){
         }
     }
     
-    return new FattyAcid(name, num_carbon, db, fg, lipid_FA_bond_type, lcb, position);
+    return new FattyAcid(name, num_carbon, db, fg, lipid_FA_bond_type, position);
 }
 
 
@@ -68,6 +72,27 @@ string FattyAcid::get_prefix(LipidFaBondType lipid_FA_bond_type){
         default: return "";
     }
 }
+
+
+
+    
+void FattyAcid::set_type(LipidFaBondType _lipid_FA_bond_type){
+    lipid_FA_bond_type = _lipid_FA_bond_type;
+    if (lipid_FA_bond_type == LCB_REGULAR && uncontains_p(functional_groups, "[X]")){
+        functional_groups->insert({"[X]", vector<FunctionalGroup*>()});
+        functional_groups->at("[X]").push_back(KnownFunctionalGroups::get_functional_group("X"));
+    }
+        
+    else if (contains_p(functional_groups, "[X]")){
+        for (auto fg : functional_groups->at("[X]")){
+            delete fg;
+        }
+        functional_groups->erase("[X]");
+    }
+        
+    name = (lipid_FA_bond_type != LCB_EXCEPTION && lipid_FA_bond_type != LCB_REGULAR) ? "FA" : "LCB";
+}
+                 
 
 
 
@@ -89,11 +114,11 @@ string FattyAcid::to_string(LipidLevel level){
     int num_carbons = num_carbon;
     int num_double_bonds = double_bonds->get_num();
     
-    if (num_carbons == 0 && num_double_bonds == 0 && level != ISOMERIC_SUBSPECIES && level != STRUCTURAL_SUBSPECIES){
+    if (num_carbons == 0 && num_double_bonds == 0 && !is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE | STRUCTURE_DEFINED | SN_POSITION)){
         return "";
     }
     
-    if (level == MOLECULAR_SUBSPECIES){
+    if (is_level(level, SN_POSITION | MOLECULAR_SPECIES)){
         ElementTable* e = get_elements();
         num_carbons = e->at(ELEMENT_C);
         num_double_bonds = get_double_bonds() - (lipid_FA_bond_type == ETHER_PLASMENYL);
@@ -104,25 +129,26 @@ string FattyAcid::to_string(LipidLevel level){
     fa_string << num_carbons << ":" << num_double_bonds;
     
     
-    if (level != MOLECULAR_SUBSPECIES && double_bonds->double_bond_positions.size() > 0){
+    if (!is_level(level, SN_POSITION | MOLECULAR_SPECIES) && double_bonds->double_bond_positions.size() > 0){
         fa_string << "(";
         
         int i = 0;
         for (auto &kv : double_bonds->double_bond_positions){
             if (i++ > 0) fa_string << ",";
             fa_string << kv.first;
-            if (level == ISOMERIC_SUBSPECIES) fa_string << kv.second;
+            if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE)) fa_string << kv.second;
         }
         fa_string << ")";
     }
         
         
-    if (level == ISOMERIC_SUBSPECIES){
+    if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE)){
         vector<string> fg_names;
         for (auto &kv : *functional_groups) fg_names.push_back(kv.first);
         sort(fg_names.begin(), fg_names.end(), lower_name_sort_function);
         
         for (auto &fg : fg_names){
+            if (fg == "[X]") continue;
             vector<FunctionalGroup*>& fg_list = functional_groups->at(fg);
             if (fg_list.empty()) continue;
             
@@ -136,13 +162,14 @@ string FattyAcid::to_string(LipidLevel level){
         }
     }
     
-    else if (level == STRUCTURAL_SUBSPECIES){
+    else if (level == STRUCTURE_DEFINED){
         vector<string> fg_names;
         for (auto &kv : *functional_groups) fg_names.push_back(kv.first);
         sort(fg_names.begin(), fg_names.end(), lower_name_sort_function);
         
         
         for (auto &fg : fg_names){
+            if (fg == "[X]") continue;
             vector<FunctionalGroup*> &fg_list = functional_groups->at(fg);
             if (fg_list.empty()) continue;
                 
@@ -187,6 +214,19 @@ string FattyAcid::to_string(LipidLevel level){
 }
 
 
+    
+ElementTable* FattyAcid::get_functional_group_elements(){
+    ElementTable *elements = FunctionalGroup::get_functional_group_elements();
+    
+    // subtract the invisible [X] functional group for regular LCBs
+    if (lipid_FA_bond_type == LCB_REGULAR && contains_p(functional_groups, "O")){
+        elements->at(ELEMENT_O) -= 1;
+    }
+        
+    return elements;
+}
+
+
 
 
 void FattyAcid::compute_elements(){
@@ -200,7 +240,7 @@ void FattyAcid::compute_elements(){
         return;
     }
     
-    if (!lcb){
+    if (lipid_FA_bond_type != LCB_EXCEPTION && lipid_FA_bond_type != LCB_REGULAR){
         
         elements->at(ELEMENT_C) = num_carbon; // carbon
         if (lipid_FA_bond_type == ESTER){
@@ -228,7 +268,7 @@ void FattyAcid::compute_elements(){
         elements->at(ELEMENT_C) = num_carbon; // carbon
         elements->at(ELEMENT_H) = (2 * (num_carbon - num_double_bonds) + 1); // hydrogen
         elements->at(ELEMENT_N) = 1; // nitrogen
-        elements->at(ELEMENT_O) = 1; // oxygen
+        //elements->at(ELEMENT_O) = 1; // oxygen
     }
 }
 
@@ -268,7 +308,7 @@ void AcylAlkylGroup::set_N_bond_type(bool _N_bond){
 
 string AcylAlkylGroup::to_string(LipidLevel level){
     stringstream acyl_alkyl_string;
-    if (level == ISOMERIC_SUBSPECIES) acyl_alkyl_string << position;
+    if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE)) acyl_alkyl_string << position;
     acyl_alkyl_string << (N_bond ? "N" : "O") << "(";
     if (!alkyl) acyl_alkyl_string << "FA ";
     acyl_alkyl_string << ((FattyAcid*)functional_groups->at(alkyl ? "alkyl" :"acyl").front())->to_string(level) << ")";
@@ -294,5 +334,5 @@ CarbonChain* CarbonChain::copy(){
 
 
 string CarbonChain::to_string(LipidLevel level){
-    return (level == ISOMERIC_SUBSPECIES ? std::to_string(position) : "") + "(" + ((FattyAcid*)functional_groups->at("cc").front())->to_string(level) + ")";
+    return (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE) ? std::to_string(position) : "") + "(" + ((FattyAcid*)functional_groups->at("cc").front())->to_string(level) + ")";
 }

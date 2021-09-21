@@ -29,12 +29,13 @@ SOFTWARE.
 #include "cppgoslin/domain/LipidEnums.h"
 #include "cppgoslin/domain/Adduct.h"
 #include "cppgoslin/domain/LipidAdduct.h"
-#include "cppgoslin/domain/LipidStructuralSubspecies.h"
-#include "cppgoslin/domain/LipidIsomericSubspecies.h"
+#include "cppgoslin/domain/LipidCompleteStructure.h"
 #include "cppgoslin/domain/FattyAcid.h"
 #include "cppgoslin/domain/FunctionalGroup.h"
 #include "cppgoslin/domain/Headgroup.h"
-#include "cppgoslin/parser/BaseParserEventHandler.h"
+#include "cppgoslin/domain/Cycle.h"
+#include "cppgoslin/domain/GenericDatastructures.h"
+#include "cppgoslin/parser/LipidBaseParserEventHandler.h"
 #include <string>
 #include <set>
 #include <map>
@@ -45,22 +46,14 @@ SOFTWARE.
 using namespace std;
 using namespace goslin;
 
-class HmdbParserEventHandler : public BaseParserEventHandler<LipidAdduct*> {
+class HmdbParserEventHandler : public LipidBaseParserEventHandler {
 public:
-    LipidLevel level;
-    LipidAdduct *lipid;
-    string head_group;
-    FattyAcid *lcb;
-    vector<FattyAcid*> *fa_list;
-    FattyAcid *current_fa;
-    bool use_head_group;
     int db_position;
     string db_cistrans;
-    Headgroup* headgroup;
+    GenericDictionary furan;
         
     HmdbParserEventHandler();
     ~HmdbParserEventHandler();
-    
     void reset_lipid(TreeNode *node);
     void build_lipid(TreeNode *node);
     void set_head_group_name(TreeNode *node);
@@ -82,6 +75,11 @@ public:
     void add_cistrans(TreeNode* node);
     
     void furan_fa(TreeNode *node);
+    void furan_fa_post(TreeNode *node);
+    void furan_fa_mono(TreeNode *node);
+    void furan_fa_di(TreeNode *node);
+    void furan_fa_first_number(TreeNode *node);
+    void furan_fa_second_number(TreeNode *node);
     void interlink_fa(TreeNode *node);
     void lipid_suffix(TreeNode *node);
     void add_one_hydroxyl(TreeNode *node);

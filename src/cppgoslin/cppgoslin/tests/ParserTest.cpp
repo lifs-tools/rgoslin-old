@@ -173,9 +173,9 @@ int main(int argc, char** argv){
     assert (abs(lipid->get_mass() - 665.632209) < 1e-3);
     delete lipid;
         
-    lipid = hmdb_parser.parse("SM(d18:1/16:1(9Z)(OH))");
+    lipid = hmdb_parser.parse("SM(d18:1(9Z)/16:1(9Z)(OH))");
     assert (lipid);
-    assert(lipid->get_lipid_string() == "SM 18:1;OH/16:1(9);OH");
+    assert(lipid->get_lipid_string() == "SM 18:1(9);OH/16:1(9);OH");
     assert(lipid->get_sum_formula() == "C39H77N2O7P");
     assert (abs(lipid->get_mass() - 716.546841) < 1e-3);
     delete lipid;
@@ -185,11 +185,10 @@ int main(int argc, char** argv){
     
     
     
-    
     lipid_name = "PG(22:1(5Z)/12:0)";
     lipid = swiss_lipids_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->lipid->info->level == ISOMERIC_SUBSPECIES);
+    assert(lipid->lipid->info->level == FULL_STRUCTURE);
     assert(lipid->get_lipid_string() == "PG 22:1(5Z)/12:0");
     delete lipid;
     
@@ -197,7 +196,7 @@ int main(int argc, char** argv){
     lipid_name = "PG(22:1/12:0)";
     lipid = swiss_lipids_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->lipid->info->level == STRUCTURAL_SUBSPECIES);
+    assert(lipid->lipid->info->level == SN_POSITION);
     assert(lipid->get_lipid_string() == "PG 22:1/12:0");
     delete lipid;
     
@@ -205,7 +204,7 @@ int main(int argc, char** argv){
     lipid_name = "PG(22:1_12:0)";
     lipid = swiss_lipids_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->lipid->info->level == MOLECULAR_SUBSPECIES);
+    assert(lipid->lipid->info->level == MOLECULAR_SPECIES);
     assert(lipid->get_lipid_string() == "PG 22:1_12:0");
     delete lipid;
     
@@ -288,7 +287,6 @@ int main(int argc, char** argv){
     
     
     
-    
     // test SwissLipids parser
     lipid_name = "TG(O-16:0/18:3(6Z,9Z,12Z)/18:1(11Z))";
     lipid = swiss_lipids_parser.parse(lipid_name);
@@ -323,7 +321,13 @@ int main(int argc, char** argv){
     lipid_name = "NAPE (12:0/30:4(15Z,18Z,21Z,24Z)/12:0)";
     lipid = swiss_lipids_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->get_lipid_string() == "NAPE 12:0/30:4(15Z,18Z,21Z,24Z)/12:0");
+    assert(lipid->get_lipid_string() == "PE-N(FA 12:0) 12:0/30:4(15Z,18Z,21Z,24Z)");
+    delete lipid;
+    
+    lipid_name = "NAPE (12:0/0:0/12:0)";
+    lipid = swiss_lipids_parser.parse(lipid_name);
+    assert (lipid);
+    assert(lipid->get_lipid_string() == "LPE-N(FA 12:0) 12:0/0:0");
     delete lipid;
     
     /*
@@ -361,7 +365,7 @@ int main(int argc, char** argv){
         assert (fa->position == faCnt);
         switch(faCnt) {
         case 1:
-        assert (fa->lcb == false);
+        assert(fa->lipid_FA_bond_type != LCB_EXCEPTION && fa->lipid_FA_bond_type != LCB_REGULAR);
         assert (fa->num_carbon == 16);
         num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
         assert (num_hydroxyl == 0);
@@ -369,7 +373,7 @@ int main(int argc, char** argv){
         assert (fa->double_bonds->get_num() == 0);
         break;
         case 2:
-        assert (fa->lcb == false);
+        assert(fa->lipid_FA_bond_type != LCB_EXCEPTION && fa->lipid_FA_bond_type != LCB_REGULAR);
         assert (fa->num_carbon == 12);
         num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
         assert (num_hydroxyl == 0);
@@ -406,6 +410,7 @@ int main(int argc, char** argv){
     assert (lipid);
     assert(lipid->get_lipid_string() == "DLCL 14:1_8:0");
     delete lipid;
+    
     
     
     lipid_name = "PIP[3'] 17:0/20:4(5Z,8Z,11Z,14Z)";
@@ -456,7 +461,7 @@ int main(int argc, char** argv){
                         {"Cer(d16:2(4E,6E)/22:0(2OH))", "Cer 16:2(4,6);(OH)2/22:0;OH"},
                         {"MG(18:1(11E)/0:0/0:0)[rac]", "MG 18:1(11E)/0:0/0:0"},
                         {"PAT18(24:1(2E)(2Me,4Me[S],6Me[S])/25:1(2E)(2Me,4Me[S],6Me[S])/26:1(2E)(2Me,4Me[S],6Me[S])/24:1(2E)(2Me,4Me[S],6Me[S]))", "PAT18 24:1(2E);2Me,4Me,6Me/25:1(2E);2Me,4Me,6Me/26:1(2E);2Me,4Me,6Me/24:1(2E);2Me,4Me,6Me"},
-                        {"(3'-sulfo)Galbeta-Cer(d18:1/20:0)", "SHexCer 18:1;OH/20:0"},
+                        {"(3'-sulfo)Galbeta-Cer(d18:1/20:0)", "SHexCer 18:1;O2/20:0"},
                         {"GlcCer(d15:2(4E,6E)/22:0(2OH))", "GlcCer 15:2(4,6);OH/22:0;OH"}};
     
     for (auto &lmp : lmp_data){
@@ -491,7 +496,7 @@ int main(int argc, char** argv){
     
     lipid = lipid_parser.parse("LCB 18:1;2");
     assert(lipid);
-    assert(lipid->get_lipid_string() == "SPB 18:1;(OH)2");
+    assert(lipid->get_lipid_string() == "SPB 18:1;O2");
     delete lipid;
     
     
@@ -561,9 +566,10 @@ int main(int argc, char** argv){
     lipid_name = "PE 16:1(2E)/12:0";
     lipid = goslin_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->get_lipid_string(ISOMERIC_SUBSPECIES) == "PE 16:1(2E)/12:0");
-    assert(lipid->get_lipid_string(STRUCTURAL_SUBSPECIES) == "PE 16:1(2)/12:0");
-    assert(lipid->get_lipid_string(MOLECULAR_SUBSPECIES) == "PE 16:1_12:0");
+    assert(lipid->get_lipid_string(FULL_STRUCTURE) == "PE 16:1(2E)/12:0");
+    assert(lipid->get_lipid_string(STRUCTURE_DEFINED) == "PE 16:1(2)/12:0");
+    assert(lipid->get_lipid_string(SN_POSITION) == "PE 16:1/12:0");
+    assert(lipid->get_lipid_string(MOLECULAR_SPECIES) == "PE 16:1_12:0");
     assert(lipid->get_lipid_string(SPECIES) == "PE 28:1");
     assert(lipid->get_lipid_string(CLASS) == "PE");
     assert(lipid->get_lipid_string(CATEGORY) == "GP");
@@ -571,11 +577,12 @@ int main(int argc, char** argv){
     
     
     // sphingolipid;
-    lipid_name = "Cer 16:1;2/12:0";
+    lipid_name = "Cer 16:1(14E);2/12:0";
     lipid = goslin_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->get_lipid_string(STRUCTURAL_SUBSPECIES) == "Cer 16:1;(OH)2/12:0");
-    assert(lipid->get_lipid_string(MOLECULAR_SUBSPECIES) == "Cer 16:1;O2/12:0");
+    assert(lipid->get_lipid_string(STRUCTURE_DEFINED) == "Cer 16:1(14);(OH)2/12:0");
+    assert(lipid->get_lipid_string(SN_POSITION) == "Cer 16:1;O2/12:0");
+    assert(lipid->get_lipid_string(MOLECULAR_SPECIES) == "Cer 16:1;O2/12:0");
     assert(lipid->get_lipid_string(SPECIES) == "Cer 28:1;O2");
     assert(lipid->get_lipid_string(CLASS) == "Cer");
     assert(lipid->get_lipid_string(CATEGORY) == "SP");
@@ -585,7 +592,7 @@ int main(int argc, char** argv){
     for(FattyAcid* fa : lipid->lipid->get_fa_list()) {
         switch(faCnt) {
         case 1:
-            assert (fa->lcb == true);
+            assert(fa->lipid_FA_bond_type == LCB_EXCEPTION || fa->lipid_FA_bond_type == LCB_REGULAR);
             assert (fa->num_carbon == 16);
             num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
             assert (num_hydroxyl == 1);
@@ -593,7 +600,7 @@ int main(int argc, char** argv){
             assert (fa->double_bonds->get_num() == 1);
             break;
         case 2:
-            assert (fa->lcb == false);
+            assert(fa->lipid_FA_bond_type != LCB_EXCEPTION && fa->lipid_FA_bond_type != LCB_REGULAR);
             assert (fa->num_carbon == 12);
             num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
             assert (num_hydroxyl == 0);
@@ -610,8 +617,9 @@ int main(int argc, char** argv){
     lipid_name = "TAG 16:1(5E)/18:0/20:2(3Z,6Z)";
     lipid = goslin_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->get_lipid_string(STRUCTURAL_SUBSPECIES) == "TG 16:1(5)/18:0/20:2(3,6)");
-    assert(lipid->get_lipid_string(MOLECULAR_SUBSPECIES) == "TG 16:1_18:0_20:2");
+    assert(lipid->get_lipid_string(STRUCTURE_DEFINED) == "TG 16:1(5)/18:0/20:2(3,6)");
+    assert(lipid->get_lipid_string(SN_POSITION) == "TG 16:1/18:0/20:2");
+    assert(lipid->get_lipid_string(MOLECULAR_SPECIES) == "TG 16:1_18:0_20:2");
     assert(lipid->get_lipid_string(SPECIES) == "TG 54:3");
     assert(lipid->get_lipid_string(CLASS) == "TG");
     assert(lipid->get_lipid_string(CATEGORY) == "GL");
@@ -620,8 +628,8 @@ int main(int argc, char** argv){
     
     // try to retrieve LipidSpeciesInfo for summary information
     LipidSpeciesInfo *lsi = lipid->lipid->info;
-    assert (lsi->lcb == false);
-    assert (lsi->level == ISOMERIC_SUBSPECIES);
+    assert(lsi->lipid_FA_bond_type != LCB_EXCEPTION && lsi->lipid_FA_bond_type != LCB_REGULAR);
+    assert (lsi->level == FULL_STRUCTURE);
     assert (lsi->lipid_FA_bond_type == ESTER);
     assert (lsi->num_carbon == 54);
     assert (lsi->double_bonds->get_num() == 3);
@@ -636,7 +644,7 @@ int main(int argc, char** argv){
         assert (fa->position == faCnt);
         switch(faCnt) {
         case 1:
-            assert (fa->lcb == false);
+            assert(fa->lipid_FA_bond_type != LCB_EXCEPTION && fa->lipid_FA_bond_type != LCB_REGULAR);
             assert (fa->num_carbon == 16);
             num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
             assert (num_hydroxyl == 0);
@@ -644,7 +652,7 @@ int main(int argc, char** argv){
             assert (fa->double_bonds->get_num() == 1);
             break;
         case 2:
-            assert (fa->lcb == false);
+            assert(fa->lipid_FA_bond_type != LCB_EXCEPTION && fa->lipid_FA_bond_type != LCB_REGULAR);
             assert (fa->num_carbon == 18);
             num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
             assert (num_hydroxyl == 0);
@@ -652,7 +660,7 @@ int main(int argc, char** argv){
             assert (fa->double_bonds->get_num() == 0);
             break;
         case 3:
-            assert (fa->lcb == false);
+            assert(fa->lipid_FA_bond_type != LCB_EXCEPTION && fa->lipid_FA_bond_type != LCB_REGULAR);
             assert (fa->num_carbon == 20);
             num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
             assert (num_hydroxyl == 0);
@@ -664,11 +672,12 @@ int main(int argc, char** argv){
     }
     delete lipid;
     
-    lipid_name = "TAG 16:1/12:0/20:2";
+    lipid_name = "TAG 16:1(8E)/12:0/20:2(4Z,8Z)";
     lipid = goslin_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->get_lipid_string(STRUCTURAL_SUBSPECIES) == "TG 16:1/12:0/20:2");
-    assert(lipid->get_lipid_string(MOLECULAR_SUBSPECIES) == "TG 16:1_12:0_20:2");
+    assert(lipid->get_lipid_string(STRUCTURE_DEFINED) == "TG 16:1(8)/12:0/20:2(4,8)");
+    assert(lipid->get_lipid_string(SN_POSITION) == "TG 16:1/12:0/20:2");
+    assert(lipid->get_lipid_string(MOLECULAR_SPECIES) == "TG 16:1_12:0_20:2");
     assert(lipid->get_lipid_string(SPECIES) == "TG 48:3");
     assert(lipid->get_lipid_string(CLASS) == "TG");
     assert(lipid->get_lipid_string(CATEGORY) == "GL");
@@ -677,8 +686,8 @@ int main(int argc, char** argv){
     
     // try to retrieve LipidSpeciesInfo for summary information
     lsi = lipid->lipid->info;
-    assert (lsi->lcb == false);
-    assert (lsi->level == STRUCTURAL_SUBSPECIES);
+    assert(lsi->lipid_FA_bond_type != LCB_EXCEPTION && lsi->lipid_FA_bond_type != LCB_REGULAR);
+    assert (lsi->level == FULL_STRUCTURE);
     assert (lsi->lipid_FA_bond_type == ESTER);
     assert (lsi->num_carbon == 48);
     assert (lsi->double_bonds->get_num() == 3);
@@ -693,7 +702,7 @@ int main(int argc, char** argv){
         assert (fa->position == faCnt);
         switch(faCnt) {
         case 1:
-            assert (fa->lcb == false);
+            assert(fa->lipid_FA_bond_type != LCB_EXCEPTION && fa->lipid_FA_bond_type != LCB_REGULAR);
             assert (fa->num_carbon == 16);
             num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
             assert (num_hydroxyl == 0);
@@ -701,7 +710,7 @@ int main(int argc, char** argv){
             assert (fa->double_bonds->get_num() == 1);
             break;
         case 2:
-            assert (fa->lcb == false);
+            assert(fa->lipid_FA_bond_type != LCB_EXCEPTION && fa->lipid_FA_bond_type != LCB_REGULAR);
             assert (fa->num_carbon == 12);
             num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
             assert (num_hydroxyl == 0);
@@ -709,7 +718,7 @@ int main(int argc, char** argv){
             assert (fa->double_bonds->get_num() == 0);
             break;
         case 3:
-            assert (fa->lcb == false);
+            assert(fa->lipid_FA_bond_type != LCB_EXCEPTION && fa->lipid_FA_bond_type != LCB_REGULAR);
             assert (fa->num_carbon == 20);
             num_hydroxyl = contains_p(fa->functional_groups, "OH") ? fa->functional_groups->at("OH").size() : 0;
             assert (num_hydroxyl == 0);
@@ -724,11 +733,12 @@ int main(int argc, char** argv){
     
     
     // sterol;
-    lipid_name = "ChE 16:1";
+    lipid_name = "ChE 16:1(12E)";
     lipid = goslin_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->get_lipid_string(STRUCTURAL_SUBSPECIES) == "SE 27:1/16:1");
-    assert(lipid->get_lipid_string(MOLECULAR_SUBSPECIES) == "SE 27:1/16:1");
+    assert(lipid->get_lipid_string(STRUCTURE_DEFINED) == "SE 27:1/16:1(12)");
+    assert(lipid->get_lipid_string(SN_POSITION) == "SE 27:1/16:1");
+    assert(lipid->get_lipid_string(MOLECULAR_SPECIES) == "SE 27:1/16:1");
     assert(lipid->get_lipid_string(SPECIES) == "SE 27:1/16:1");
     assert(lipid->get_lipid_string(CLASS) == "SE 27:1");
     assert(lipid->get_lipid_string(CATEGORY) == "ST");
@@ -738,11 +748,12 @@ int main(int argc, char** argv){
     
     
     // sterol;
-    lipid_name = "ChE 16:1";
+    lipid_name = "ChE 16:1(12E)";
     lipid = goslin_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->get_lipid_string(STRUCTURAL_SUBSPECIES) == "SE 27:1/16:1");
-    assert(lipid->get_lipid_string(MOLECULAR_SUBSPECIES) == "SE 27:1/16:1");
+    assert(lipid->get_lipid_string(STRUCTURE_DEFINED) == "SE 27:1/16:1(12)");
+    assert(lipid->get_lipid_string(SN_POSITION) == "SE 27:1/16:1");
+    assert(lipid->get_lipid_string(MOLECULAR_SPECIES) == "SE 27:1/16:1");
     assert(lipid->get_lipid_string(SPECIES) == "SE 27:1/16:1");
     assert(lipid->get_lipid_string(CLASS) == "SE 27:1");
     assert(lipid->get_lipid_string(CATEGORY) == "ST");
@@ -751,11 +762,12 @@ int main(int argc, char** argv){
 
     
     // PC;
-    lipid_name = "PC O-16:1a/12:0";
+    lipid_name = "PC O-16:1(13E)a/12:0";
     lipid = goslin_parser.parse(lipid_name);
     assert (lipid);
-    assert(lipid->get_lipid_string(STRUCTURAL_SUBSPECIES) == "PC O-16:1/12:0");
-    assert(lipid->get_lipid_string(MOLECULAR_SUBSPECIES) == "PC O-16:1_12:0");
+    assert(lipid->get_lipid_string(STRUCTURE_DEFINED) == "PC O-16:1(13)/12:0");
+    assert(lipid->get_lipid_string(SN_POSITION) == "PC O-16:1/12:0");
+    assert(lipid->get_lipid_string(MOLECULAR_SPECIES) == "PC O-16:1_12:0");
     assert(lipid->get_lipid_string(SPECIES) == "PC O-28:1");
     assert(lipid->get_lipid_string(CLASS) == "PC");
     assert(lipid->get_lipid_string(CATEGORY) == "GP");

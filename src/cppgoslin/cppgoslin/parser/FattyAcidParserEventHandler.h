@@ -29,8 +29,7 @@ SOFTWARE.
 #include "cppgoslin/domain/Adduct.h"
 #include "cppgoslin/domain/Cycle.h"
 #include "cppgoslin/domain/LipidAdduct.h"
-#include "cppgoslin/domain/LipidStructuralSubspecies.h"
-#include "cppgoslin/domain/LipidIsomericSubspecies.h"
+#include "cppgoslin/domain/LipidCompleteStructure.h"
 #include "cppgoslin/domain/FattyAcid.h"
 #include "cppgoslin/domain/Headgroup.h"
 #include "cppgoslin/domain/FunctionalGroup.h"
@@ -111,8 +110,10 @@ public:
     void add_amine_name(TreeNode *node);
     void add_summary(TreeNode *node);
     void add_func_stereo(TreeNode *node);
-    void set_db_length(TreeNode *node);
-    void check_db_length(TreeNode *node);
+    void set_tetrahydrofuran(TreeNode *node);
+    void set_furan(TreeNode *node);
+    void open_db_length(TreeNode *node);
+    void close_db_length(TreeNode *node);
     
     void set_lipid_level(LipidLevel _level);
     void switch_position(FunctionalGroup* func_group, int switch_num);

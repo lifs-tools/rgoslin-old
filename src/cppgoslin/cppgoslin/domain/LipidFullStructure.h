@@ -23,20 +23,26 @@ SOFTWARE.
 */
 
 
-#ifndef FRAGMENT_H
-#define FRAGMENT_H
+#ifndef LIPID_FULL_STRUCTURE_H
+#define LIPID_FULL_STRUCTURE_H
 
 #include <string>
+#include "cppgoslin/domain/LipidExceptions.h"
+#include "cppgoslin/domain/LipidStructureDefined.h"
+#include "cppgoslin/domain/FattyAcid.h"
+#include "cppgoslin/domain/Headgroup.h"
+#include <sstream>
+#include <vector>
 
 using namespace std;
+using namespace goslin;
 
-class Fragment {
+class LipidFullStructure : public LipidStructureDefined {
 public:
-    string name;
-    
-    Fragment(string _name);
-    string get_lipid_string();
-        
+    LipidFullStructure(Headgroup* _headgroup, vector<FattyAcid*>* _fa = NULL);
+    string get_lipid_string(LipidLevel level = NO_LEVEL);
+    LipidLevel get_lipid_level();
+            
 };
 
-#endif /* FRAGMENT_H */
+#endif /* LIPID_FULL_STRUCTURE_H */

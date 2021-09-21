@@ -134,7 +134,7 @@ void FunctionalGroup::compute_elements(){
         
 string FunctionalGroup::to_string(LipidLevel level){
     string fg_string = "";
-    if (level == ISOMERIC_SUBSPECIES){
+    if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE)){
         if ('0' <= name[0] && name[0] <= '9'){
             fg_string = (position > -1) ? (std::to_string(position) + ring_stereo + "(" + name + ")") : name;
         }
@@ -145,7 +145,7 @@ string FunctionalGroup::to_string(LipidLevel level){
     else{
         fg_string = (count > 1) ? ("(" + name + ")" + std::to_string(count)) : name;
     }
-    if (stereochemistry.length() > 0 && level == ISOMERIC_SUBSPECIES){
+    if (stereochemistry.length() > 0 && is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE)){
         fg_string += "[" + stereochemistry + "]";
     }
             
@@ -220,7 +220,6 @@ string HeadgroupDecorator::to_string(LipidLevel level){
 
     string decorator_string = "";
     if (lowest_visible_level == NO_LEVEL || lowest_visible_level <= level){
-        
         if (contains_p(functional_groups, "decorator_alkyl") && functional_groups->at("decorator_alkyl").size() > 0){
             decorator_string = (level != SPECIES) ? functional_groups->at("decorator_alkyl").at(0)->to_string(level) : "Alk";
         }
