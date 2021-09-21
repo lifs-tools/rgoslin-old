@@ -32,12 +32,16 @@ std::string get_lipid_level_str(LipidLevel& level) {
             return "CLASS";
         case SPECIES:
             return "SPECIES";
-        case MOLECULAR_SUBSPECIES:
-            return "MOLECULAR_SUBSPECIES";
-        case STRUCTURAL_SUBSPECIES:
-            return "STRUCTURAL_SUBSPECIES";
-        case ISOMERIC_SUBSPECIES:
-            return "ISOMERIC_SUBSPECIES";
+        case MOLECULAR_SPECIES:
+            return "MOLECULAR_SPECIES";
+        case SN_POSITION:
+            return "SN_POSITION";
+        case STRUCTURE_DEFINED:
+            return "STRUCTURE_DEFINED";
+        case FULL_STRUCTURE:
+            return "FULL_STRUCTURE";
+        case COMPLETE_STRUCTURE:
+            return "COMPLETE_STRUCTURE";
         default:
             return "UNDEFINED";
     }
@@ -113,9 +117,10 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
     lipidDetails.push_back(chr_na, "Lipid.Maps.Category");
     lipidDetails.push_back(chr_na, "Lipid.Maps.Main.Class");
     lipidDetails.push_back(chr_na, "Species.Name");
-    lipidDetails.push_back(chr_na, "Molecular.Subspecies.Name");
-    lipidDetails.push_back(chr_na, "Structural.Subspecies.Name");
-    lipidDetails.push_back(chr_na, "Isomeric.Subspecies.Name");
+    lipidDetails.push_back(chr_na, "Molecular.Species.Name");
+    lipidDetails.push_back(chr_na, "Sn.Position.Name");
+    lipidDetails.push_back(chr_na, "Structure.Defined.Name");
+    lipidDetails.push_back(chr_na, "Full.Structure.Name");
     lipidDetails.push_back(chr_na, "Functional.Class.Abbr");
     lipidDetails.push_back(chr_na, "Functional.Class.Synonyms");
     lipidDetails.push_back(chr_na, "Level");
@@ -205,9 +210,10 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             lipidDetails["Lipid.Maps.Category"] = lipidMapsCategory;
             lipidDetails["Lipid.Maps.Main.Class"] = lipidMapsMainClass;
             lipidDetails["Species.Name"] = species;
-            lipidDetails["Molecular.Subspecies.Name"] = get_lipid_name_for_level(lipidAdduct, MOLECULAR_SUBSPECIES);
-            lipidDetails["Structural.Subspecies.Name"] = get_lipid_name_for_level(lipidAdduct, STRUCTURAL_SUBSPECIES);
-            lipidDetails["Isomeric.Subspecies.Name"] = get_lipid_name_for_level(lipidAdduct, ISOMERIC_SUBSPECIES);
+            lipidDetails["Molecular.Species.Name"] = get_lipid_name_for_level(lipidAdduct, MOLECULAR_SPECIES);
+            lipidDetails["Sn.Position.Name"] = get_lipid_name_for_level(lipidAdduct, SN_POSITION);
+            lipidDetails["Structure.Defined.Name"] = get_lipid_name_for_level(lipidAdduct, STRUCTURE_DEFINED);
+            lipidDetails["Full.Structure.Name"] = get_lipid_name_for_level(lipidAdduct, FULL_STRUCTURE);
             lipidDetails["Functional.Class.Abbr"] = "[" + headGroup + "]";
             lipidDetails["Functional.Class.Synonyms"] = headGroupSynonyms;
             lipidDetails["Level"] = level;
@@ -218,7 +224,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             lipidDetails["Sum.Formula"] = formula;
             int faCnt = 1;
             for(FattyAcid* fap : lipid->get_fa_list()) {
-                string prefix = (fap->lcb ? "LCB" : "FA") + std::to_string(faCnt) + ".";
+                string prefix = ((fap->lipid_FA_bond_type == LCB_EXCEPTION || fap->lipid_FA_bond_type == LCB_REGULAR) ? "LCB" : "FA") + std::to_string(faCnt) + ".";
                 lipidDetails[prefix + "Position"] = fap->position;
                 lipidDetails[prefix + "C"] = fap->num_carbon;
                 lipidDetails[prefix + "OH"] = ((fap->functional_groups->find("OH") != fap->functional_groups->end()) ? fap->functional_groups->at("OH").size() : 0);
