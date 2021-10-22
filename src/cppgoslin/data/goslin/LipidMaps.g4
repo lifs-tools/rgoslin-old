@@ -28,14 +28,23 @@
 grammar LipidMaps;
 
 /* first rule is always start rule */
-lipid: lipid_rule EOF;
+lipid : lipid_rule EOF | lipid_rule adduct_info EOF;
 lipid_rule: lipid_mono | lipid_mono isotope;
 lipid_mono: lipid_pure | lipid_pure isoform;
 lipid_pure: pure_fa | gl | pl | sl | pk | sterol | mediator;
 isoform: square_open_bracket isoform_inner square_close_bracket;
 isoform_inner : 'rac' | 'iso' | 'iso' number | 'R';
-isotope: SPACE round_open_bracket element number round_close_bracket | DASH round_open_bracket element number round_close_bracket | DASH element number;
-element: 'd';
+isotope: SPACE round_open_bracket isotope_element number round_close_bracket | DASH round_open_bracket isotope_element number round_close_bracket | DASH isotope_element number;
+isotope_element: 'd';
+
+
+/* adduct information */
+adduct_info : adduct_sep | adduct_separator adduct_sep;
+adduct_sep : '[M' adduct ']' charge_sign | '[M' adduct ']' charge charge_sign;
+adduct : adduct_set;
+adduct_set : adduct_element | adduct_element adduct_set;
+adduct_element : element | element number | number element | plus_minus element | plus_minus element number | plus_minus number element;
+
 
 
 /* pure fatty acid */
@@ -119,13 +128,13 @@ dsl_subspecies: round_open_bracket lcb_fa_sorted round_close_bracket | lcb_fa_so
 
 hg_dslc: hg_dsl_global | hg_dsl_global headgroup_separator;
 hg_dsl_global : hg_dsl | special_cer | special_glyco;
-hg_dsl: 'Cer' | 'CerP' | 'EPC' | 'GB3' | 'GB4' | 'GD3' | 'GM3' | 'GM4' | 'Hex3Cer' | 'Hex2Cer' | 'HexCer' | 'IPC' | 'M(IP)2C' | 'MIPC' | 'SHexCer' | 'SulfoHexCer' | 'SM' | 'PE-Cer' | 'PI-Cer' | 'GlcCer' | 'FMC-5' | 'FMC-6' | 'LacCer' | 'GalCer' | 'C1P' | omega_linoleoyloxy_Cer;
+hg_dsl: 'Cer' | 'CerP' | 'EPC' | 'GB3' | 'GB4' | 'GD3' | 'GM3' | 'GM4' | 'Hex3Cer' | 'Hex2Cer' | 'HexCer' | 'IPC' | 'M(IP)2C' | 'MIPC' | 'SHexCer' | 'SulfoHexCer' | 'SM' | 'PE-Cer' | 'PI-Cer' | 'GlcCer' | 'FMC-5' | 'FMC-6' | 'LacCer' | 'GalCer' | 'C1P' | '(3\'-sulfo)Galbeta-Cer' | omega_linoleoyloxy_Cer;
 omega_linoleoyloxy_Cer : 'omega-linoleoyloxy-' special_cer_hg;
 special_cer : special_cer_prefix '-Cer';
 special_cer_hg : 'Cer';
-special_cer_prefix : '1-O-' special_cer_prefix_1_O | '(3\'-sulfo)Galbeta';
+special_cer_prefix : '1-O-' special_cer_prefix_1_O;
 special_glyco : glyco_cer '-' special_cer_hg;
-special_cer_prefix_1_O : 'myristoyl' | 'palmitoyl' | 'stearoyl' | 'eicosanoyl' | 'behenoyl' | 'lignoceroyl' | 'cerotoyl' | 'glyco_ceroyl' | 'tricosanoyl' | 'carboceroyl';
+special_cer_prefix_1_O : 'myristoyl' | 'palmitoyl' | 'stearoyl' | 'eicosanoyl' | 'behenoyl' | 'lignoceroyl' | 'cerotoyl' | 'pentacosanoyl' | 'tricosanoyl' | 'carboceroyl' | 'lignoceroyl-omega-linoleoyloxy' | 'stearoyl-omega-linoleoyloxy';
 glyco_cer : glyco_entity | glyco_entity '-' glyco_cer | number glyco_branch glyco_cer;
 glyco_branch : '(' glyco_cer '-' number ')' | '(' glyco_cer '-' number ')' glyco_branch;
 glyco_entity : glyco_struct | glyco_number glyco_struct | glyco_number glyco_struct greek | glyco_number glyco_struct greek number | glyco_number glyco_struct number | glyco_struct greek | glyco_struct greek number;
@@ -180,7 +189,7 @@ isomeric_mod : mod_pos mod_text;
 structural_mod : mod_text | mod_text mod_num;
 mod_pos : number;
 mod_num : number;
-mod_text: 'OH' | 'Ke' | 'OOH' | 'My' | 'Me' | 'Br' | 'CHO' | 'COOH' | 'Cp' | 'Ep' | 'cyclo' | 'KE' | 'NH'  | 'Y';
+mod_text: 'OH' | 'Ke' | 'OOH' | 'My' | 'Me' | 'Br' | 'CHO' | 'COOH' | 'Cp' | 'Ep' | 'KE' | 'NH';
 ether : 'P-' | 'O-';
 stereo : 'R' | 'S';
 fa_pure: carbon carbon_db_separator db | carbon carbon_db_separator db db_hydroxyl_separator hydroxyl;
@@ -216,6 +225,7 @@ SOB: '[';
 SCB: ']';
 
 fa_separator: UNDERSCORE | SLASH | BACKSLASH | DASH;
+adduct_separator : SPACE;
 headgroup_separator: SPACE;
 fa_mod_separator: SPACE;
 carbon_db_separator: COLON;
@@ -228,3 +238,7 @@ round_close_bracket: RCB;
 square_open_bracket: SOB;
 square_close_bracket: SCB;
 
+element: 'C' | 'H' | 'N' | 'O' | 'P' | 'S' | 'Br' | 'I' | 'F' | 'Cl' | 'As';
+charge : '1' | '2' | '3' | '4';
+charge_sign : plus_minus;
+plus_minus : '-' | '+';

@@ -132,6 +132,8 @@ ShorthandParserEventHandler::ShorthandParserEventHandler() : LipidBaseParserEven
     reg("hg_pip_d_pre_event", suffix_decorator_molecular);
     reg("hg_pip_t_pre_event", suffix_decorator_molecular);
     reg("hg_PE_PS_type_pre_event", suffix_decorator_species);
+    reg("acer_hg_post_event", set_acer);
+    reg("acer_species_post_event", set_acer_species);
     
     
     debug = "";
@@ -154,12 +156,13 @@ void ShorthandParserEventHandler::reset_lipid(TreeNode *node) {
     current_fas.clear();
     headgroup_decorators->clear();
     tmp.remove_all();
-    
+    acer_species = false;
 }
 
 
 
 void ShorthandParserEventHandler::build_lipid(TreeNode *node) {
+    if (acer_species) fa_list->at(0)->num_carbon -= 2;
     Headgroup *headgroup = prepare_headgroup_and_checks();
     
     // add count numbers for fatty acyl chains
@@ -177,6 +180,24 @@ void ShorthandParserEventHandler::build_lipid(TreeNode *node) {
     BaseParserEventHandler<LipidAdduct*>::content = lipid;
 }
 
+
+void ShorthandParserEventHandler::set_acer(TreeNode *node){
+    head_group = "ACer";
+    HeadgroupDecorator *hgd = new HeadgroupDecorator("decorator_acyl", -1, 1, 0, true);
+    hgd->functional_groups->insert({"decorator_acyl", vector<FunctionalGroup*>{fa_list->back()}});
+    fa_list->pop_back();
+    headgroup_decorators->push_back(hgd);
+}
+    
+    
+void ShorthandParserEventHandler::set_acer_species(TreeNode *node){
+    head_group = "ACer";
+    set_lipid_level(SPECIES);
+    HeadgroupDecorator *hgd = new HeadgroupDecorator("decorator_acyl", -1, 1, 0, true);
+    hgd->functional_groups->insert({"decorator_acyl", vector<FunctionalGroup*>{new FattyAcid("FA", 2)}});
+    headgroup_decorators->push_back(hgd);
+    acer_species = true;
+}
 
 
 
@@ -606,7 +627,6 @@ void ShorthandParserEventHandler::set_sn_position_func_group(TreeNode *node){
 }
 
 
-
 void ShorthandParserEventHandler::add_functional_group(TreeNode *node){
     string fa_i = FA_I;
     GenericDictionary *gd = tmp.get_dictionary(FA_I);
@@ -635,6 +655,7 @@ void ShorthandParserEventHandler::add_functional_group(TreeNode *node){
     functional_group->count = fg_cnt;
     functional_group->stereochemistry = fg_stereo;
     functional_group->ring_stereo = fg_ring_stereo;
+    
     
     gd->remove("fg_pos");
     gd->remove("fg_name");
@@ -693,7 +714,7 @@ void ShorthandParserEventHandler::set_double_bond_count(TreeNode *node){
 
 
 void ShorthandParserEventHandler::new_adduct(TreeNode *node){
-    adduct = new Adduct("", "", 0, 0);
+    adduct = new Adduct("", "");
 }
 
 

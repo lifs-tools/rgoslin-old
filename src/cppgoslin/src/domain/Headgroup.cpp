@@ -43,17 +43,40 @@ Headgroup::~Headgroup(){
     for (auto hgd : *decorators) delete hgd;
     delete decorators;
 }
+
+
+
+void Headgroup::init(){
+    if (!StringCategory.size()){
+        for (const auto& kvp : LipidClasses::get_instance().lipid_classes){
+            LipidCategory category = kvp.second.lipid_category;
+            for (auto hg : kvp.second.synonyms){
+                StringCategory.insert(pair<string, LipidCategory>(hg, category));
+            }
+        }
+        
+        
+        for (auto kvp : LipidClasses::get_instance().lipid_classes){
+            LipidClass l_class = kvp.first;
+            for (auto hg : kvp.second.synonyms){
+                StringClass.insert({hg, l_class});
+            }
+        }
+        
+        for (auto kvp : LipidClasses::get_instance().lipid_classes){
+            ClassString.insert({kvp.first, kvp.second.synonyms.at(0)});
+        }
+    }
+}
+
         
 
 LipidCategory Headgroup::get_category(string _headgroup){
-    #pragma omp critical
-    {
-        if (!StringCategory.size()){
-            for (const auto& kvp : LipidClasses::get_instance().lipid_classes){
-                LipidCategory category = kvp.second.lipid_category;
-                for (auto hg : kvp.second.synonyms){
-                    StringCategory.insert(pair<string, LipidCategory>(hg, category));
-                }
+    if (!StringCategory.size()){
+        for (const auto& kvp : LipidClasses::get_instance().lipid_classes){
+            LipidCategory category = kvp.second.lipid_category;
+            for (auto hg : kvp.second.synonyms){
+                StringCategory.insert(pair<string, LipidCategory>(hg, category));
             }
         }
     }
@@ -65,14 +88,11 @@ LipidCategory Headgroup::get_category(string _headgroup){
 
 
 LipidClass Headgroup::get_class(string _headgroup){
-    #pragma omp critical
-    {
-        if (!StringClass.size()){
-            for (auto kvp : LipidClasses::get_instance().lipid_classes){
-                LipidClass l_class = kvp.first;
-                for (auto hg : kvp.second.synonyms){
-                    StringClass.insert({hg, l_class});
-                }
+    if (!StringClass.size()){
+        for (auto kvp : LipidClasses::get_instance().lipid_classes){
+            LipidClass l_class = kvp.first;
+            for (auto hg : kvp.second.synonyms){
+                StringClass.insert({hg, l_class});
             }
         }
     }
@@ -83,12 +103,9 @@ LipidClass Headgroup::get_class(string _headgroup){
 
 
 string Headgroup::get_class_string(LipidClass _lipid_class){
-    #pragma omp critical
-    {
-        if (!ClassString.size()){
-            for (auto kvp : LipidClasses::get_instance().lipid_classes){
-                ClassString.insert({kvp.first, kvp.second.synonyms.at(0)});
-            }
+    if (!ClassString.size()){
+        for (auto kvp : LipidClasses::get_instance().lipid_classes){
+            ClassString.insert({kvp.first, kvp.second.synonyms.at(0)});
         }
     }
     auto cl = ClassString.find(_lipid_class);

@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 
-#include "FattyAcid.h"
+#include "cppgoslin/domain/FattyAcid.h"
 
 FattyAcid::FattyAcid(string _name, int _num_carbon, DoubleBonds* _double_bonds, map<string, vector<FunctionalGroup*> >* _functional_groups, LipidFaBondType _lipid_FA_bond_type, int _position) : FunctionalGroup(_name, _position, 1, _double_bonds, false, "", 0, _functional_groups) {
     
@@ -133,10 +133,16 @@ string FattyAcid::to_string(LipidLevel level){
         fa_string << "(";
         
         int i = 0;
-        for (auto &kv : double_bonds->double_bond_positions){
+        
+        
+        vector<int> db_keys;
+        for (auto &kv : double_bonds->double_bond_positions) db_keys.push_back(kv.first);
+        sort(db_keys.begin(), db_keys.end());
+        
+        for (auto key : db_keys){
             if (i++ > 0) fa_string << ",";
-            fa_string << kv.first;
-            if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE)) fa_string << kv.second;
+            fa_string << key;
+            if (is_level(level, COMPLETE_STRUCTURE | FULL_STRUCTURE)) fa_string << double_bonds->double_bond_positions.at(key);
         }
         fa_string << ")";
     }

@@ -23,9 +23,8 @@ SOFTWARE.
 */
 
 
-#include "LipidSpecies.h"
+#include "cppgoslin/domain/LipidSpecies.h"
 
-#include <iostream>
 using namespace std;
 
 LipidSpecies::LipidSpecies(Headgroup* _headgroup, vector<FattyAcid*>* _fa){
@@ -40,17 +39,6 @@ LipidSpecies::LipidSpecies(Headgroup* _headgroup, vector<FattyAcid*>* _fa){
             fa_list.push_back(fatty_acid);
         }
     }
-    
-    
-    for (auto decorator : *headgroup->decorators){
-        if (decorator->name == "decorator_alkyl" || decorator->name == "decorator_acyl"){
-            ElementTable* e = decorator->get_elements();
-            info->num_carbon += e->at(ELEMENT_C);
-            delete e;
-            info->double_bonds->num_double_bonds += decorator->get_double_bonds();
-        }
-    }
-       
 }
 
 
@@ -88,7 +76,19 @@ string LipidSpecies::get_lipid_string(LipidLevel level){
             lipid_string << headgroup->get_lipid_string(level);
             
             if (info->elements->at(ELEMENT_C) > 0 || info->num_carbon > 0){
-                lipid_string << (headgroup->lipid_category != ST ? " " : "/") << info->to_string();
+                
+                LipidSpeciesInfo* lsi = info->copy();
+                for (auto decorator : *headgroup->decorators){
+                    if (decorator->name == "decorator_alkyl" || decorator->name == "decorator_acyl"){
+                        ElementTable* e = decorator->get_elements();
+                        lsi->num_carbon += e->at(ELEMENT_C);
+                        delete e;
+                        lsi->double_bonds->num_double_bonds += decorator->get_double_bonds();
+                    }
+                }
+                
+                lipid_string << (headgroup->lipid_category != ST ? " " : "/") << lsi->to_string();
+                delete lsi;
             }
             return lipid_string.str();
     }
@@ -105,7 +105,7 @@ string LipidSpecies::get_extended_class(){
     }
     
     else if (special_case && info->extended_class == ETHER_PLASMENYL){
-        return class_name + "-p";
+        return class_name + "-P";
     }
     
     return class_name;
@@ -132,6 +132,9 @@ ElementTable* LipidSpecies::get_elements(){
             break;
 
         default:    
+            throw LipidException("Element table cannot be computed for lipid level " + std::to_string(info->level));
+    }
+    if (headgroup->use_headgroup){
             throw LipidException("Element table cannot be computed for lipid level " + std::to_string(info->level));
     }
     

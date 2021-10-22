@@ -28,11 +28,19 @@ grammar HMDB;
 
 
 /* first rule is always start rule */
-lipid : lipid_pure EOF;
+lipid : lipid_pure EOF | lipid_pure adduct_info EOF;
 lipid_pure : lipid_class | lipid_class lipid_suffix;
 lipid_class : fatty_acid | gl | pl | sl | st;
 
 lipid_suffix : '[rac]';
+
+/* adduct information */
+adduct_info : adduct_sep | adduct_separator adduct_sep;
+adduct_sep : '[M' adduct ']' charge_sign | '[M' adduct ']' charge charge_sign;
+adduct : adduct_set;
+adduct_set : adduct_element | adduct_element adduct_set;
+adduct_element : element | element number | number element | plus_minus element | plus_minus element number | plus_minus number element;
+
 
 
 
@@ -190,10 +198,6 @@ st_sub2_hg : 'SE';
 st_sub2_fa : ROB fa2 RCB;
 
 
-
-
-
-
 /* separators */
 SPACE : ' ';
 COLON : ':';
@@ -208,6 +212,7 @@ RCB: ')';
 
 unsorted_fa_separator : UNDERSCORE;
 sorted_fa_separator : SLASH;
+adduct_separator : SPACE;
 headgroup_separator : SPACE;
 carbon_db_separator : COLON;
 db_position_separator : COMMA;
@@ -217,3 +222,8 @@ fa_lcb_prefix_separator : DASH;
 
 number :  digit | digit number;
 digit : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+
+element: 'C' | 'H' | 'N' | 'O' | 'P' | 'S' | 'Br' | 'I' | 'F' | 'Cl' | 'As';
+charge : '1' | '2' | '3' | '4';
+charge_sign : plus_minus;
+plus_minus : '-' | '+';

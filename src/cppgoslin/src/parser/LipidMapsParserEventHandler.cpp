@@ -92,6 +92,13 @@ LipidMapsParserEventHandler::LipidMapsParserEventHandler() : LipidBaseParserEven
     reg("mod_pos_pre_event", set_mod_pos);
     reg("mod_num_pre_event", set_mod_num);
     reg("single_mod_post_event", add_functional_group);
+    reg("special_cer_prefix_pre_event", add_ACer);
+    
+    
+    reg("adduct_info_pre_event", new_adduct);
+    reg("adduct_pre_event", add_adduct);
+    reg("charge_pre_event", add_charge);
+    reg("charge_sign_pre_event", add_charge_sign);
     
     debug = "";
 } 
@@ -110,6 +117,7 @@ void LipidMapsParserEventHandler::reset_lipid(TreeNode* node){
     use_head_group = false;
     omit_fa = false;
     db_position = 0;
+    adduct = 0;
     db_numbers = -1;
     db_cistrans = "";
     mod_pos = -1;
@@ -141,6 +149,40 @@ void LipidMapsParserEventHandler::set_isomeric_level(TreeNode* node){
 }
 
 
+const map<string, int> LipidMapsParserEventHandler::acer_heads{
+    {"1-O-myristoyl", 14},
+    {"1-O-palmitoyl", 16},
+    {"1-O-stearoyl", 18},
+    {"1-O-eicosanoyl", 20},
+    {"1-O-behenoyl", 22},
+    {"1-O-lignoceroyl", 24},
+    {"1-O-cerotoyl", 26},
+    {"1-O-pentacosanoyl", 25},
+    {"1-O-carboceroyl", 28},
+    {"1-O-tricosanoyl", 30},
+    {"1-O-lignoceroyl-omega-linoleoyloxy", 24},
+    {"1-O-stearoyl-omega-linoleoyloxy", 18}};
+    
+    
+void LipidMapsParserEventHandler::add_ACer(TreeNode *node){
+    string head = node->get_text();
+    head_group = "ACer";
+    
+    if (uncontains(acer_heads, head)){
+        throw LipidException("ACer head group '" + head + "' unknown");
+    }
+    
+    HeadgroupDecorator *hgd = new HeadgroupDecorator("decorator_acyl", -1, 1, 0, true);
+    int acer_num = acer_heads.at(head);
+    hgd->functional_groups->insert({"decorator_acyl", vector<FunctionalGroup*>{new FattyAcid("FA", acer_num)}});
+    headgroup_decorators->push_back(hgd);
+    
+    if (head == "1-O-lignoceroyl-omega-linoleoyloxy" || head == "1-O-stearoyl-omega-linoleoyloxy"){
+        add_omega_linoleoyloxy_Cer = true;
+    }
+}
+        
+        
 void LipidMapsParserEventHandler::add_db_position(TreeNode* node){
     if (current_fa != NULL){
         current_fa->double_bonds->double_bond_positions.insert({db_position, db_cistrans});
@@ -160,7 +202,7 @@ void LipidMapsParserEventHandler::add_cistrans(TreeNode* node){
     
     
 void LipidMapsParserEventHandler::set_head_group_name(TreeNode* node){
-    head_group = node->get_text();
+    if (head_group.length() == 0) head_group = node->get_text();
 }
 
 
@@ -205,12 +247,20 @@ void LipidMapsParserEventHandler::set_mod_num(TreeNode* node){
     
     
 void LipidMapsParserEventHandler::add_functional_group(TreeNode* node){
-    FunctionalGroup* functional_group = KnownFunctionalGroups::get_functional_group(mod_text);
-    functional_group->position = mod_pos;
-    functional_group->count = mod_num;
-    string fg_name = functional_group->name;
-    if (uncontains_p(current_fa->functional_groups, fg_name)) current_fa->functional_groups->insert({fg_name, vector<FunctionalGroup*>()});
-    current_fa->functional_groups->at(fg_name).push_back(functional_group);
+    if (mod_text != "Cp"){
+        FunctionalGroup* functional_group = KnownFunctionalGroups::get_functional_group(mod_text);
+        functional_group->position = mod_pos;
+        functional_group->count = mod_num;
+        string fg_name = functional_group->name;
+        if (uncontains_p(current_fa->functional_groups, fg_name)) current_fa->functional_groups->insert({fg_name, vector<FunctionalGroup*>()});
+        current_fa->functional_groups->at(fg_name).push_back(functional_group);
+    }
+    else {
+        current_fa->num_carbon += 1;
+        Cycle *cycle = new Cycle(3, mod_pos, mod_pos + 2);
+        if (uncontains_p(current_fa->functional_groups, "cy")) current_fa->functional_groups->insert({"cy", vector<FunctionalGroup*>()});
+        current_fa->functional_groups->at("cy").push_back(cycle);
+    }
 }
 
 
@@ -354,7 +404,34 @@ void LipidMapsParserEventHandler::build_lipid(TreeNode* node){
     
     LipidAdduct *lipid = new LipidAdduct();
     lipid->lipid = assemble_lipid(headgroup);
+    lipid->adduct = adduct;
     BaseParserEventHandler<LipidAdduct*>::content = lipid;
+}
+    
+    
+
+void LipidMapsParserEventHandler::new_adduct(TreeNode *node) {
+    adduct = new Adduct("", "");
+}
+    
+    
+
+void LipidMapsParserEventHandler::add_adduct(TreeNode *node) {
+    adduct->adduct_string = node->get_text();
+}
+    
+    
+
+void LipidMapsParserEventHandler::add_charge(TreeNode *node) {
+    adduct->charge = atoi(node->get_text().c_str());
+}
+    
+    
+
+void LipidMapsParserEventHandler::add_charge_sign(TreeNode *node) {
+    string sign = node->get_text();
+    if (sign == "+") adduct->set_charge_sign(1);
+    else if (sign == "-") adduct->set_charge_sign(-1);
 }
     
         

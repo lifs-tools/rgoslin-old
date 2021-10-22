@@ -29,6 +29,7 @@ SOFTWARE.
 #include "cppgoslin/domain/LipidEnums.h"
 #include "cppgoslin/domain/Adduct.h"
 #include "cppgoslin/domain/LipidAdduct.h"
+#include "cppgoslin/domain/Cycle.h"
 #include "cppgoslin/domain/LipidCompleteStructure.h"
 #include "cppgoslin/domain/FattyAcid.h"
 #include "cppgoslin/domain/FunctionalGroup.h"
@@ -89,6 +90,16 @@ public:
     void add_db_position_number(TreeNode* node);
     void add_cistrans(TreeNode* node);
     void set_omega_head_group_name(TreeNode* node);
+    void add_ACer(TreeNode* node);
+    void new_adduct(TreeNode *node);
+    void add_adduct(TreeNode *node);
+    void add_charge(TreeNode *node);
+    void add_charge_sign(TreeNode *node);
+    
+    static const map<string, int> acer_heads;
         
 };
+
+
+
 #endif /* LIPID_MAPS_PARSER_EVENT_HANDLER_H */
