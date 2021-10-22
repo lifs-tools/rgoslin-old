@@ -3,14 +3,15 @@
 
 This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project.
 
-[https://github.com/lifs-tools/goslin](Goslin) defines multiple grammers compatible with ANTLRv4 for different sources of shorthand lipid nomenclature. This allows to generate parsers based on the defined grammars,
-which provide immediate feedback whether a processed lipid shorthand notation string is compliant with a particular grammar, or not.
+[https://github.com/lifs-tools/goslin](Goslin) defines multiple grammars for different sources of shorthand lipid nomenclature. This allows to generate parsers based on the defined grammars, which provide immediate feedback whether a processed lipid shorthand notation string is compliant with a particular grammar, or not.
+
+> **_NOTE:_**  Please report any issues you might find to help improve it!
 
 Here, rgoslin 2.0 uses the Goslin grammars and the cppgoslin parser to support the following general tasks:
 
 1. Facilitate the parsing of shorthand lipid names dialects.
 2. Provide a structural representation of the shorthand lipid after parsing.
-3. Use the structural representation to generate normalized names.
+3. Use the structural representation to generate normalized names, following the latest shorthand nomenclature.
 
 ## Related Projects
 

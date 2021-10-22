@@ -35,15 +35,15 @@ isValidLipidName <- function(lipidName) {
 #' parseLipidName("PC 32:1")
 #' parseLipidName("LPC 34:1") 
 #' parseLipidName("TG(18:1_18:0_16:1)")
-#' @return Named vector with details of the lipid, empty vector otherwise.
+#' @return Data frame with details of the lipid, empty data frame otherwise.
 #' @export
 parseLipidName <- function(lipidName) {
   tryCatch(
     {
-      return(rcpp_parse_lipid_name(lipidName))
+      return(as.data.frame(rcpp_parse_lipid_name(lipidName)))
     }, error = function(err) {
       message(paste("Could not parse ", lipidName," with any of the available parsers!"))
-      return(c())
+      return(data.frame())
     }
   )
 }
@@ -59,15 +59,15 @@ parseLipidName <- function(lipidName) {
 #' parseLipidNameWithGrammar("PC 32:1", "Goslin")
 #' parseLipidNameWithGrammar("LPC(34:1)", "SwissLipids") 
 #' parseLipidNameWithGrammar("TG(18:1_18:0_16:1)", "LipidMaps")
-#' @return Named vector with details of the lipid, empty vector otherwise.
+#' @return character vector with details of the lipid, empty vector otherwise.
 #' @export
 parseLipidNameWithGrammar <- function(lipidName, grammar) {
   tryCatch(
     {
-      return(rcpp_parse_lipid_name_with_grammar(lipidName, grammar))
+      return(as.data.frame(rcpp_parse_lipid_name_with_grammar(lipidName, grammar)))
     }, error = function(err) {
       message(paste("Could not parse ", lipidName," with any of the available parsers!"))
-      return(c())
+      return(data.frame())
     }
   )
 }
@@ -86,18 +86,18 @@ parseLipidNames <- function(lipidNames) {
   tryCatch(
     {
       namesList <- list()
-      for (lipidName in lipidNames) {
+      for (i in 1:length(lipidNames)) {
         tryCatch(
           {
-            namesList[[lipidName]] <- rcpp_parse_lipid_name(lipidName)
+            namesList[[i]] <- rcpp_parse_lipid_name(as.character(lipidNames[[i]]))
           }, error = function(err) {
             message(paste("Could not parse ", lipidName," with any of the available parsers!"))
           }
         )
       }
-      return(as.data.frame(do.call(rbind, namesList)))
+      return(dplyr::bind_rows(namesList))
     }, error = function(err) {
-      message(paste("Could not parse the provided lipid names", lipidNames," with any of the available parsers!"))
+      message(paste("Could not parse the provided lipid names", lipidNames," with any of the available parsers!", collapse=", "))
       return(data.frame())
     }
   )
@@ -118,16 +118,16 @@ parseLipidNamesWithGrammar <- function(lipidNames, grammar) {
   tryCatch(
     {
       namesList <- list()
-      for (lipidName in lipidNames) {
+      for (i in 1:length(lipidNames)) {
         tryCatch(
           {
-            namesList[[lipidName]] <- rcpp_parse_lipid_name_with_grammar(lipidName, grammar)
+            namesList[[i]] <- as.data.frame(rcpp_parse_lipid_name_with_grammar(lipidNames[[i]], grammar))
           }, error = function(err) {
-            message(paste("Could not parse ", lipidName," with any of the available parsers!"))
+            message(paste("Could not parse ", lipidNames[[i]]," with any of the available parsers!"))
           }
         )
       }
-      return(as.data.frame(do.call(rbind, namesList)))
+      return(do.call(rbind, namesList))
     }, error = function(err) {
       message(paste("Could not parse the provided lipid names", lipidNames," with any of the available parsers!"))
       return(data.frame())
