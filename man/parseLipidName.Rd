@@ -10,7 +10,7 @@ parseLipidName(lipidName)
 \item{lipidName}{The lipid name to parse.}
 }
 \value{
-Named vector with details of the lipid, empty vector otherwise.
+Data frame with details of the lipid, empty data frame otherwise.
 }
 \description{
 \code{parseLipidName} reads the provided lipid name and returns structural information as a named vector.

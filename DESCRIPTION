@@ -1,7 +1,7 @@
 Package: rgoslin
 Type: Package
 Title: Lipid Name Parsing and Normalization
-Version: 2.0.1.1000
+Version: 2.0.0.1000
 Date: 2021-07-31
 Authors@R: c(
     person("Nils", "Hoffmann", email = "nils.hoffmann@cebitec.uni-bielefeld.de", role=c("aut","cre")),
@@ -20,6 +20,6 @@ Suggests:
     rmarkdown,
     kableExtra,
     dplyr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.2
 Encoding: UTF-8
 VignetteBuilder: knitr

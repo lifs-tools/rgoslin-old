@@ -12,7 +12,7 @@ parseLipidNameWithGrammar(lipidName, grammar)
 \item{grammar}{The grammar to use. One of "Goslin", "GoslinFragments", "SwissLipids", "LipidMaps", "HMDB"}
 }
 \value{
-Named vector with details of the lipid, empty vector otherwise.
+character vector with details of the lipid, empty vector otherwise.
 }
 \description{
 \code{parseLipidName} reads the provided lipid name based on grammar and returns structural information as a named vector.

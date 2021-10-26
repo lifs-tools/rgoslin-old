@@ -16,7 +16,7 @@ implementations for parsing of lipid names from LipidMAPS, SwissLipids and other
 NA
 }
 \author{
-\strong{Maintainer}: Nils Hoffmann \email{nils.hoffmann@isas.de}
+\strong{Maintainer}: Nils Hoffmann \email{nils.hoffmann@cebitec.uni-bielefeld.de}
 
 Authors:
 \itemize{

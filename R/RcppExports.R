@@ -9,6 +9,10 @@ rcpp_parse_lipid_name_with_grammar <- function(lipid_name, target_grammar) {
     .Call(`_rgoslin_rcpp_parse_lipid_name_with_grammar`, lipid_name, target_grammar)
 }
 
+rcpp_list_available_grammars <- function() {
+    .Call(`_rgoslin_rcpp_list_available_grammars`)
+}
+
 rcpp_parse_lipid_name <- function(lipid_name) {
     .Call(`_rgoslin_rcpp_parse_lipid_name`, lipid_name)
 }

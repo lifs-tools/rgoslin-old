@@ -5,9 +5,11 @@
 ^pkgdown$
 ^\.github$
 ^\.sh$
+^\.exe$
 ^src/cppgoslin/data/goslin/CITATION\.cff$
 ^src/cppgoslin/\.github$
 ^src/cppgoslin/data/\.github$
 ^src/cppgoslin/data/goslin/\.github$
 \.o$
 \.so$
+\.a$

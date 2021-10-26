@@ -91,7 +91,7 @@ parseLipidNames <- function(lipidNames) {
           {
             namesList[[i]] <- rcpp_parse_lipid_name(as.character(lipidNames[[i]]))
           }, error = function(err) {
-            message(paste("Could not parse ", lipidName," with any of the available parsers!"))
+            message(paste("Could not parse ", lipidNames[[i]]," with any of the available parsers!"))
           }
         )
       }
@@ -131,6 +131,24 @@ parseLipidNamesWithGrammar <- function(lipidNames, grammar) {
     }, error = function(err) {
       message(paste("Could not parse the provided lipid names", lipidNames," with any of the available parsers!"))
       return(data.frame())
+    }
+  )
+}
+
+#' Return the list of grammars supported by goslin.
+#'
+#' \code{listAvailableGrammars} returns the list of grammars that the underlying cppgoslin library supports.
+#' @examples
+#' listAvailableGrammars()
+#' @return the list of grammars
+#' @export
+listAvailableGrammars <- function() {
+  tryCatch(
+    {
+      return(rcpp_list_available_grammars())
+    }, error = function(err) {
+        message(paste("Could not access supported grammar names!"))
+        return(c())
     }
   )
 }

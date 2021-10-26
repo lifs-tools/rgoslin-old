@@ -154,8 +154,24 @@ test_that("parsing many lipid names works", {
     df <- rgoslin::parseLipidName(lipidNames[[i]])
     expect_equal(is.data.frame(df), TRUE)
     expect_equal(as.character(df[1, "Original.Name"]), lipidNames[[i]])
+    expect_true(!is.na(df[1, "Normalized.Name"]))
   }
   df2 <- rgoslin::parseLipidNames(lipidNames)
   expect_equal(46, nrow(df2))
+  expect_equal(0, sum(is.na(df2[, "Message"])))
+  expect_equal(0, sum(is.na(df2[, "Normalized.Name"])))
+})
+
+test_that("getting the list of supported parsers/grammars works", {
+  expectedGrammars <- c(
+    "FattyAcids",
+    "Goslin",
+    "HMDB",
+    "LipidMaps",
+    "Shorthand2020",
+    "SwissLipids"
+  )
+  availableGrammars <- rgoslin::listAvailableGrammars() %>% sort()
+  expect_setequal(expectedGrammars, availableGrammars)
 })
 

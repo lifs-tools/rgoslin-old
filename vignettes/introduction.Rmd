@@ -3,7 +3,7 @@ title: "Using R Goslin to parse and normalize lipid nomenclature"
 author: "Nils Hoffmann"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{introduction}
+  %\VignetteIndexEntry{Using R Goslin to parse and normalize lipid nomenclature}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

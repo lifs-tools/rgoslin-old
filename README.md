@@ -16,11 +16,19 @@ Here, rgoslin 2.0 uses the Goslin grammars and the cppgoslin parser to support t
 ## Related Projects
 
 - [This project](https://github.com/lifs-tools/rgoslin)
-- [Goslin grammars and reference test files](http://github.com/lifs-tools/goslin)
+- [Goslin grammars and reference test files](https://github.com/lifs-tools/goslin)
 - [C++ implementation](https://github.com/lifs-tools/cppgoslin)
 - [Java implementation](https://github.com/lifs-tools/jgoslin)
 - [Python implementation](https://github.com/lifs-tools/pygoslin)
 - [Webapplication and REST API](https://github.com/lifs-tools/goslin-webapp)
+
+## Changes in Version 2.0
+
+- The column names within the data frames returned from the `parse*` methods now use column names with dots instead of spaces. This makes it easier to use the column names unquoted within other R expressions.
+- All `parse*` methods now return data frames.
+- The `Messages` column has been added to capture parser messages. If parsing succeeds, this will contain `NA` and `Normalized.Name` will contain the normalized lipid shorthand name.
+- Parser implementations have been updated to reflect the latest lipid shorthand nomenclature changes. Please see the [Goslin repository](https://github.com/lifs-tools/goslin) for more details.
+- Exceptions in the C++ part of the library are captured as warnings in R. However, if you parse multiple lipid names, exceptions will not stop the parsing process.
 
 ## Installation ##
 
@@ -39,10 +47,10 @@ to install from the github repository.
 
 This will install the latest, potentially unstable development version of the package with all required dependencies into your local R installation.
 
-If you want to use a proper release version, referenced by a Git tag (here: `v2.0.1`) install the package as follows:
+If you want to use a proper release version, referenced by a Git tag (here: `v2.0.0`) install the package as follows:
 
 ```R
-  install_github("lifs-tools/rgoslin", ref="v2.0.1")
+  install_github("lifs-tools/rgoslin", ref="v2.0.0")
 ```
 
 If you want to work off of a specific branch (here: `adding_masses`), install the package as follows:
@@ -88,15 +96,22 @@ Type the following to see the package vignette / tutorial:
 
 ## Adding cppgoslin as a Git subtree
 
-In the root of your git project, run the git subtree command, with `<PREFIX>` replaced by the subdirectory path where you want the subtree to live:
+In the root of your git project, run the git subtree command, with `<PREFIX>` replaced by the subdirectory path where you want the subtree to live (`src/cppgoslin/`):
 
 ~~~~
 git subtree add --prefix=<PREFIX> https://github.com/lifs-tools/cppgoslin.git master
 ~~~~
 
+For rgoslin, we use the following command:
+
+~~~~
+git subtree add --prefix=src/cppgoslin/ https://github.com/lifs-tools/cppgoslin.git master
+~~~~
+
+Note: instead of the https URL to the Git repository, you can also use the ssh location, e.g. `git@github.com:lifs-tools/cppgoslin.git`.
+
 Instead of `master`, you can choose any other branch or tag to clone.
 For more information on git subtree, see [Git Subtree](https://github.com/git/git/blob/master/contrib/subtree/git-subtree.txt) or [this article](https://blog.developer.atlassian.com/the-power-of-git-subtree/).
-
 
 ## Pulling and pushing of a Git subtree
 For pulling and pushing, you have to change into the root directory of the host repository and execute the following commands:
