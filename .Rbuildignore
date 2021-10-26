@@ -13,3 +13,5 @@
 \.o$
 \.so$
 \.a$
+^src/cppgoslin/writeGrammarsHeader.exe$
+^src/cppgoslin/writeLipidEnums.exe$
