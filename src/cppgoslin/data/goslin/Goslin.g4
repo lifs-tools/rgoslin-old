@@ -77,10 +77,10 @@ hg_tgl : 'TAG';
 pl : lpl | dpl | tpl | pl_o | cl | mlcl | dlcl;
 pl_o : lpl_o | dpl_o;
 lpl : hg_lplc headgroup_separator fa;
-lpl_o : hg_lpl_oc plasmalogen_separator fa;
+lpl_o : hg_lpl_oc plasmalogen_separator fa | hg_lpl_spec headgroup_separator fa;
 dpl : hg_plc headgroup_separator pl_species | hg_plc headgroup_separator pl_subspecies;
 tpl : hg_tplc headgroup_separator pl_species | hg_tplc headgroup_separator tpl_subspecies;
-dpl_o : hg_pl_oc plasmalogen_separator pl_species | hg_pl_oc plasmalogen_separator pl_subspecies;
+dpl_o : hg_pl_oc plasmalogen_separator pl_species | hg_pl_oc plasmalogen_separator pl_subspecies | hg_pl_spec headgroup_separator pl_species | hg_pl_spec headgroup_separator pl_subspecies;
 dlcl : hg_dlclc headgroup_separator pl_species | hg_dlclc headgroup_separator dlcl_subspecies;
 mlcl : hg_mlclc headgroup_separator pl_species | hg_mlclc headgroup_separator mlcl_subspecies;
 cl : hg_clc headgroup_separator pl_species | hg_clc headgroup_separator cl_subspecies;
@@ -117,11 +117,14 @@ hg_lplc : hg_lpl | hg_lpl heavy_hg;
 hg_lpl : 'LPA' | 'LPC' | 'LPE' | 'LPG' | 'LPI' | 'LPS' | hg_lpim | 'CPA' | 'LCDPDAG' | 'LDMPE' | 'LMMPE' | 'LPIMIP' | 'LPIN';
 hg_lpim : 'LPIM' hg_lpim_number;
 hg_lpim_number : number;
+hg_lpl_spec : hg_lpl plasmalogen_separator plasmalogen;
 hg_lpl_oc : hg_lpl_o ' O' | hg_lpl_o heavy_hg ' O';
 hg_lpl_o : hg_lpl;
+hg_pl_spec : hg_pl plasmalogen_separator plasmalogen;
 hg_pl_oc : hg_pl_o ' O' | hg_pl_o heavy_hg ' O';
 hg_pl_o : hg_pl;
 
+plasmalogen : 'O' | 'o' | 'P' | 'p';
 
 
 /* sphingolipid rules (21) */
@@ -135,7 +138,7 @@ sl_subspecies : lcb sorted_fa_separator fa;
 hg_lslc : hg_lsl | hg_lsl heavy_hg;
 hg_lsl : 'LCB' | 'LCBP' | 'LHexCer' | 'LSM' | 'LIPC';
 hg_dslc : hg_dsl | hg_dsl heavy_hg;
-hg_dsl : 'Cer' | 'CerP' | 'EPC' | 'GB4' | 'GD3' | 'GB3' | 'GM1' | 'GM3' | 'GM4' | 'Hex3Cer' | 'Hex2Cer' | 'HexCer' | 'IPC' | 'MIP2C' | 'M(IP)2C' | 'MIPC' | 'SHexCer' | 'SM' | 'FMC-5' | 'FMC-6' ;
+hg_dsl : 'Cer' | 'CerP' | 'EPC' | 'GB4' | 'GD3' | 'GB3' | 'GM1' | 'GM3' | 'GM4' | 'Hex3Cer' | 'Hex2Cer' | 'HexCer' | 'IPC' | 'MIP2C' | 'M(IP)2C' | 'MIPC' | 'SHexCer' | 'SM' | 'FMC-5' | 'FMC-6' | 'CerPE' | 'PE-Cer';
 
 
 
