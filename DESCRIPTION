@@ -9,7 +9,7 @@ Authors@R: c(
 Author: Nils Hoffmann [aut, cre],
   Dominik Kopczynski [aut]
 Maintainer: Nils Hoffmann <nils.hoffmann@cebitec.uni-bielefeld.de>
-Description: rGoslin is the R implementation for the Grammar of Succint Lipid Nomenclature. It parses different short hand notation dialects for lipid names and normalizes them to a standard name and provides calculated monoisotopic masses and sum formulas.
+Description: The R implementation for the Grammar of Succint Lipid Nomenclature parses different short hand notation dialects for lipid names and normalizes them to a standard name and provides calculated monoisotopic masses and sum formulas.
 License: MIT + file LICENSE
 Imports: Rcpp (>= 1.0.3)
 LinkingTo: Rcpp, testthat
