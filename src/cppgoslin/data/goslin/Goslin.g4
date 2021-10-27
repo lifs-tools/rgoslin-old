@@ -136,7 +136,7 @@ sl_species : lcb;
 sl_subspecies : lcb sorted_fa_separator fa;
 
 hg_lslc : hg_lsl | hg_lsl heavy_hg;
-hg_lsl : 'LCB' | 'LCBP' | 'LHexCer' | 'LSM' | 'LIPC';
+hg_lsl : 'LCB' | 'LCBP' | 'LHexCer' | 'LSM' | 'LIPC' | 'So' | 'Sa' | 'SPH' | 'Sph' | 'LCB' | 'S1P' | 'SPH-P' | 'SIP' | 'Sa1P';
 hg_dslc : hg_dsl | hg_dsl heavy_hg;
 hg_dsl : 'Cer' | 'CerP' | 'EPC' | 'GB4' | 'GD3' | 'GB3' | 'GM1' | 'GM3' | 'GM4' | 'Hex3Cer' | 'Hex2Cer' | 'HexCer' | 'IPC' | 'MIP2C' | 'M(IP)2C' | 'MIPC' | 'SHexCer' | 'SM' | 'FMC-5' | 'FMC-6' | 'CerPE' | 'PE-Cer';
 
@@ -185,7 +185,7 @@ fa_pure : carbon carbon_db_separator db | carbon carbon_db_separator db db_hydro
 ether : 'a' | 'p';
 lcb : lcb_pure | lcb_pure heavy_lcb;
 heavy_lcb : heavy;
-lcb_pure : carbon carbon_db_separator db db_hydroxyl_separator hydroxyl | old_hydroxyl carbon carbon_db_separator db;
+lcb_pure : carbon carbon_db_separator db db_hydroxyl_separator hydroxyl | old_hydroxyl carbon carbon_db_separator db | old_hydroxyl DASH carbon carbon_db_separator db;
 carbon : number;
 db : db_count | db_count db_positions;
 db_count : number;
