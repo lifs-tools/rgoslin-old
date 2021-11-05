@@ -6,7 +6,7 @@
 \alias{rgoslin-package}
 \title{rgoslin: Lipid Name Parsing and Normalization}
 \description{
-rGoslin is the R implementation for the Grammar of Succint Lipid Nomenclature. It parses different short hand notation dialects for lipid names and normalizes them to a standard name and provides calculated monoisotopic masses and sum formulas.
+The R implementation for the Grammar of Succint Lipid Nomenclature parses different short hand notation dialects for lipid names and normalizes them to a standard name and provides calculated monoisotopic masses and sum formulas.
 }
 \details{
 rgoslin is the R implementation of the "grammar of succint lipid nomenclature". It provides 
