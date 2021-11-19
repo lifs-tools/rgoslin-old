@@ -22,6 +22,7 @@ Here, rgoslin 2.0 uses the Goslin grammars and the cppgoslin parser to support t
 - [This project](https://github.com/lifs-tools/rgoslin)
 - [Goslin grammars and reference test files](https://github.com/lifs-tools/goslin)
 - [C++ implementation](https://github.com/lifs-tools/cppgoslin)
+- [C# implementation](https://github.com/lifs-tools/csgoslin)
 - [Java implementation](https://github.com/lifs-tools/jgoslin)
 - [Python implementation](https://github.com/lifs-tools/pygoslin)
 - [Webapplication and REST API](https://github.com/lifs-tools/goslin-webapp)

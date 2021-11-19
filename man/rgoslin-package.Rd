@@ -10,7 +10,7 @@ The R implementation for the Grammar of Succint Lipid Nomenclature parses differ
 }
 \details{
 rgoslin is the R implementation of the "grammar of succint lipid nomenclature". It provides 
-implementations for parsing of lipid names from LipidMAPS, SwissLipids and other common sources of lipid names.
+implementations for parsing of shorthand lipid names from LipidMAPS, SwissLipids and other common sources of lipid names.
 }
 \references{
 NA

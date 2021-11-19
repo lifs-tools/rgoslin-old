@@ -24,6 +24,7 @@ Here, rgoslin 2.0 uses the Goslin grammars and the cppgoslin parser to support t
 
 - [Goslin grammars and reference test files](http://github.com/lifs-tools/goslin)
 - [C++ implementation](https://github.com/lifs-tools/cppgoslin)
+- [C# implementation](https://github.com/lifs-tools/csgoslin)
 - [Java implementation](https://github.com/lifs-tools/jgoslin)
 - [Python implementation](https://github.com/lifs-tools/pygoslin)
 - [Webapplication and REST API](https://github.com/lifs-tools/goslin-webapp)
@@ -42,11 +43,16 @@ library(kableExtra)
 ```
 ### Supported nomenclatures
 
-- LIPID MAPS
-- SwissLipids
-- Shorthand (Liebisch et al.) nomenclature
-- Fragments (as full parts)
-- HMDB
+- [LIPID MAPS](https://www.lipidmaps.org)
+- [SwissLipids](https://www.swisslipids.org/)
+- Updated Shorthand nomenclature [2020 Update](https://pubmed.ncbi.nlm.nih.gov/33037133/),[2013 Version](https://pubmed.ncbi.nlm.nih.gov/23549332/)
+- [HMDB](https://hmdb.ca/)
+- FattyAcids
+
+### Changes from Version 1
+
+- The fragment grammar parser has been removed but may be re-added in the future. Please use our [GitHub Issues](https://github.com/lifs-tools/goslin/issues) if you need this parser.
+- The column names of the R implementation have been changed to contain "." instead of " " (space). This makes handling and access easier, since quoting is no longer necessary.
 
 ### Using the library
 
@@ -55,7 +61,12 @@ In order to use the provided translation functions of rgoslin, you first need to
 library(rgoslin)
 ```
 
-To check, whether a given lipid name can be parsed by any of the parsers supplied by cppGoslin, you can use the `isValidLipidName` method. It will return `TRUE` if the given name can be parsed by any of the available parsers and `FALSE` if the name was not parseable.
+If you want to check, which grammars are supported, use the following command:
+```{r}
+listAvailableGrammars()
+```
+
+To check, whether a given lipid name can be parsed by any of the parsers, you can use the `isValidLipidName` method. It will return `TRUE` if the given name can be parsed by any of the available parsers and `FALSE` if the name was not parseable.
 ```{r}
 isValidLipidName("PC 32:1")
 ```
@@ -138,4 +149,4 @@ kable(lipidNamesWithAdduct %>% select(-starts_with("FA"),-starts_with("LCB")), c
 ```
 
 ### Getting help & support
-If you find any issues with the library, would like to have other functionality included, require help or would like to contribute, please contact us via our [GitHub Project](https://github.com/lifs-tools/rgoslin) or via the [LIFS support page](https://lifs.isas.de/support.html).
+If you find any issues with the library, would like to have other functionality included, require help or would like to contribute, please contact us via our [GitHub Project](https://github.com/lifs-tools/rgoslin) or via the [LIFS support page](https://lifs-tools.org/support.html).
