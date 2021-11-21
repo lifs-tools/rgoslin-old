@@ -135,6 +135,7 @@ ShorthandParserEventHandler::ShorthandParserEventHandler() : LipidBaseParserEven
     reg("acer_hg_post_event", set_acer);
     reg("acer_species_post_event", set_acer_species);
     
+    reg("sterol_definition_post_event", set_sterol_definition);
     
     debug = "";
 }
@@ -159,7 +160,10 @@ void ShorthandParserEventHandler::reset_lipid(TreeNode *node) {
     acer_species = false;
 }
 
-
+void ShorthandParserEventHandler::set_sterol_definition(TreeNode *node){
+    head_group += " " + node->get_text();
+    fa_list->erase(fa_list->begin());
+}
 
 void ShorthandParserEventHandler::build_lipid(TreeNode *node) {
     if (acer_species) fa_list->at(0)->num_carbon -= 2;
@@ -204,7 +208,7 @@ void ShorthandParserEventHandler::set_acer_species(TreeNode *node){
 void ShorthandParserEventHandler::add_cycle_element(TreeNode *node){
     string element = node->get_text();
     
-    if (uncontains(element_positions, element)){
+    if (uncontains_val(element_positions, element)){
         throw LipidParsingException("Element '" + element + "' unknown");
     }
     
@@ -234,7 +238,7 @@ void ShorthandParserEventHandler::set_carbohydrate(TreeNode *node){
         headgroup_decorators->push_back((HeadgroupDecorator*)functional_group);
     }
     else {
-        if (uncontains_p(current_fas.at(current_fas.size() - 1)->functional_groups, carbohydrate)){
+        if (uncontains_val_p(current_fas.at(current_fas.size() - 1)->functional_groups, carbohydrate)){
             current_fas.at(current_fas.size() - 1)->functional_groups->insert({carbohydrate, vector<FunctionalGroup*>()});
         }
         current_fas.at(current_fas.size() - 1)->functional_groups->at(carbohydrate).push_back(functional_group);
@@ -313,7 +317,7 @@ void ShorthandParserEventHandler::add_fatty_acyl_chain(TreeNode *node){
     string special_type = "";
     if (current_fas.size() >= 2 && tmp.contains_key(fg_i) && tmp.get_dictionary(fg_i)->contains_key("fg_name")){
         string fg_name = tmp.get_dictionary(fg_i)->get_string("fg_name");
-        if (contains(special_types, fg_name)){
+        if (contains_val(special_types, fg_name)){
             special_type = fg_name;
         }
     }
@@ -331,7 +335,7 @@ void ShorthandParserEventHandler::add_fatty_acyl_chain(TreeNode *node){
     current_fas.pop_back();
     if (special_type.length() > 0){
         fa->name = special_type;
-        if (uncontains_p(current_fas.back()->functional_groups, special_type)) current_fas.back()->functional_groups->insert({special_type, vector<FunctionalGroup*>()});
+        if (uncontains_val_p(current_fas.back()->functional_groups, special_type)) current_fas.back()->functional_groups->insert({special_type, vector<FunctionalGroup*>()});
         current_fas.back()->functional_groups->at(special_type).push_back(fa);
     }
     else {
@@ -413,7 +417,7 @@ void ShorthandParserEventHandler::add_cycle(TreeNode *node){
     if (cycle->start > -1 && cycle->end > -1 && cycle->end - cycle->start + 1 + (int)cycle->bridge_chain->size() < cycle->cycle){
         throw ConstraintViolationException("Cycle length '" + std::to_string(cycle->cycle) + "' does not match with cycle description.");
     }
-    if (uncontains_p(current_fas.back()->functional_groups, "cy")){
+    if (uncontains_val_p(current_fas.back()->functional_groups, "cy")){
         current_fas.back()->functional_groups->insert({"cy", vector<FunctionalGroup*>()});
     }
     current_fas.back()->functional_groups->at("cy").push_back(cycle);
@@ -487,7 +491,7 @@ void ShorthandParserEventHandler::add_hydrocarbon_chain(TreeNode *node){
     cc->position = linkage_pos;
     if (linkage_pos == -1) set_lipid_level(STRUCTURE_DEFINED);
     
-    if (uncontains_p(current_fas.back()->functional_groups, "cc")) current_fas.back()->functional_groups->insert({"cc", vector<FunctionalGroup*>()});
+    if (uncontains_val_p(current_fas.back()->functional_groups, "cc")) current_fas.back()->functional_groups->insert({"cc", vector<FunctionalGroup*>()});
     current_fas.back()->functional_groups->at("cc").push_back(cc);
 }
 
@@ -514,7 +518,7 @@ void ShorthandParserEventHandler::add_acyl_linkage(TreeNode *node){
     acyl->set_N_bond_type(linkage_type);
     if (linkage_pos == -1) set_lipid_level(STRUCTURE_DEFINED);
         
-    if (uncontains_p(current_fas.back()->functional_groups, "acyl")) current_fas.back()->functional_groups->insert({"acyl", vector<FunctionalGroup*>()});
+    if (uncontains_val_p(current_fas.back()->functional_groups, "acyl")) current_fas.back()->functional_groups->insert({"acyl", vector<FunctionalGroup*>()});
     current_fas.back()->functional_groups->at("acyl").push_back(acyl);
 }
 
@@ -538,7 +542,7 @@ void ShorthandParserEventHandler::add_alkyl_linkage(TreeNode *node){
     alkyl->position = linkage_pos;
     if (linkage_pos == -1) set_lipid_level(STRUCTURE_DEFINED);
     
-    if (uncontains_p(current_fas.back()->functional_groups, "alkyl")) current_fas.back()->functional_groups->insert({"alkyl", vector<FunctionalGroup*>()});
+    if (uncontains_val_p(current_fas.back()->functional_groups, "alkyl")) current_fas.back()->functional_groups->insert({"alkyl", vector<FunctionalGroup*>()});
     current_fas.back()->functional_groups->at("alkyl").push_back(alkyl);
 }
 
@@ -632,7 +636,7 @@ void ShorthandParserEventHandler::add_functional_group(TreeNode *node){
     GenericDictionary *gd = tmp.get_dictionary(FA_I);
     string fg_name = gd->get_string("fg_name");
     
-    if (contains(special_types, fg_name) || fg_name == "cy") return;
+    if (contains_val(special_types, fg_name) || fg_name == "cy") return;
         
     int fg_pos = gd->get_int("fg_pos");
     int fg_cnt = gd->get_int("fg_cnt");
@@ -662,7 +666,7 @@ void ShorthandParserEventHandler::add_functional_group(TreeNode *node){
     gd->remove("fg_cnt");
     gd->remove("fg_stereo");
     
-    if (uncontains_p(current_fas.back()->functional_groups, fg_name)) current_fas.back()->functional_groups->insert({fg_name, vector<FunctionalGroup*>()});
+    if (uncontains_val_p(current_fas.back()->functional_groups, fg_name)) current_fas.back()->functional_groups->insert({fg_name, vector<FunctionalGroup*>()});
     current_fas.back()->functional_groups->at(fg_name).push_back(functional_group);
 }
 
