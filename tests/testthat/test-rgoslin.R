@@ -175,3 +175,23 @@ test_that("getting the list of supported parsers/grammars works", {
   expect_setequal(expectedGrammars, availableGrammars)
 })
 
+test_that("lipid level works", {
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6Z)/16:0;3oxo;5OH[R],8OH", "Shorthand2020")
+  expect_equal("COMPLETE_STRUCTURE", l[["Level"]])
+  
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6Z)/16:0;3oxo;5OH,8OH", "Shorthand2020")
+  expect_equal("FULL_STRUCTURE", l[["Level"]])
+  
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6)/16:0;oxo;(OH)2", "Shorthand2020")
+  expect_equal("STRUCTURE_DEFINED", l[["Level"]])
+  
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1/16:0;O3", "Shorthand2020")
+  expect_equal("SN_POSITION", l[["Level"]])
+  
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1_16:0;O3", "Shorthand2020")
+  expect_equal("MOLECULAR_SPECIES", l[["Level"]])
+  
+  l = rgoslin::parseLipidNameWithGrammar("PE 32:1;O3", "Shorthand2020")
+  expect_equal("SPECIES", l[["Level"]])
+})
+
