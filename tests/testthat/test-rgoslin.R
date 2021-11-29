@@ -195,3 +195,7 @@ test_that("lipid level works", {
   expect_equal("SPECIES", l[["Level"]])
 })
 
+test_that("cyclopropane works", {
+  l = rgoslin::parseLipidNameWithGrammar("FA 19:0;[11-13cy3:0]", "Shorthand2020")
+  expect_equal("FULL_STRUCTURE", l[["Level"]])
+})
