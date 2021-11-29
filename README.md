@@ -3,7 +3,7 @@
 [![codecov (master)](https://codecov.io/gh/lifs-tools/rgoslin/branch/master/graph/badge.svg)](https://codecov.io/gh/lifs-tools/rgoslin)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3757672.svg)](https://doi.org/10.5281/zenodo.3757672)
 
-This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project.
+This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, based on the Grammar of Succinct Lipid Nomenclatures project.
 
 [https://github.com/lifs-tools/goslin](Goslin) defines multiple grammars for different sources of shorthand lipid nomenclature. This allows to generate parsers based on the defined grammars, which provide immediate feedback whether a processed lipid shorthand notation string is compliant with a particular grammar, or not.
 
