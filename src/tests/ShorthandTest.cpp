@@ -200,6 +200,11 @@ int main(int argc, char** argv){
     assertEqual(l->get_lipid_string(), "EPC 34:2;O2");
     assertEqual(l->get_sum_formula(), "C36H71N2O6P");
     delete l;
+
+    l = parser.parse("PE 16:1(6Z)/16:0;3oxo;5OH[R],8OH");
+    assertEqual(l->get_lipid_string(), "PE 16:1(6Z)/16:0;2oxo;5OH[R],8OH");
+    // assertEqual(l->get_lipid_string(), "PE 16:1(6Z)/16:0;5OH[R],8OH;3oxo");
+    delete l;
     
     
     // test several more lipid names
