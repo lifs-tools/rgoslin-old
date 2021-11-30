@@ -41,6 +41,22 @@ Install the `devtools` package with the following command.
 if(!require(devtools)) { install.packages("devtools") }
 ```
   
+### Adjusting Makevars for more performance
+
+In order to apply platform-specific optimizations, you can edit your user Makevars file.
+This file is in `~/.R/Makevars`, where `~` is your user directory. If it does not exist, you may need to create the directory and the file.
+To apply optimizations, put the following lines into your Makevars file.
+
+```bash
+CFLAGS = -O3 -Wall -mtune=native -march=native
+CXXFLAGS = -O3 -Wall -mtune=native -march=native
+CXX1XFLAGS = -O3 -Wall -mtune=native -march=native
+CXX11FLAGS = -O3 -Wall -mtune=native -march=native
+```
+Please note that these settings will apply to *all* R packages that require compilation from this point on! Also, `-O3` may have detrimental influence on some code. You can also replace it with R's default `-O2`.
+
+### Installing rgoslin
+
 Run
 
 ```R

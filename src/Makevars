@@ -2,11 +2,11 @@
 $(info The name of the shared library to be created is: $(SHLIB))
 
 # libraries of this package (Rcpp files do not count for those)
-PKG_LIBS= $(SUBLIBS)
-CXX_STD= CXX11
+PKG_LIBS = $(SUBLIBS)
+CXX_STD = CXX11
 
 # include header locations to compile rgoslin.cpp against
-PKG_CPPFLAGS= -I"." -I"./cppgoslin" -I"./cppgoslin/cppgoslin" -I"./cppgoslin/cppgoslin/domain" -I"./cppgoslin/cppgoslin/parser"
+PKG_CPPFLAGS = -I"." -I"./cppgoslin" -I"./cppgoslin/cppgoslin" -I"./cppgoslin/cppgoslin/domain" -I"./cppgoslin/cppgoslin/parser"
 
 # space separated list of sublibrary directories
 SUBDIRS = cppgoslin/

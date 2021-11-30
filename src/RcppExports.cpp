@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // rcpp_is_valid_lipid_name
 bool rcpp_is_valid_lipid_name(std::string lipid_name);
 RcppExport SEXP _rgoslin_rcpp_is_valid_lipid_name(SEXP lipid_nameSEXP) {
