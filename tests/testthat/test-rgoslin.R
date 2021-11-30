@@ -49,12 +49,10 @@ test_that("multiple lipid names parsing works", {
   expect_equal(as.character(df[2, "Original.Name"]), originalNames[[2]])
   expect_equal(as.character(df[3, "Original.Name"]), originalNames[[3]])
   expect_equal(as.character(df[4, "Original.Name"]), originalNames[[4]])
-  # expect_equal(as.character(df[5, "Original.Name"]), originalNames[[5]])
   expect_equal(as.character(df[1, "Normalized.Name"]), "PC 32:0")
   expect_equal(as.character(df[2, "Normalized.Name"]), "LPC 34:2;O")
   expect_equal(as.character(df[3, "Normalized.Name"]), "TG 18:1_18:0_16:1")
   expect_equal(as.character(df[4, "Normalized.Name"]), "TG 16:1/18:0/20:2")
-  # expect_equal(as.character(df[5, "Normalized.Name"]), "Cer 18:1;2O/16:0")
 })
 
 test_that("multiple lipid names parsing with grammar works", {
@@ -75,6 +73,7 @@ test_that("lipid name with adduct parsing with grammar works", {
   df <- rgoslin::parseLipidNameWithGrammar(originalName, "Goslin")
   expect_equal(is.data.frame(df), TRUE)
   expect_equal(df[["Original.Name"]], originalName)
+  expect_equal(df[["Grammar"]], "Goslin")
   expect_equal(df[["Normalized.Name"]], "PC 34:1")
   expect_equal(df[["Adduct"]], "[M+H]1+")
   expect_equal(df[["Adduct.Charge"]], 1)
@@ -176,19 +175,19 @@ test_that("getting the list of supported parsers/grammars works", {
 })
 
 test_that("lipid level works", {
-  l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6Z)/16:0;3oxo;5OH[R],8OH", "Shorthand2020")
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6Z)/16:0;5OH[R],8OH;3oxo", "Shorthand2020")
   expect_equal("COMPLETE_STRUCTURE", l[["Level"]])
   
-  l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6Z)/16:0;3oxo;5OH,8OH", "Shorthand2020")
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6Z)/16:0;5OH,8OH;3oxo", "Shorthand2020")
   expect_equal("FULL_STRUCTURE", l[["Level"]])
   
-  l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6)/16:0;oxo;(OH)2", "Shorthand2020")
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6)/16:0;(OH)2;oxo", "Shorthand2020")
   expect_equal("STRUCTURE_DEFINED", l[["Level"]])
   
-  l = rgoslin::parseLipidNameWithGrammar("PE 16:1/16:0;O3", "Shorthand2020")
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1/16:1;O3", "Shorthand2020")
   expect_equal("SN_POSITION", l[["Level"]])
   
-  l = rgoslin::parseLipidNameWithGrammar("PE 16:1_16:0;O3", "Shorthand2020")
+  l = rgoslin::parseLipidNameWithGrammar("PE 16:1_16:1;O3", "Shorthand2020")
   expect_equal("MOLECULAR_SPECIES", l[["Level"]])
   
   l = rgoslin::parseLipidNameWithGrammar("PE 32:1;O3", "Shorthand2020")

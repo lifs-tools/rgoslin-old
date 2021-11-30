@@ -47,7 +47,7 @@ library(kableExtra)
 - [SwissLipids](https://www.swisslipids.org/)
 - Updated Shorthand nomenclature [2020 Update](https://pubmed.ncbi.nlm.nih.gov/33037133/),[2013 Version](https://pubmed.ncbi.nlm.nih.gov/23549332/)
 - [HMDB](https://hmdb.ca/)
-- FattyAcids
+- [FattyAcids](https://iupac.qmul.ac.uk/lipid/appABC.html#appA)
 
 ### Changes from Version 1
 
