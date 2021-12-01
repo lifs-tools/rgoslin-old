@@ -198,3 +198,9 @@ test_that("cyclopropane works", {
   l = rgoslin::parseLipidNameWithGrammar("FA 19:0;[11-13cy3:0]", "Shorthand2020")
   expect_equal("FULL_STRUCTURE", l[["Level"]])
 })
+
+test_that("DB count for Fa is correct", {
+  l = rgoslin::parseLipidName("CAR 18:1")
+  expect_equal(1, l[["FA1.DB"]])
+  expect_equal(425.3505, l[["Mass"]], tolerance = 1e-06)
+})

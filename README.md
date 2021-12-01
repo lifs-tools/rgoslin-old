@@ -53,6 +53,13 @@ CXXFLAGS = -O3 -Wall -mtune=native -march=native
 CXX1XFLAGS = -O3 -Wall -mtune=native -march=native
 CXX11FLAGS = -O3 -Wall -mtune=native -march=native
 ```
+
+Depending on the number of available cores, you can speed up compilation by redefining `MAKE` in Makevars (here for 4 CPU cores):
+
+```bash
+MAKE = make -j4
+```
+
 Please note that these settings will apply to *all* R packages that require compilation from this point on! Also, `-O3` may have detrimental influence on some code. You can also replace it with R's default `-O2`.
 
 ### Installing rgoslin
