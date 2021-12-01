@@ -229,7 +229,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 lipidDetails[prefix + "Position"] = fap->position;
                 lipidDetails[prefix + "C"] = fap->num_carbon;
                 lipidDetails[prefix + "OH"] = ((fap->functional_groups->find("OH") != fap->functional_groups->end()) ? fap->functional_groups->at("OH").size() : 0);
-                lipidDetails[prefix + "DB"] = lipidAdduct->get_mass();
+                lipidDetails[prefix + "DB"] = fap->double_bonds->num_double_bonds;
                 string fa_bond_type = "ESTER";
                 switch(fap->lipid_FA_bond_type){
                 case (UNDEFINED_FA): fa_bond_type = "UNDEFINED"; break;
