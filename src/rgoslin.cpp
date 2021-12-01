@@ -258,7 +258,6 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 dbPos << join(dbPosPairs, ", ");
                 dbPos << "]";
                 lipidDetails[prefix + "DB.Positions"] = dbPos.str();
-                ++faCnt;
             }
         }
         delete lipidAdduct;
