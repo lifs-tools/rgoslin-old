@@ -212,7 +212,7 @@ test_that("LCB and FAs are distinguished", {
   expect_equal(1, l[["LCB.DB"]])
   expect_equal(1, l[["LCB.OH"]])
   expect_equal("LCB", l[["LCB.Bond.Type"]])
-  expect_equal(1, l[["FA1.Position"]])
+  expect_equal(2, l[["FA1.Position"]])
   expect_equal(24, l[["FA1.C"]])
   expect_equal(0, l[["FA1.DB"]])
 })
