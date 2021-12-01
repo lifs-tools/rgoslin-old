@@ -225,7 +225,14 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             lipidDetails["Sum.Formula"] = formula;
             int faCnt = 1;
             for(FattyAcid* fap : lipid->get_fa_list()) {
-                string prefix = ((fap->lipid_FA_bond_type == LCB_EXCEPTION || fap->lipid_FA_bond_type == LCB_REGULAR) ? "LCB" : "FA") + std::to_string(faCnt) + ".";
+                std::ostringstream prefs;
+                if((fap->lipid_FA_bond_type == LCB_EXCEPTION || fap->lipid_FA_bond_type == LCB_REGULAR)) {
+                    prefs << "LCB";
+                } else {
+                    prefs << "FA" << faCnt;
+                    ++faCnt;
+                }
+                string prefix = prefs.str() + ".";
                 lipidDetails[prefix + "Position"] = fap->position;
                 lipidDetails[prefix + "C"] = fap->num_carbon;
                 lipidDetails[prefix + "OH"] = ((fap->functional_groups->find("OH") != fap->functional_groups->end()) ? fap->functional_groups->at("OH").size() : 0);
@@ -252,7 +259,6 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 dbPos << join(dbPosPairs, ", ");
                 dbPos << "]";
                 lipidDetails[prefix + "DB.Positions"] = dbPos.str();
-                ++faCnt;
             }
         }
         delete lipidAdduct;
