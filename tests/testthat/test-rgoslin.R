@@ -204,3 +204,15 @@ test_that("DB count for Fa is correct", {
   expect_equal(1, l[["FA1.DB"]])
   expect_equal(425.3505, l[["Mass"]], tolerance = 1e-06)
 })
+
+test_that("LCB and FAs are distinguished", {
+  l = rgoslin::parseLipidName("Cer d18:1/24:0")
+  expect_equal(0, l[["LCB.Position"]])
+  expect_equal(18, l[["LCB.C"]])
+  expect_equal(1, l[["LCB.DB"]])
+  expect_equal(1, l[["LCB.OH"]])
+  expect_equal("LCB", l[["LCB.Bond.Type"]])
+  expect_equal(2, l[["FA1.Position"]])
+  expect_equal(24, l[["FA1.C"]])
+  expect_equal(0, l[["FA1.DB"]])
+})
