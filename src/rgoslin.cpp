@@ -196,7 +196,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             headGroupSynonyms = "[" + join(lcMeta.synonyms, ", ") + "]";
             level = get_lipid_level_str(info->level);
             totalC = info->num_carbon;
-            totalOH = ((info->functional_groups->find("OH") != info->functional_groups->end()) ? info->functional_groups->at("OH").size() : 0);
+            //totalOH = ((info->functional_groups->find("OH") != info->functional_groups->end()) ? info->functional_groups->at("OH").count : 0);
             totalDB = info->double_bonds->get_num();
             mass = lipidAdduct->get_mass();
             formula = lipidAdduct->get_sum_formula();
@@ -219,7 +219,6 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             lipidDetails["Functional.Class.Synonyms"] = headGroupSynonyms;
             lipidDetails["Level"] = level;
             lipidDetails["Total.C"] = totalC;
-            lipidDetails["Total.OH"] = totalOH;
             lipidDetails["Total.DB"] = totalDB;
             lipidDetails["Mass"] = mass;
             lipidDetails["Sum.Formula"] = formula;
@@ -234,7 +233,12 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 }
                 lipidDetails[prefix + "Position"] = fap->position;
                 lipidDetails[prefix + "C"] = fap->num_carbon;
-                lipidDetails[prefix + "OH"] = ((fap->functional_groups->find("OH") != fap->functional_groups->end()) ? fap->functional_groups->at("OH").size() : 0);
+                double numOH = 0;
+                if (contains_val_p(fap->functional_groups, "OH")){
+                    for (FunctionalGroup* fg : fap->functional_groups->at("OH")) numOH += fg->count;
+                }
+                lipidDetails[prefix + "OH"] = numOH;
+                totalOH += numOH;
                 lipidDetails[prefix + "DB"] = fap->double_bonds->num_double_bonds;
                 string fa_bond_type = "ESTER";
                 switch(fap->lipid_FA_bond_type){
@@ -259,6 +263,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 dbPos << "]";
                 lipidDetails[prefix + "DB.Positions"] = dbPos.str();
             }
+            lipidDetails["Total.OH"] = totalOH;
         }
         delete lipidAdduct;
     } else {
