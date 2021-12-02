@@ -210,9 +210,22 @@ test_that("LCB and FAs are distinguished", {
   expect_equal(0, l[["LCB.Position"]])
   expect_equal(18, l[["LCB.C"]])
   expect_equal(1, l[["LCB.DB"]])
-  expect_equal(1, l[["LCB.OH"]])
+  expect_equal(2, l[["LCB.OH"]])
   expect_equal("LCB", l[["LCB.Bond.Type"]])
   expect_equal(2, l[["FA1.Position"]])
   expect_equal(24, l[["FA1.C"]])
   expect_equal(0, l[["FA1.DB"]])
+})
+
+test_that("Hydroxyl group counts are proper", {
+  l = rgoslin::parseLipidName("Cer 36:1;2")
+  expect_equal(2, l[["Total.OH"]])
+  l = rgoslin::parseLipidName("Cer d36:1");
+  expect_equal(2, l[["Total.OH"]])
+  l = rgoslin::parseLipidName("Cer 18:1;2/18:0");
+  expect_equal(2, l[["Total.OH"]])
+  l = rgoslin::parseLipidName("Cer d18:1/18:0");
+  expect_equal(2, l[["Total.OH"]])
+  l = rgoslin::parseLipidName("Cer 18:1;(OH)2/18:0");
+  expect_equal(2, l[["Total.OH"]])
 })

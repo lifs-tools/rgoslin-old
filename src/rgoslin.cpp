@@ -196,7 +196,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             headGroupSynonyms = "[" + join(lcMeta.synonyms, ", ") + "]";
             level = get_lipid_level_str(info->level);
             totalC = info->num_carbon;
-            totalOH = ((info->functional_groups->find("OH") != info->functional_groups->end()) ? info->functional_groups->at("OH").size() : 0);
+            totalOH = info->get_total_functional_group_count("OH");
             totalDB = info->double_bonds->get_num();
             mass = lipidAdduct->get_mass();
             formula = lipidAdduct->get_sum_formula();
@@ -234,7 +234,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 }
                 lipidDetails[prefix + "Position"] = fap->position;
                 lipidDetails[prefix + "C"] = fap->num_carbon;
-                lipidDetails[prefix + "OH"] = ((fap->functional_groups->find("OH") != fap->functional_groups->end()) ? fap->functional_groups->at("OH").size() : 0);
+                lipidDetails[prefix + "OH"] = fap->get_total_functional_group_count("OH");
                 lipidDetails[prefix + "DB"] = fap->double_bonds->num_double_bonds;
                 string fa_bond_type = "ESTER";
                 switch(fap->lipid_FA_bond_type){
