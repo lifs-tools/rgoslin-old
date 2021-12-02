@@ -219,7 +219,6 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             lipidDetails["Functional.Class.Synonyms"] = headGroupSynonyms;
             lipidDetails["Level"] = level;
             lipidDetails["Total.C"] = totalC;
-            lipidDetails["Total.OH"] = totalOH;
             lipidDetails["Total.DB"] = totalDB;
             lipidDetails["Mass"] = mass;
             lipidDetails["Sum.Formula"] = formula;
@@ -259,6 +258,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 dbPos << "]";
                 lipidDetails[prefix + "DB.Positions"] = dbPos.str();
             }
+            lipidDetails["Total.OH"] = totalOH;
         }
         delete lipidAdduct;
     } else {
