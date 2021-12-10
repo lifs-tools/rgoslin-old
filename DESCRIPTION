@@ -4,8 +4,8 @@ Title: Lipid Name Parsing and Normalization
 Version: 2.0.0.1000
 Date: 2021-10-26
 Authors@R: c(
-    person("Nils", "Hoffmann", email = "nils.hoffmann@cebitec.uni-bielefeld.de", role=c("aut","cre")),
-    person("Dominik", "Kopczynski", email = "dominik.kopczynski@isas.de", role=c("aut")))
+    person("Nils", "Hoffmann", email = "nils.hoffmann@cebitec.uni-bielefeld.de", role=c("aut","cre"), comment = c(ORCID = "0000-0002-6540-6875")),
+    person("Dominik", "Kopczynski", email = "dominik.kopczynski@univie.ac.at", role=c("aut"), comment = c(ORCID = "0000-0001-5885-4568")))
 Author: Nils Hoffmann [aut, cre],
   Dominik Kopczynski [aut]
 Maintainer: Nils Hoffmann <nils.hoffmann@cebitec.uni-bielefeld.de>
