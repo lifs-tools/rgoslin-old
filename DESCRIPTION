@@ -1,6 +1,6 @@
 Package: rgoslin
 Type: Package
-Title: Lipid Name Parsing and Normalization
+Title: Lipid Shorthand Name Parsing and Normalization
 Version: 2.0.0.1000
 Date: 2021-10-26
 Authors@R: c(
@@ -23,3 +23,6 @@ Suggests:
 RoxygenNote: 7.1.2
 Encoding: UTF-8
 VignetteBuilder: knitr
+biocViews: Software
+BugReports: https://github.com/lifs-tools/rgoslin/issues
+URL: https://github.com/lifs-tools/rgoslin
