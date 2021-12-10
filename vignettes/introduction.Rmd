@@ -3,9 +3,9 @@ title: "Using R Goslin to parse and normalize lipid nomenclature"
 author: "Nils Hoffmann"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using R Goslin to parse and normalize lipid nomenclature}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+    %\VignetteIndexEntry{Using R Goslin to parse and normalize lipid nomenclature}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
 ---
 
 This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project.
@@ -31,8 +31,8 @@ Here, rgoslin 2.0 uses the Goslin grammars and the cppgoslin parser to support t
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+    collapse = TRUE,
+    comment = "#>"
 )
 ```
 
