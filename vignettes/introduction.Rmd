@@ -150,3 +150,9 @@ kable(lipidNamesWithAdduct %>% select(-starts_with("FA"),-starts_with("LCB")), c
 
 ### Getting help & support
 If you find any issues with the library, would like to have other functionality included, require help or would like to contribute, please contact us via our [GitHub Project](https://github.com/lifs-tools/rgoslin) or via the [LIFS support page](https://lifs-tools.org/support.html).
+
+# Session information {-}
+
+```{r sessioninfo, echo=FALSE}
+sessionInfo()
+```
