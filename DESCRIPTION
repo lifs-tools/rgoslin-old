@@ -6,8 +6,8 @@ Date: 2021-12-10
 Authors@R: c(
     person("Nils", "Hoffmann", email = "nils.hoffmann@cebitec.uni-bielefeld.de", role=c("aut","cre"), comment = c(ORCID = "0000-0002-6540-6875")),
     person("Dominik", "Kopczynski", email = "dominik.kopczynski@univie.ac.at", role=c("aut"), comment = c(ORCID = "0000-0001-5885-4568")))
-Author: Nils Hoffmann [aut, cre],
-  Dominik Kopczynski [aut]
+Author: Nils Hoffmann [aut, cre] (<0000-0002-6540-6875>),
+  Dominik Kopczynski [aut] (<0000-0001-5885-4568>)
 Maintainer: Nils Hoffmann <nils.hoffmann@cebitec.uni-bielefeld.de>
 Description: The R implementation for the Grammar of Succint Lipid Nomenclature parses different short hand notation dialects for lipid names and normalizes them to a standard name and provides calculated monoisotopic masses and sum formulas.
 License: MIT + file LICENSE
