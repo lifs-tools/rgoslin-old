@@ -23,7 +23,7 @@ test_that("lipid name parsing with grammar works", {
   expect_equal(df[["Structure.Defined.Name"]], "NA")
   expect_equal(df[["Full.Structure.Name"]], "NA")
   expect_equal(df[["Lipid.Maps.Category"]], "GP")
-  
+
   originalName <- "TG(16:1(5E)/18:0/20:2(3Z,6Z))"
   df <- rgoslin::parseLipidNameWithGrammar(originalName, "LipidMaps")
   expect_equal(is.data.frame(df), TRUE)
@@ -177,19 +177,19 @@ test_that("getting the list of supported parsers/grammars works", {
 test_that("lipid level works", {
   l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6Z)/16:0;5OH[R],8OH;3oxo", "Shorthand2020")
   expect_equal("COMPLETE_STRUCTURE", l[["Level"]])
-  
+
   l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6Z)/16:0;5OH,8OH;3oxo", "Shorthand2020")
   expect_equal("FULL_STRUCTURE", l[["Level"]])
-  
+
   l = rgoslin::parseLipidNameWithGrammar("PE 16:1(6)/16:0;(OH)2;oxo", "Shorthand2020")
   expect_equal("STRUCTURE_DEFINED", l[["Level"]])
-  
+
   l = rgoslin::parseLipidNameWithGrammar("PE 16:1/16:1;O3", "Shorthand2020")
   expect_equal("SN_POSITION", l[["Level"]])
-  
+
   l = rgoslin::parseLipidNameWithGrammar("PE 16:1_16:1;O3", "Shorthand2020")
   expect_equal("MOLECULAR_SPECIES", l[["Level"]])
-  
+
   l = rgoslin::parseLipidNameWithGrammar("PE 32:1;O3", "Shorthand2020")
   expect_equal("SPECIES", l[["Level"]])
 })
@@ -207,7 +207,7 @@ test_that("DB count for Fa is correct", {
 
 test_that("LCB and FAs are distinguished", {
   l = rgoslin::parseLipidName("Cer d18:1/24:0")
-  expect_equal(0, l[["LCB.Position"]])
+  expect_equal(1, l[["LCB.Position"]])
   expect_equal(18, l[["LCB.C"]])
   expect_equal(1, l[["LCB.DB"]])
   expect_equal(2, l[["LCB.OH"]])
