@@ -13,8 +13,10 @@ isValidLipidName(lipidName)
 TRUE if the lipidName could be parsed, FALSE otherwise.
 }
 \description{
-\code{isValidLipidName} checks the provided lipid name against the built-in grammars.
-Will return FALSE if none of the parsers was able to parse the provided name successfully or if any error was raised.
+\code{isValidLipidName} checks the provided lipid name against the built-in
+grammars.
+Will return FALSE if none of the parsers was able to parse the provided name
+successfully or if any error was raised.
 }
 \examples{
 isValidLipidName("PC 32:1")

@@ -9,18 +9,21 @@ parseLipidNameWithGrammar(lipidName, grammar)
 \arguments{
 \item{lipidName}{The lipid name to parse.}
 
-\item{grammar}{The grammar to use. One of "Goslin", "GoslinFragments", "SwissLipids", "LipidMaps", "HMDB"}
+\item{grammar}{The grammar to use. One of "Goslin", "GoslinFragments",
+"SwissLipids", "LipidMaps", "HMDB"}
 }
 \value{
 character vector with details of the lipid, empty vector otherwise.
 }
 \description{
-\code{parseLipidName} reads the provided lipid name based on grammar and returns structural information as a named vector.
-Will return a vector with the "Grammar" element set to "NOT_PARSEABLE" if none of the parsers was able to parse the provided name with the provided grammar successfully.
-If any error was raised, returns an empty vector.
+\code{parseLipidName} reads the provided lipid name based on grammar and
+returns structural information as a named vector. Will return a vector with
+the "Grammar" element set to "NOT_PARSEABLE" if none of the parsers was able
+to parse the provided name with the provided grammar successfully.If any
+error was raised, returns an empty vector.
 }
 \examples{
 parseLipidNameWithGrammar("PC 32:1", "Goslin")
-parseLipidNameWithGrammar("LPC(34:1)", "SwissLipids") 
+parseLipidNameWithGrammar("LPC(34:1)", "SwissLipids")
 parseLipidNameWithGrammar("TG(18:1_18:0_16:1)", "LipidMaps")
 }

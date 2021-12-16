@@ -4,9 +4,9 @@
 \name{rgoslin-package}
 \alias{rgoslin}
 \alias{rgoslin-package}
-\title{rgoslin: Lipid Name Parsing and Normalization}
+\title{rgoslin: Lipid Shorthand Name Parsing and Normalization}
 \description{
-The R implementation for the Grammar of Succint Lipid Nomenclature parses different short hand notation dialects for lipid names and normalizes them to a standard name and provides calculated monoisotopic masses and sum formulas.
+The R implementation for the Grammar of Succint Lipid Nomenclature parses different short hand notation dialects for lipid names. It normalizes them to a standard name. It further provides calculated monoisotopic masses and sum formulas for each successfully parsed lipid name and supplements it with LIPID MAPS Category and Class information. Also, the structural level and further structural details about the head group, fatty acyls and functional groups are returned, where applicable.
 }
 \details{
 rgoslin is the R implementation of the "grammar of succint lipid nomenclature". It provides 
@@ -15,12 +15,20 @@ implementations for parsing of shorthand lipid names from LipidMAPS, SwissLipids
 \references{
 NA
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/lifs-tools/rgoslin}
+  \item Report bugs at \url{https://github.com/lifs-tools/rgoslin/issues}
+}
+
+}
 \author{
-\strong{Maintainer}: Nils Hoffmann \email{nils.hoffmann@cebitec.uni-bielefeld.de}
+\strong{Maintainer}: Nils Hoffmann \email{nils.hoffmann@cebitec.uni-bielefeld.de} (\href{https://orcid.org/0000-0002-6540-6875}{ORCID})
 
 Authors:
 \itemize{
-  \item Dominik Kopczynski \email{dominik.kopczynski@isas.de}
+  \item Dominik Kopczynski \email{dominik.kopczynski@univie.ac.at} (\href{https://orcid.org/0000-0001-5885-4568}{ORCID})
 }
 
 }

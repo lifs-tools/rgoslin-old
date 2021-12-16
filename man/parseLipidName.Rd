@@ -13,12 +13,13 @@ parseLipidName(lipidName)
 Data frame with details of the lipid, empty data frame otherwise.
 }
 \description{
-\code{parseLipidName} reads the provided lipid name and returns structural information as a named vector.
-Will return a vector with the "Grammar" element set to "NOT_PARSEABLE" if none of the parsers was able to parse the provided name successfully.
-If any error was raised, returns an empty vector.
+\code{parseLipidName} reads the provided lipid name and returns structural
+information as a named vector. Will return a vector with the "Grammar"
+element set to "NOT_PARSEABLE" if none of the parsers was able to parse the
+provided name successfully. If any error was raised, returns an empty vector.
 }
 \examples{
 parseLipidName("PC 32:1")
-parseLipidName("LPC 34:1") 
+parseLipidName("LPC 34:1")
 parseLipidName("TG(18:1_18:0_16:1)")
 }

@@ -47,10 +47,10 @@ std::string get_lipid_level_str(LipidLevel& level) {
     }
 }
 
-/** 
+/**
  * Uses the cppGoslin library's LipidParser->parse(lipid_name) method to check,
  * whether the provided name is valid in any of the supported parsers/grammars.
- * Returns true if at least one parser supports the lipid name, false if no parser 
+ * Returns true if at least one parser supports the lipid name, false if no parser
  * supports the lipid name.
  */
 // [[Rcpp::plugins("cpp11")]]
@@ -102,12 +102,12 @@ std::string get_lipid_name_for_level(LipidAdduct* lipidAdduct, LipidLevel level)
 
 /**
  * Creates the List for the provided lipidAdduct. Will be filled with default values,
- * if the lipidAdduct is false. The grammar argument must be the name of a valid grammar, or 
+ * if the lipidAdduct is false. The grammar argument must be the name of a valid grammar, or
  * the NA_STRING.
  */
 SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string grammar, std::string message) {
     String chr_na = NA_STRING;
-    
+
     List lipidDetails = List::create();
     lipidDetails.push_back(chr_na, "Normalized.Name");
     lipidDetails.push_back(chr_na, "Original.Name");
@@ -159,7 +159,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
     lipidDetails.push_back(NA_INTEGER, "FA4.DB");
     lipidDetails.push_back(chr_na, "FA4.Bond.Type");
     lipidDetails.push_back(chr_na, "FA4.DB.Positions");
-    
+
     if (lipidAdduct){
         // grammar = parser->grammar_name;
         std::string originalName = chr_na;
@@ -177,7 +177,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
         int totalDB = 0;
         double mass = 0;
         std::string formula = chr_na;
-        
+
         Adduct* adduct = lipidAdduct->adduct;
         lipidMapsCategory = lipidAdduct->lipid->get_lipid_string(CATEGORY);
         lipidMapsMainClass = lipidAdduct->lipid->get_lipid_string(CLASS);
@@ -201,7 +201,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
             mass = lipidAdduct->get_mass();
             formula = lipidAdduct->get_sum_formula();
 
-            // Normalized Name	Original Name	Grammar	Lipid Maps Category	Lipid Maps Main Class	Functional Class Abbr	Functional Class Synonyms	Level	Total #C	Total #OH	Total #DB	FA1 Position	FA1 #C	FA1 #OH	FA1 #DB	FA1 Bond Type	FA2 Position	FA2 #C	FA2 #OH	FA2 #DB	FA2 Bond Type	LCB Position	LCB #C	LCB #OH	LCB #DB	LCB Bond Type	FA3 Position	FA3 #C	FA3 #OH	FA3 #DB	FA3 Bond Type	FA4 Position	FA4 #C	FA4 #OH	FA4 #DB	FA4 Bond Type        
+            // Normalized Name	Original Name	Grammar	Lipid Maps Category	Lipid Maps Main Class	Functional Class Abbr	Functional Class Synonyms	Level	Total #C	Total #OH	Total #DB	FA1 Position	FA1 #C	FA1 #OH	FA1 #DB	FA1 Bond Type	FA2 Position	FA2 #C	FA2 #OH	FA2 #DB	FA2 Bond Type	LCB Position	LCB #C	LCB #OH	LCB #DB	LCB Bond Type	FA3 Position	FA3 #C	FA3 #OH	FA3 #DB	FA3 Bond Type	FA4 Position	FA4 #C	FA4 #OH	FA4 #DB	FA4 Bond Type
             lipidDetails["Normalized.Name"] = nativeLevelName;
             lipidDetails["Original.Name"] = lipid_name;
             lipidDetails["Adduct"] = adductString;
@@ -242,7 +242,7 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
                 case (ETHER_PLASMANYL): fa_bond_type = "ETHER_PLASMANYL"; break;
                 case (ETHER_PLASMENYL): fa_bond_type = "ETHER_PLASMENYL"; break;
                 case (NO_FA): fa_bond_type = "NO_FA"; break;
-                case (AMINE): fa_bond_type = "AMINE"; break;
+                case (AMIDE): fa_bond_type = "AMIDE"; break;
                 case (LCB_EXCEPTION): fa_bond_type = "LCB"; break;
                 case (LCB_REGULAR): fa_bond_type = "LCB"; break;
                 default: fa_bond_type = "UNKNOWN";
@@ -271,11 +271,11 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
     return lipidDetails;
 }
 
-/** 
+/**
  * Allows to define the specific grammar to use to parse a lipid.
  * It adds information about the parser/grammar that was used to parse the lipid name,
  * if parsing was successful.
- * 
+ *
  * The grammar argument can be one of Goslin, GoslinFragments, SwissLipids, LipidMaps, HMDB. The rcpp_list_available_grammars for the exact list.
  */
 // [[Rcpp::plugins("cpp11")]]
@@ -313,7 +313,7 @@ SEXP rcpp_list_available_grammars() {
     return availableGrammars;
 }
 
-/** 
+/**
  * Reimplements the cppGoslin library's LipidParser->parse(lipid_name) method.
  * It adds information about the parser/grammar that was used to parse the lipid name,
  * if parsing was successful.

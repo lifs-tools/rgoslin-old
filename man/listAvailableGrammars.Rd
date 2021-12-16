@@ -10,7 +10,8 @@ listAvailableGrammars()
 the list of grammars
 }
 \description{
-\code{listAvailableGrammars} returns the list of grammars that the underlying cppgoslin library supports.
+\code{listAvailableGrammars} returns the list of grammars that the
+underlying cppgoslin library supports.
 }
 \examples{
 listAvailableGrammars()
