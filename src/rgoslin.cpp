@@ -6,6 +6,16 @@
 using namespace Rcpp;
 using namespace goslin;
 
+LipidParser *lipid_parser = NULL;
+
+inline LipidParser* get_parser() {
+    if (!lipid_parser)
+    {
+        lipid_parser = new LipidParser();
+    }
+    return lipid_parser;
+}
+
 /**
  * Join elements of a string vector with the provided delimiter
  */
@@ -57,11 +67,11 @@ std::string get_lipid_level_str(LipidLevel& level) {
 // [[Rcpp::export]]
 bool rcpp_is_valid_lipid_name(std::string lipid_name) {
     /* create instance of lipid parser containing several grammars */
-    LipidParser lipid_parser;
+    LipidParser* lipid_parser = get_parser();
     LipidAdduct* lipidAdduct;
     /* parsing lipid name into a lipid container data structure */
     try {
-        lipidAdduct = lipid_parser.parse(lipid_name);
+        lipidAdduct = lipid_parser->parse(lipid_name);
         /* checking if parsing was successful, otherwise lipid reference remains NULL */
         bool isValidLipidName = lipidAdduct != NULL;
         if(lipidAdduct) {
@@ -276,15 +286,15 @@ SEXP handle_lipid(LipidAdduct* lipidAdduct, std::string lipid_name, std::string 
  * It adds information about the parser/grammar that was used to parse the lipid name,
  * if parsing was successful.
  *
- * The grammar argument can be one of Goslin, GoslinFragments, SwissLipids, LipidMaps, HMDB. The rcpp_list_available_grammars for the exact list.
+ * The grammar argument can be one of Goslin, SwissLipids, LipidMaps, HMDB. The rcpp_list_available_grammars for the exact list.
  */
 // [[Rcpp::plugins("cpp11")]]
 // [[Rcpp::export]]
 SEXP rcpp_parse_lipid_name_with_grammar(std::string lipid_name, std::string target_grammar) {
     String chr_na = NA_STRING;
-    LipidParser lipid_parser;
+    LipidParser* lipid_parser = get_parser();
     LipidAdduct* lipidAdduct = NULL;
-    for (auto parser : lipid_parser.parser_list) {
+    for (auto parser : lipid_parser->parser_list) {
         try {
             if(target_grammar.compare(parser->grammar_name)==0) {
                 lipidAdduct = parser->parse(lipid_name, false);
@@ -306,8 +316,8 @@ SEXP rcpp_parse_lipid_name_with_grammar(std::string lipid_name, std::string targ
 // [[Rcpp::export]]
 SEXP rcpp_list_available_grammars() {
     CharacterVector availableGrammars = CharacterVector::create();
-    LipidParser lipid_parser;
-    for (auto parser : lipid_parser.parser_list) {
+    LipidParser* lipid_parser = get_parser();
+    for (auto parser : lipid_parser->parser_list) {
         availableGrammars.push_back(parser->grammar_name);
     }
     return availableGrammars;
@@ -326,12 +336,11 @@ SEXP rcpp_parse_lipid_name(std::string lipid_name) {
     LipidAdduct* lipidAdduct = NULL;
     try {
         /* create instance of lipid parser containing several grammars */
-        LipidParser lipid_parser;
-        lipidAdduct = lipid_parser.parse_parallel(lipid_name);
-        return handle_lipid(lipidAdduct, lipid_name, (lipidAdduct != 0) ? String(lipid_parser.lastSuccessfulParser->grammar_name) : chr_na, chr_na);
+        LipidParser* lipid_parser = get_parser();
+        lipidAdduct = lipid_parser->parse_parallel(lipid_name);
+        return handle_lipid(lipidAdduct, lipid_name, (lipidAdduct != 0) ? String(lipid_parser->lastSuccessfulParser->grammar_name) : chr_na, chr_na);
     } catch(LipidException &e) {
         warning("Parsing of lipid name '" +lipid_name+"' caused an exception: "+ e.what());
         return List::create();
     }
 }
-

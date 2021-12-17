@@ -1,12 +1,20 @@
 ---
 title: "Using R Goslin to parse and normalize lipid nomenclature"
-author: "Nils Hoffmann"
-output: rmarkdown::html_vignette
+author: 
+- name: Nils Hoffmann
+  affiliation: Bielefeld University, Center for Biotechnology, Bielefeld, Germany
+date: 17 December 2021
+output:
+  BiocStyle::html_document:
+    toc_float: true
+  BiocStyle::pdf_document: default
+package: BiocStyle    
 vignette: >
     %\VignetteIndexEntry{Using R Goslin to parse and normalize lipid nomenclature}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
 ---
+# Prerequisites
 
 This project is a parser, validator and normalizer implementation for shorthand lipid nomenclatures, base on the Grammar of Succinct Lipid Nomenclatures project.
 
@@ -36,12 +44,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r include=FALSE}
+```{r include=FALSE, echo=FALSE, results="hide", warning=FALSE}
+suppressPackageStartupMessages({
 library(dplyr)
 library(knitr)
 library(kableExtra)
+})
 ```
-### Supported nomenclatures
+## Supported nomenclatures
 
 - [LIPID MAPS](https://www.lipidmaps.org)
 - [SwissLipids](https://www.swisslipids.org/)
@@ -49,12 +59,12 @@ library(kableExtra)
 - [HMDB](https://hmdb.ca/)
 - [FattyAcids](https://iupac.qmul.ac.uk/lipid/appABC.html#appA)
 
-### Changes from Version 1
+## Changes from Version 1
 
 - The fragment grammar parser has been removed but may be re-added in the future. Please use our [GitHub Issues](https://github.com/lifs-tools/goslin/issues) if you need this parser.
 - The column names of the R implementation have been changed to contain "." instead of " " (space). This makes handling and access easier, since quoting is no longer necessary.
 
-### Using the library
+# Using the library
 
 In order to use the provided translation functions of rgoslin, you first need to load the library.
 ```{r}
@@ -71,7 +81,7 @@ To check, whether a given lipid name can be parsed by any of the parsers, you ca
 isValidLipidName("PC 32:1")
 ```
 
-#### Parsing a single lipid name
+## Parsing a single lipid name
 
 Using `parseLipidName` with a lipid name returns a data frame of properties of the parsed lipid name as columns.
 ```{r}
@@ -102,7 +112,7 @@ kable(tagDf %>% select(-starts_with("FA"),-starts_with("LCB")), caption = "Lipid
 kable(tagDf %>% select(Normalized.Name, starts_with("FA"),starts_with("LCB")), caption = "Lipid name parsing results for TG isomeric subspecies with FA and LCB columns.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "200px")
 ```
 
-#### Parsing multiple lipid names
+## Parsing multiple lipid names
 
 If you want to parse multiple lipid names, use the `parseLipidNames` method with a vector of lipid names. This returns a data frame of properties of the parsed lipid names with one row per lipid.
 
@@ -133,7 +143,7 @@ kable(multipleLipidNamesWithGrammar %>% select(-starts_with("FA"),-starts_with("
 kable(multipleLipidNamesWithGrammar %>% select(Normalized.Name, starts_with("FA"), starts_with("LCB")), caption = "Lipid name parsing results for Goslin grammar and lipids PC 32:1, LPC 34:1, TG(18:1_18:0_16:1) with FA and LCB columns.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "300px")
 ```
 
-### Parsing Adducts
+# Parsing Adducts
 
 The Goslin parser also support reading of lipid shorthand names with adducts:
 
@@ -148,10 +158,10 @@ This will populate the columns "Adduct" and "AdductCharge" with the respective v
 kable(lipidNamesWithAdduct %>% select(-starts_with("FA"),-starts_with("LCB")), caption = "Lipid name parsing results for Goslin grammar and lipids PC 32:1[M+H]1+, PC 32:1 [M+H]+ and PC 32:1, FA and LCB columns omitted for brevity.") %>% kable_styling(bootstrap_options = c("striped", "hover", "condensed", font_size = 7)) %>% scroll_box(width = "800px", height = "300px")
 ```
 
-### Getting help & support
+# Getting help & support
 If you find any issues with the library, would like to have other functionality included, require help or would like to contribute, please contact us via our [GitHub Project](https://github.com/lifs-tools/rgoslin) or via the [LIFS support page](https://lifs-tools.org/support.html).
 
-# Session information {-}
+# Session information {.unnumbered}
 
 ```{r sessioninfo, echo=FALSE}
 sessionInfo()
