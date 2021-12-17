@@ -5,10 +5,11 @@ author:
   affiliation: Bielefeld University, Center for Biotechnology, Bielefeld, Germany
 date: 17 December 2021
 output:
-  BiocStyle::html_document:
-    toc_float: true
-  BiocStyle::pdf_document: default
-package: BiocStyle    
+    html_document
+  # BiocStyle::html_document:
+    # toc_float: true
+  # BiocStyle::pdf_document: default
+# package: BiocStyle    
 vignette: >
     %\VignetteIndexEntry{Using R Goslin to parse and normalize lipid nomenclature}
     %\VignetteEngine{knitr::rmarkdown}
