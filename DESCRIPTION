@@ -22,7 +22,6 @@ Suggests:
     rmarkdown,
     kableExtra,
     dplyr,
-    microbenchmark,
     BiocManager
 RoxygenNote: 7.1.2
 Encoding: UTF-8
