@@ -1,9 +1,7 @@
 /*
  * MIT License
  * 
- * Copyright (c) 2017 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
- *                    Bing Peng   -   bing.peng {at} isas.de
- *                    Nils Hoffmann  -  nils.hoffmann {at} isas.de
+ * Copyright (c) the authors (listed in global LICENSE file)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the 'Software'), to deal
@@ -34,7 +32,7 @@ grammar GoslinFragments;
 lipid : lipid_eof EOF;
 lipid_eof : just_lipid | just_lipid FRAGMENT_SEPARATOR fragment_name;
 just_lipid : lipid_pure | lipid_pure adduct_info;
-lipid_pure : gl | pl | sl | cholesterol | mediatorc | saccharolipid;
+lipid_pure : gl | pl | sl | sterol | mediatorc | saccharolipid;
 
 /* rules for fragments */
 fragment_name : frag_char;
@@ -127,9 +125,9 @@ hg_lpl : 'LPA' | 'LPC' | 'LPE' | 'LPG' | 'LPI' | 'LPS' | hg_lpim | 'CPA' | 'LCDP
 hg_lpim : 'LPIM' hg_lpim_number;
 hg_lpim_number : number;
 hg_lpl_oc : hg_lpl_o ' O' | hg_lpl_o heavy_hg ' O';
-hg_lpl_o : 'LPC' | 'LPE';
+hg_lpl_o : hg_lpl;
 hg_pl_oc : hg_pl_o ' O' | hg_pl_o heavy_hg ' O';
-hg_pl_o : 'PA' | 'PC' | 'PE' | 'PG' | 'PI' | 'PS';
+hg_pl_o : hg_pl;
 
 
 
@@ -144,17 +142,20 @@ sl_subspecies : lcb sorted_fa_separator fa;
 hg_lslc : hg_lsl | hg_lsl heavy_hg;
 hg_lsl : 'LCB' | 'LCBP' | 'LHexCer' | 'LSM';
 hg_dslc : hg_dsl | hg_dsl heavy_hg;
-hg_dsl : 'Cer' | 'CerP' | 'EPC' | 'GB4' | 'GD3' | 'GB3' | 'GM3' | 'GM4' | 'Hex3Cer' | 'Hex2Cer' | 'HexCer' | 'IPC' | 'M(IP)2C' | 'MIPC' | 'SHexCer' | 'SM' | 'FMC-5' | 'FMC-6' ;
+hg_dsl : 'Cer' | 'CerP' | 'EPC' | 'GB4' | 'GD3' | 'GB3' | 'GM1' | 'GM3' | 'GM4' | 'Hex3Cer' | 'Hex2Cer' | 'HexCer' | 'IPC' | 'M(IP)2C' | 'MIPC' | 'SHexCer' | 'SM' | 'FMC-5' | 'FMC-6' ;
 
 
 
-/* cholesterol lipids */
-cholesterol : chc | che;
-chc : ch | ch heavy_hg;
-ch : 'Ch' | 'Cholesterol';
-che : hg_chec headgroup_separator fa;
-hg_chec : hg_che | hg_che heavy_hg;
-hg_che : 'ChE' | 'CE';
+/* sterol lipids */
+sterol : stc | ste | stes;
+stc : st | st heavy_hg;
+st : 'Ch' | 'Cholesterol' | 'ST 27:1;1' | 'ST 27:2;1' | 'ST 28:3;1' | 'ST 30:2;1' | 'ST 29:2;1' | 'ST 28:2;1' | 'Desmosterol' | 'Stigmasterol' | 'Ergosterol' | 'Lanosterol';
+ste : hg_stc sorted_fa_separator fa;
+stes : hg_stcs headgroup_separator fa;
+hg_stc : hg_ste | hg_ste heavy_hg;
+hg_ste : 'SE 27:1' | 'SE 27:2' | 'SE 28:3' | 'SE 30:2' | 'SE 29:2' | 'SE 28:2';
+hg_stcs : hg_stes | hg_ste heavy_hg;
+hg_stes : 'ChE' | 'CE';
 
 
 /* mediator lipids */
@@ -188,14 +189,17 @@ lcb : lcb_pure | lcb_pure heavy_lcb;
 heavy_lcb : heavy;
 lcb_pure : carbon carbon_db_separator db db_hydroxyl_separator hydroxyl | old_hydroxyl carbon carbon_db_separator db;
 carbon : number;
-db : db_count | db_count round_open_bracket db_position round_close_bracket;
+db : db_count | db_count db_positions;
 db_count : number;
-db_position : number cistrans | number cistrans | db_position db_position_separator db_position;
+db_positions : ROB db_position RCB;
+db_position : db_single_position | db_position db_position_separator db_position;
+db_single_position : db_position_number | db_position_number cistrans;
+db_position_number : number;
 cistrans : 'E' | 'Z';
 hydroxyl : number;
 old_hydroxyl : 'd' | 't';
-number :  digit;
-digit : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | digit digit;
+number :  digit | digit number;
+digit : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
 
 
 

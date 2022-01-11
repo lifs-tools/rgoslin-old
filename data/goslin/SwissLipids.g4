@@ -1,9 +1,7 @@
 /*
  * MIT License
  * 
- * Copyright (c) 2020 Dominik Kopczynski   -   dominik.kopczynski {at} isas.de
- *                    Bing Peng   -   bing.peng {at} isas.de
- *                    Nils Hoffmann  -  nils.hoffmann {at} isas.de
+ * Copyright (c) the authors (listed in global LICENSE file)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the 'Software'), to deal
@@ -30,10 +28,16 @@ grammar SwissLipids;
 
 
 /* first rule is always start rule */
-lipid : lipid_pure EOF;
+lipid : lipid_pure EOF | lipid_pure adduct_info EOF;
 lipid_pure : fatty_acid | gl | pl | sl | st;
 
 
+/* adduct information */
+adduct_info : adduct_sep | adduct_separator adduct_sep;
+adduct_sep : '[M' adduct ']' charge_sign | '[M' adduct ']' charge charge_sign;
+adduct : adduct_set;
+adduct_set : adduct_element | adduct_element adduct_set;
+adduct_element : element | element number | number element | plus_minus element | plus_minus element number | plus_minus number element;
 
 
 /* fatty acyl rules */
@@ -48,7 +52,7 @@ db : db_count | db_count db_positions;
 db_count : number;
 db_positions : ROB db_position RCB;
 db_position : db_single_position | db_position db_position_separator db_position;
-db_single_position : db_position_number cistrans;
+db_single_position : db_position_number | db_position_number cistrans;
 db_position_number : number;
 cistrans : 'E' | 'Z';
 ether : 'O-' | 'P-';
@@ -172,13 +176,8 @@ st_sub1 : st_sub1_hg st_sub1_fa | st_sub1_hg headgroup_separator st_sub1_fa;
 st_sub1_hg : 'CE';
 st_sub1_fa : ROB fa RCB;
 
-st_sub2 : st_sub2_hg st_sub2_fa | st_sub2_hg headgroup_separator st_sub2_fa;
-st_sub2_hg : 'SE';
-st_sub2_fa : ROB fa2 RCB;
-
-
-
-
+st_sub2 : st_sub2_hg sorted_fa_separator fa RCB;
+st_sub2_hg : 'SE' ROB number COLON number;
 
 
 /* separators */
@@ -194,6 +193,7 @@ ROB: '(';
 RCB: ')';
 
 unsorted_fa_separator : UNDERSCORE;
+adduct_separator : SPACE;
 sorted_fa_separator : SLASH;
 headgroup_separator : SPACE;
 carbon_db_separator : COLON;
@@ -202,5 +202,10 @@ med_position_separator : COMMA;
 fa_lcb_suffix_separator : DASH;
 fa_lcb_prefix_separator : DASH;
 
-number :  digit;
-digit : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | digit digit;
+number :  digit | digit number;
+digit : '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+
+element: 'C' | 'H' | 'N' | 'O' | 'P' | 'S' | 'Br' | 'I' | 'F' | 'Cl' | 'As';
+charge : '1' | '2' | '3' | '4';
+charge_sign : plus_minus;
+plus_minus : '-' | '+';
