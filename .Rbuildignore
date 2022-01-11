@@ -10,6 +10,7 @@
 ^src/cppgoslin/\.github$
 ^src/cppgoslin/data/\.github$
 ^src/cppgoslin/data/goslin/\.github$
+^src/cppgoslin/data/goslin$
 \.o$
 \.so$
 \.a$
